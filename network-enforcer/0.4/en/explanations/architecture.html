@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SUSE Security Network Enforcer architecture | Network Enforcer  0.4-dev</title>
+    <link rel="prev" href="phases.html">
+    <link rel="next" href="../howtos/uninstall.html">
+    <meta name="description" content="How SUSE Security Network Enforcer is built: one controller that reads flows from the data plane, writes proposals and policies, and renders each policy as a native object on Istio ambient, Calico, or Cilium.">
+    <meta name="keywords" content="SUSE Security Network Enforcer, kubewarden, kubernetes, architecture, istio, calico, cilium">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-23"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/network-enforcer/0.4/en/explanations/architecture.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/network-enforcer/0.4/en/explanations/architecture.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "SUSE Security Network Enforcer architecture |  0.4",
+  "headline": "SUSE Security Network Enforcer architecture",
+  "description": "How SUSE Security Network Enforcer is built: one controller that reads flows from the data plane, writes proposals and policies, and renders each policy as a native object on Istio ambient, Calico, or Cilium.",
+  "inLanguage": "en",
+  "dateModified": "2026-10-23T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.4",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="network-enforcer" data-version="0.4">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Network Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/verifying-network-enforcer.html">Verifying Network Enforcer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="phases.html">Phases: learn, monitor, protect</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/emergency-disable.html">Emergency disable</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/setup-development-env.html">Development environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/known_limitations.html">Known limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/crd.html">CRD API reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Network Enforcer</span>
+    <span class="version">0.4-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../../0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="../introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Explanations
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.4-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="architecture.html">0.4-dev</a>
+    <a class="version" href="../../../0.3/en/explanations/architecture.html">0.3</a>
+    <a class="version" href="../../../0.2/en/architecture.html">0.2</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/network-enforcer/version-0.4/modules/en/pages/explanations/architecture.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:network-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Network Enforcer 0.4-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">SUSE Security Network Enforcer architecture</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>SUSE Security Network Enforcer is one controller. It does not add an agent to the nodes. It reads
+<a href="../glossary.html#_flow" class="xref page">flow</a> records from the <a href="../glossary.html#_data-plane" class="xref page">data plane</a> that already runs in the
+cluster, and writes what it sees as a proposal. When you promote the
+proposal, it renders a policy in the format of that data plane. The data
+plane enforces the policy. The controller watches the result and reports each
+<a href="../glossary.html#_violation" class="xref page">violation</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../introduction.html" class="xref page">introduction</a> explains why the enforcer learns
+from the data plane. The <a href="phases.html" class="xref page">Phases</a> page explains
+the learn, monitor, and protect lifecycle. This page explains how the parts
+fit together.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_principles"><a class="anchor" href="#_design_principles"></a>Design principles</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_observe_before_you_enforce"><a class="anchor" href="#_observe_before_you_enforce"></a>Observe before you enforce</h3>
+<div class="paragraph">
+<p>Observation is always on and has no side effect. Enforcement is a label that
+you set on one resource. Nothing blocks traffic until you ask.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_learn_from_the_data_plane_do_not_add_one"><a class="anchor" href="#_learn_from_the_data_plane_do_not_add_one"></a>Learn from the data plane, do not add one</h3>
+<div class="paragraph">
+<p>The flow records already exist. ztunnel, Goldmane, and Hubble Relay produce
+them. The controller reads them. It does not install an eBPF probe, a
+sidecar, or a node agent of its own.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_one_model_three_providers"><a class="anchor" href="#_one_model_three_providers"></a>One model, three providers</h3>
+<div class="paragraph">
+<p>A proposal and a policy have the same shape on every <a href="../glossary.html#_provider" class="xref page">provider</a>. The
+provider changes the <a href="#_flow_sources">flow source</a> that the controller reads
+and the <a href="../glossary.html#_backend" class="xref page">backend</a> that it writes. The learn, monitor, and protect
+workflow does not change.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_promotion_is_a_label_not_a_side_effect"><a class="anchor" href="#_promotion_is_a_label_not_a_side_effect"></a>Promotion is a label, not a side effect</h3>
+<div class="paragraph">
+<p>The controller never turns a proposal into a policy on its own. You set the
+<a href="../glossary.html#_promote-label" class="xref page"><code>networkenforcer.kubewarden.io/promote</code></a>. A reviewer can read the proposal, approve it, and keep
+the approval in Git.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_native_object_is_the_policy"><a class="anchor" href="#_the_native_object_is_the_policy"></a>The native object is the policy</h3>
+<div class="paragraph">
+<p>In protect mode, the thing that blocks traffic is an
+<a href="../glossary.html#_authorizationpolicy" class="xref page"><code>AuthorizationPolicy</code></a> or a <a href="../glossary.html#_networkpolicy" class="xref page"><code>NetworkPolicy</code></a>. You read it, diff it,
+and debug it with the tools of the data plane. Network Enforcer owns the
+object and keeps it in sync, but it adds no format of its own.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_two_telemetry_paths_kept_apart"><a class="anchor" href="#_two_telemetry_paths_kept_apart"></a>Two telemetry paths, kept apart</h3>
+<div class="paragraph">
+<p>On Istio, the controller receives flow logs over OTLP. On every provider,
+the controller sends violation events over OTLP. The first path is the flow
+source. The second path is telemetry about policies. They use different
+ports, different certificates, and different settings.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_suse_security_network_enforcer_stack"><a class="anchor" href="#_the_suse_security_network_enforcer_stack"></a>The SUSE Security Network Enforcer stack</h2>
+<div class="sectionbody">
+<div class="imageblock"><div class="mermaid content" style=" ">%%{init: { "themeVariables": { "fontSize": "24px" } }}%%
+graph LR
+    accTitle: Network Enforcer architecture
+    accDescr: A diagram showing the components of Network Enforcer and the flow of data between them.
+    subgraph outer[" "]
+      direction LR
+      subgraph platform[" "]
+        direction LR
+        k8s(("Kubernetes API"))
+        ztunnel["ztunnel logs
+        (Istio ambient)"]
+        goldmane["Goldmane
+        (Calico)"]
+        hubble["Hubble Relay
+        (Cilium)"]
+        native["Native policy object
+        AuthorizationPolicy or
+        NetworkPolicy"]
+      end
+      subgraph kw["`**Network Enforcer**`"]
+        direction LR
+        fluentbit["fluent-bit DaemonSet
+        (Istio only)"]
+        controller("`**Controller**`")
+        collector["OpenTelemetry
+        collector"]
+      end
+    end
+    ztunnel -->|"tails log files"| fluentbit
+    fluentbit -->|"OTLP logs"| controller
+    goldmane -->|"gRPC, mTLS"| controller
+    hubble -->|"gRPC"| controller
+    controller -->|"writes proposals
+    and policies"| k8s
+    k8s -->|"promote label,
+    mode changes"| controller
+    controller -->|"renders and
+    owns"| native
+    controller -->|"violation events,
+    OTLP"| collector
+    class outer,platform,kw container</div><div class="title">Figure 1. Architecture</div></div>
+<div class="sect2">
+<h3 id="_controller"><a class="anchor" href="#_controller"></a>Controller</h3>
+<div class="paragraph">
+<p>The <a href="../glossary.html#_controller" class="xref page">controller</a> is a Deployment with leader election, so one replica
+is active at a time. The active replica runs five parts in one process.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="../glossary.html#_scraper" class="xref page">scraper</a> reads the flow source of the selected provider. It
+turns each flow into a learning event or a violation observation. It does
+not write Kubernetes objects.</p>
+</li>
+<li>
+<p>The learning reconciler turns learning events into
+<a href="../glossary.html#_workloadnetworkpolicyproposal" class="xref page"><code>WorkloadNetworkPolicyProposal</code></a> resources, one per workload and
+<a href="../glossary.html#_direction" class="xref page">direction</a>.</p>
+</li>
+<li>
+<p>The proposal reconciler watches the promote label. It creates the
+<a href="../glossary.html#_workloadnetworkpolicy" class="xref page"><code>WorkloadNetworkPolicy</code></a>, sets the
+<a href="../glossary.html#_promoted-from-label" class="xref page">promoted-from label</a>, and deletes
+the proposal.</p>
+</li>
+<li>
+<p>The policy reconciler renders each policy as a <a href="../glossary.html#_native-policy-object" class="xref page">native policy object</a>
+and keeps it in sync.</p>
+</li>
+<li>
+<p>The status sync writes the buffered violation observations to the policy
+status on a timer, the <a href="../glossary.html#_status-sync-interval" class="xref page">status
+sync interval</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The controller also exports the violation events to the OpenTelemetry
+collector, when the export is on.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fluent_bit_daemonset"><a class="anchor" href="#_fluent_bit_daemonset"></a>fluent-bit DaemonSet</h3>
+<div class="paragraph">
+<p>With the <code>istio</code> provider, the chart deploys
+<a href="../glossary.html#_fluent-bit" class="xref page">fluent-bit</a> on each node. It reads the JSON
+log files of <a href="../glossary.html#_ztunnel" class="xref page"><code>ztunnel</code></a>, parses them, and sends them to the controller
+as OTLP logs on port 4317. The other providers do not need it, because
+Goldmane and Hubble Relay are services that the controller calls.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_opentelemetry-collector"><a class="anchor" href="#_opentelemetry-collector"></a>OpenTelemetry collector</h3>
+<div class="paragraph">
+<p>The <a href="../glossary.html#_opentelemetry-collector" class="xref page">OpenTelemetry collector</a> receives the violation events. The Helm
+value <code>telemetry.collectorStrategy</code> selects one of three setups. With
+<code>default</code>, the chart deploys a collector that prints each event and exports
+the Prometheus counter <code>network_enforcer_policy_denies</code>. With <code>external</code>,
+the controller sends the events to a collector that you run. With <code>none</code>,
+nothing is exported, and the violations stay in the policy status.</p>
+</div>
+<div class="paragraph">
+<p>The collector is not the flow source. On Istio, the controller receives
+flows on one port and sends events to the collector on another.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flow_sources"><a class="anchor" href="#_flow_sources"></a>Flow sources</h3>
+<div class="paragraph">
+<p>The <a href="../glossary.html#_flow-source" class="xref page">flow source</a> is a service of the data plane. The controller reads
+it with a client that matches the provider.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../glossary.html#_istio-ambient" class="xref page">Istio ambient</a>: the JSON access and authorization log of ztunnel,
+delivered by fluent-bit. Learning sees inbound TCP only, so it creates
+ingress proposals.</p>
+</li>
+<li>
+<p><a href="../glossary.html#_calico" class="xref page">Calico</a>: the <a href="../glossary.html#_goldmane" class="xref page">Goldmane</a> flow service, over gRPC with mutual
+TLS. Goldmane reports both ends of a connection, so learning creates an
+egress proposal on the source and an ingress proposal on the destination.</p>
+</li>
+<li>
+<p><a href="../glossary.html#_cilium" class="xref page">Cilium</a>: the <code>GetFlows</code> stream of <a href="../glossary.html#_hubble-relay" class="xref page">Hubble Relay</a>, over gRPC
+with TLS by default. Hubble reports both ends too.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A flow with one end outside the cluster, or on a pod with <code>hostNetwork</code>, is
+dropped. See <a href="../reference/known_limitations.html" class="xref page">Known limitations</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_validating_admission_policies"><a class="anchor" href="#_validating_admission_policies"></a>Validating Admission Policies</h3>
+<div class="paragraph">
+<p>The chart installs two
+<a href="../glossary.html#_validating-admission-policy" class="xref page">Validating Admission
+Policies</a>. One rejects a promote label whose value is not <code>monitor</code> or
+<code>protect</code>. One rejects a change to the owner reference of a proposal, so
+that a proposal stays tied to its workload.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_admission_webhook"><a class="anchor" href="#_admission_webhook"></a>Validating admission webhook</h3>
+<div class="paragraph">
+<p>The controller also serves a webhook that checks policy target uniqueness.
+It fails closed for <code>WorkloadNetworkPolicy</code> creates and updates.
+Proposal writes, policy deletes, and status updates are outside its scope.
+An outage does not stop enforcement of existing native policies. See
+<a href="../howtos/production-deployments.html#_controller" class="xref page">Controller availability</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_providers_and_backends"><a class="anchor" href="#_providers_and_backends"></a>Providers and backends</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Helm value <code>controller.provider.name</code> selects the provider once, at
+installation. The provider selects the flow source and the backend.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Provider</th>
+<th class="tableblock halign-left valign-top">Flow source</th>
+<th class="tableblock halign-left valign-top">Backend and native object</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>istio</code> (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ztunnel logs, through fluent-bit, OTLP on port 4317</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spec.backend: istio</code>, rendered as an Istio <code>AuthorizationPolicy</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>calico</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Goldmane, gRPC with mutual TLS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spec.backend: kubernetes</code>, rendered as a Kubernetes <code>NetworkPolicy</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cilium</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hubble Relay, gRPC with TLS by default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spec.backend: kubernetes</code>, rendered as a Kubernetes <code>NetworkPolicy</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The endpoint of each flow source has a default that matches a standard
+installation. The Helm values <code>controller.provider.istio.endpoint</code>,
+<code>controller.provider.calico.endpoint</code>, and
+<code>controller.provider.cilium.endpoint</code> override it.
+The <code>spec.backend</code> field of a proposal or policy cannot change after
+creation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_runs_where"><a class="anchor" href="#_what_runs_where"></a>What runs where</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Place</th>
+<th class="tableblock halign-left valign-top">Work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controller leader</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flow scraping. Learning, promotion, and policy rendering. Status sync.
+Event export.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Every node, Istio provider only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fluent-bit reads the ztunnel log and forwards it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data plane</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enforcement of the native policy object. On Istio, ztunnel also evaluates
+the dry-run policy in monitor mode and logs the result.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_workload_targeting"><a class="anchor" href="#_workload_targeting"></a>Workload targeting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Policies and proposals require <code>spec.targetRef</code> (workload kind and name)
+and <code>spec.direction</code>. The target is a Deployment, StatefulSet, or DaemonSet
+in the same namespace. The direction is <code>Ingress</code> or <code>Egress</code>, with
+<code>Ingress</code> only for Istio.</p>
+</div>
+<div class="paragraph">
+<p>Only one policy can target a workload and direction in a namespace.
+That policy holds all rules for that direction. Its selector still controls
+which pods the native policy selects. It must match the target workload&#8217;s
+pod template without matching another workload&#8217;s template.</p>
+</div>
+<div class="paragraph">
+<p>The controller checks duplicates and selector scope on reconciliation.
+See <a href="../howtos/troubleshooting.html#_policy_targeting" class="xref page">Policy targeting</a>
+for conditions and corrective actions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_journey_of_a_policy"><a class="anchor" href="#_the_journey_of_a_policy"></a>The journey of a policy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section follows one workload from the first observed flow to a written
+violation record.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>A flow is observed.</strong> The data plane records a connection between two
+workloads. The scraper reads the record, resolves both ends to a workload
+through the Kubernetes API, and emits a learning event. If a policy
+already exists for that workload and direction, it emits a violation
+observation instead.</p>
+</li>
+<li>
+<p><strong>The controller writes a proposal.</strong> The learning reconciler creates or
+updates the <code>WorkloadNetworkPolicyProposal</code> for the workload and the
+direction. The name is the kind, the name, and the direction of the
+workload, for example <code>deployment-http-server-ingress</code>. The proposal lists
+the <a href="../glossary.html#_peer" class="xref page">peer</a>s, protocols, and ports. It is owned by the workload, so
+Kubernetes deletes it with the workload. Nothing is enforced.</p>
+</li>
+<li>
+<p><strong>You promote the proposal.</strong> You set the promote label to <code>monitor</code> or
+<code>protect</code>. The proposal reconciler creates a <code>WorkloadNetworkPolicy</code> with
+the same name, namespace, target, direction, and backend spec. It sets
+<code>spec.mode</code> from the label and sets the promoted-from label. Then it deletes
+the proposal. If the scraper creates the proposal again, the reconciler deletes it as a
+leftover.</p>
+</li>
+<li>
+<p><strong>The controller renders the native object.</strong> The policy reconciler creates
+an object with the same name and namespace as the policy, and an owner
+reference to it. What it creates depends on the backend and the mode:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Backend</th>
+<th class="tableblock halign-left valign-top">Monitor</th>
+<th class="tableblock halign-left valign-top">Protect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>istio</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An <code>AuthorizationPolicy</code> with the annotation <code>istio.io/dry-run: "true"</code>.
+ztunnel evaluates it and logs the decision. Traffic is not blocked.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same <code>AuthorizationPolicy</code> without the annotation. Traffic is blocked.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No object. The controller compares each observed flow with
+<code>spec.kubernetes</code> in software. Traffic is not blocked.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <code>NetworkPolicy</code> built from <code>spec.kubernetes</code>. The CNI blocks traffic.</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>The data plane acts.</strong> In monitor mode, the flow passes. In protect mode,
+the data plane drops it, and the connection fails with a timeout, a reset,
+or a refusal.</p>
+</li>
+<li>
+<p><strong>A violation is observed.</strong> On Istio, ztunnel logs a dry-run match in
+monitor mode and a denial in protect mode. On Calico and Cilium, the
+scraper sees a flow that the policy does not allow, or a dropped flow with
+a policy as the reason. In each case the scraper emits a violation
+observation. The controller buffers it and sends a
+<code>policy_violation_observed</code> event to the collector.</p>
+</li>
+<li>
+<p><strong>The status is written.</strong> On the next status sync, the controller merges
+the buffered observations into the policy status. It gives each new record
+an <code>id</code>, keeps the 100 most recent records in <code>status.violations</code>, and
+updates <code>status.violationCount</code> and <code>status.activeViolationCount</code>. The
+<a href="../glossary.html#_violation-record" class="xref page">violation record</a> is now visible to <code>kubectl</code>.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_a_mode_change"><a class="anchor" href="#_a_mode_change"></a>A mode change</h3>
+<div class="paragraph">
+<p>When you change <code>spec.mode</code>, the policy reconciler updates the native
+object. On Istio, it adds or removes the dry-run annotation. On Calico and
+Cilium, it creates or deletes the <code>NetworkPolicy</code>. No pod restarts.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_an_acknowledgement"><a class="anchor" href="#_an_acknowledgement"></a>An acknowledgement</h3>
+<div class="paragraph">
+<p>When you add the <a href="../glossary.html#_acknowledged-violation" class="xref page"><code>networkenforcer.kubewarden.io/acknowledge-&lt;id&gt;</code></a> with a reason, the status
+sync moves the record to <code>status.acknowledgedViolations</code>, removes the
+annotation, and sends a <code>policy_violation_acknowledged</code> event.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_back_to_learning"><a class="anchor" href="#_back_to_learning"></a>Back to learning</h3>
+<div class="paragraph">
+<p>When you delete a <code>WorkloadNetworkPolicy</code>, Kubernetes deletes the native
+object through the owner reference. The next observed flow for that
+workload and direction creates a new proposal.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_the_status_tells_you"><a class="anchor" href="#_what_the_status_tells_you"></a>What the status tells you</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The status holds the 100 most recent active records and the 100 most recent
+acknowledged records. The counter <code>violationCount</code> grows with each
+observation that the controller scrapes, so it can exceed the number of
+distinct records. The field <code>activeViolationCount</code> equals the number of
+records in <code>status.violations</code>.</p>
+</div>
+<div class="paragraph">
+<p>The controller resolves the subject workload through pod owner references.
+It first checks a reported enforcing object&#8217;s owner against that subject.
+Otherwise, it looks up the policy by target and direction.</p>
+</div>
+<div class="paragraph">
+<p>Attributed violations appear in status on the next status sync.
+Unattributed observations do not enter policy status. They increment
+<code>network_enforcer_violations_unattributed_total</code> and still produce
+OpenTelemetry logs when export is enabled.</p>
+</div>
+<div class="paragraph">
+<p>On Istio, the destination port of a violation record is always 0, because
+ztunnel does not report it in the policy log.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_trust_boundaries"><a class="anchor" href="#_trust_boundaries"></a>Trust boundaries</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>One certificate authority, issued by <a href="../glossary.html#_cert-manager" class="xref page">cert-manager</a>, signs the
+certificates of the admission webhook, the collector, and the OTLP endpoint
+that receives the fluent-bit logs. The collector and the controller mount
+their certificates through the cert-manager CSI driver.</p>
+</li>
+<li>
+<p>The default collector presents a server certificate, and the controller
+verifies it. An external collector can also require a client certificate
+from the controller, which makes the hop mutual TLS.</p>
+</li>
+<li>
+<p>Goldmane requires mutual TLS. The controller reads the client key pair and
+the CA bundle that Calico creates in its own namespace. There is no
+plain-text option.</p>
+</li>
+<li>
+<p>Hubble Relay uses TLS by default, with a client certificate that Cilium
+creates. A plain-text connection is a choice that you make at installation.</p>
+</li>
+<li>
+<p>Each provider hop has a TLS mode: <code>issuer</code>, <code>existingSecret</code>, or
+<code>insecure</code>. The mode says where the certificates for that hop come from.
+With <code>issuer</code>, cert-manager writes them into the pod. With
+<code>existingSecret</code>, the controller reads a Secret that already exists, in
+its own namespace or in the namespace of the provider. The
+<a href="../reference/compatibility.html#_provider-tls" class="xref page">Provider TLS</a> table lists
+the default mode and the Secret of each provider.</p>
+</li>
+<li>
+<p>The controller is the only writer of proposals, policies, policy status,
+and native policy objects. No component writes a Pod.</p>
+</li>
+<li>
+<p>The two Validating Admission Policies fail closed. A promote label with a
+wrong value, or a change to the owner of a proposal, is rejected.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_network_enforcer_scales"><a class="anchor" href="#_how_network_enforcer_scales"></a>How SUSE Security Network Enforcer scales</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One controller replica is active. It reads one flow stream and handles all
+the workloads of the cluster. The rate of flows that the data plane produces
+is the main load. On Istio, the fluent-bit DaemonSet spreads the log reading
+across the nodes, and the controller receives one merged stream.</p>
+</div>
+<div class="paragraph">
+<p>The status of each policy is capped at 100 records, so a loud workload does
+not grow the API object without bound. The collector keeps the full history.</p>
+</div>
+<div class="paragraph">
+<p>The controller adds no cost to the data path. In protect mode, the data plane
+enforces the native object on its own. If the controller stops, the policies
+that it rendered stay in place.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="phases.html">Phases: learn, monitor, protect</a></span>
+  <span class="next"><a href="../howtos/uninstall.html">Uninstall</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

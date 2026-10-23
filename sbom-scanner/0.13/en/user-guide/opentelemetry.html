@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenTelemetry | Vulnerability Scanner  0.13</title>
+    <link rel="prev" href="mcp-server.html">
+    <link rel="next" href="../explanations/architecture.html">
+    <meta name="description" content="Export traces and metrics from SUSE Security Vulnerability Scanner with OpenTelemetry.">
+    <meta name="keywords" content="["SUSE Security Vulnerability Scanner", "kubewarden", "kubernetes", "opentelemetry", "otlp", "traces", "metrics", "observability"]">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-08-19"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/sbom-scanner/0.13/en/user-guide/opentelemetry.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/sbom-scanner/0.13/en/user-guide/opentelemetry.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "OpenTelemetry |  0.13",
+  "headline": "OpenTelemetry",
+  "description": "Export traces and metrics from SUSE Security Vulnerability Scanner with OpenTelemetry.",
+  "inLanguage": "en",
+  "dateModified": "2026-08-19T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.13",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="sbom-scanner" data-version="0.13">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Vulnerability Scanner</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/verifying-sbom-scanner.html">Verifying Vulnerability Scanner</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">User guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scanning-registries.html">Scanning Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scanning-workloads.html">Scanning Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="scanning-nodes.html">Scanning Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="querying-reports.html">Querying Reports</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="airgap-support.html">Airgap Support</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="private-registries.html">Private Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="vex.html">VEX Support</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="mcp-server.html">MCP Server</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="opentelemetry.html">OpenTelemetry</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Using the UI extension</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/dashboard.html">Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-list.html">Registry List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-create-edit.html">Creating and Editing a Registry</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-detail.html">Registry Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-configuration.html">Workload Scan Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-registries.html">Workload Scan Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-list.html">Image List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-detail.html">Image Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/cve-detail.html">CVE Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-interaction.html">Workload Interaction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/vex-management.html">VEX Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installation/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installation/helm-values.html">Helm Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../troubleshooting/collecting-logs.html">Collecting Logs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../troubleshooting/common-problems.html">Common Problems</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/crd-reference.html">CRD Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/opentelemetry-reference.html">OpenTelemetry Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Vulnerability Scanner</span>
+    <span class="version">0.13</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-current is-latest">
+              <a href="../introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Tutorials
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.13</button>
+  <div class="version-menu">
+    <a class="version" href="../../../0.14/en/howtos/opentelemetry.html">0.14-dev</a>
+    <a class="version is-current" href="opentelemetry.html">0.13</a>
+    <a class="version is-missing" href="../../../0.12/en/introduction.html">0.12</a>
+    <a class="version is-missing" href="../../../0.11/en/introduction.html">0.11</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/sbom-scanner/version-0.13/modules/en/pages/user-guide/opentelemetry.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:sbom-scanner" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+<h1 class="page">OpenTelemetry</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>SUSE Security Vulnerability Scanner exports traces and metrics with <a href="https://opentelemetry.io/">OpenTelemetry</a>, over OTLP/gRPC.
+Telemetry export is off by default.
+When you enable it, one scan produces one trace across all the components.
+The trace starts at the admission webhook and ends at the SQL statements of the storage component.
+The metrics include scan counts, stage durations, and the resource usage of each replica.</p>
+</div>
+<div class="paragraph">
+<p>The full list of spans and metrics is in the <a href="../reference/opentelemetry-reference.html" class="xref page">OpenTelemetry Reference</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The controller also serves its metrics on the standard controller-runtime Prometheus endpoint.
+Telemetry export does not change this endpoint.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>An OTLP/gRPC endpoint that receives the telemetry.
+This is usually an <a href="https://opentelemetry.io/docs/collector/">OpenTelemetry Collector</a> in the cluster.
+An OTLP-compatible backend also works.</p>
+</li>
+<li>
+<p>A TLS server certificate for the endpoint, and a client certificate for SUSE Security Vulnerability Scanner.
+You can create the certificates with <a href="https://cert-manager.io/">cert-manager</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enable_telemetry_export"><a class="anchor" href="#_enable_telemetry_export"></a>Enable telemetry export</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Set the <code>otel.endpoint</code> value to the URL of your OTLP endpoint:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade sbomscanner ./chart \
+  --set otel.endpoint=https://otel-collector.telemetry.svc.cluster.local:4317</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The URL scheme controls the connection security.
+An <code>https://</code> URL makes the components connect with TLS.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not use an <code>http://</code> URL in production.
+An <code>http://</code> URL sends the telemetry as plaintext on the network.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configure_mtls"><a class="anchor" href="#_configure_mtls"></a>Configure mTLS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two values configure the TLS certificates.
+Both secrets must exist in the namespace where SUSE Security Vulnerability Scanner is installed.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>otel.caSecretName</code> names a secret that contains a <code>ca.crt</code> key.
+The components use this CA certificate to verify the server certificate of the endpoint.</p>
+</li>
+<li>
+<p><code>otel.clientCertificateSecretName</code> names a secret that contains <code>tls.crt</code> and <code>tls.key</code> keys.
+The components use this certificate to authenticate to the endpoint (mTLS).</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_create_the_certificates_with_cert_manager"><a class="anchor" href="#_create_the_certificates_with_cert_manager"></a>Create the certificates with cert-manager</h3>
+<div class="paragraph">
+<p>This example creates a client certificate from an existing cert-manager issuer.
+The certificate secret also contains the <code>ca.crt</code> key of the issuer.
+For this reason, one secret can serve both values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sbomscanner-otel-client
+  namespace: sbomscanner
+spec:
+  secretName: sbomscanner-otel-client
+  commonName: sbomscanner
+  usages:
+    - client auth
+  issuerRef:
+    kind: ClusterIssuer
+    name: my-ca-issuer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The OTLP endpoint must present a server certificate from the same issuer.
+It must also require client certificates from this issuer.
+For an OpenTelemetry Collector, set <code>cert_file</code>, <code>key_file</code>, and <code>client_ca_file</code> on the OTLP receiver.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_with_mtls"><a class="anchor" href="#_install_with_mtls"></a>Install with mTLS</h3>
+<div class="paragraph">
+<p>Set all three values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade sbomscanner ./chart \
+  --set otel.endpoint=https://otel-collector.telemetry.svc.cluster.local:4317 \
+  --set otel.caSecretName=sbomscanner-otel-client \
+  --set otel.clientCertificateSecretName=sbomscanner-otel-client</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The chart mounts the secrets into the components.
+Then the components connect to the endpoint with TLS and a client certificate.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_histograms"><a class="anchor" href="#_histograms"></a>Histograms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The components export histograms as <a href="https://opentelemetry.io/docs/specs/otel/metrics/sdk/#base2-exponential-bucket-histogram-aggregation">exponential histograms</a>.
+Exponential histograms adapt their bucket resolution to the recorded values.
+Prometheus stores them as native histograms.</p>
+</div>
+<div class="paragraph">
+<p>Some backends do not support exponential histograms.
+If your backend does not support them, convert the histograms in the collector.
+The <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/transformprocessor">transform processor</a> converts them to explicit histograms:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">processors:
+  transform:
+    metric_statements:
+      - context: metric
+        statements:
+          - convert_exponential_histogram_to_histogram("midpoint", [0.05, 0.1, 0.5, 1, 5, 30, 120])</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_dashboard"><a class="anchor" href="#_example_dashboard"></a>Example dashboard</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The SUSE Security Vulnerability Scanner repository contains an example Grafana dashboard at <a href="https://github.com/kubewarden/sbomscanner/blob/main/examples/dashboards/sbomscanner.json">examples/dashboards/sbomscanner.json</a>.
+The dashboard shows the scan counters, the stage durations, the storage metrics, and the resource usage of each replica.
+The latency panels show exemplars.
+An exemplar connects one point on a latency panel to the trace that produced it.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="mcp-server.html">MCP Server</a></span>
+  <span class="next"><a href="../explanations/architecture.html">Architecture</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

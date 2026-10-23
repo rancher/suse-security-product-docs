@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade path | Vulnerability Scanner  0.14-dev</title>
+    <link rel="prev" href="compatibility.html">
+    <link rel="next" href="crd-reference.html">
+    <meta name="description" content="Upgrade SUSE Security Vulnerability Scanner with the supported version steps, one minor version at a time, and keep the database and its operator in mind.">
+    <meta name="keywords" content="["SUSE Security Vulnerability Scanner", kubewarden, "upgrade path", support, versioning]">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-13"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/sbom-scanner/0.14/en/reference/upgrade-path.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/sbom-scanner/0.14/en/reference/upgrade-path.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Upgrade path |  0.14",
+  "headline": "Upgrade path",
+  "description": "Upgrade SUSE Security Vulnerability Scanner with the supported version steps, one minor version at a time, and keep the database and its operator in mind.",
+  "inLanguage": "en",
+  "dateModified": "2026-10-13T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.14",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="sbom-scanner" data-version="0.14">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Vulnerability Scanner</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/verifying-sbom-scanner.html">Verifying Vulnerability Scanner</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/scanning-registries.html">Scanning Registries</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/scanning-workloads.html">Scanning Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/scanning-nodes.html">Scanning Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/querying-reports.html">Querying Reports</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Using the UI extension</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/dashboard.html">Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-list.html">Registry List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-create-edit.html">Creating and Editing a Registry</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-detail.html">Registry Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-configuration.html">Workload Scan Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-registries.html">Workload Scan Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-list.html">Image List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-detail.html">Image Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/cve-detail.html">CVE Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-interaction.html">Workload Interaction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/vex-management.html">VEX Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/helm-values.html">Helm Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/private-registries.html">Private Registries</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/airgap-support.html">Airgap Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/vex.html">VEX Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/opentelemetry.html">OpenTelemetry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/mcp-server.html">MCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/collecting-logs.html">Collecting Logs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/common-problems.html">Common Problems</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="crd-reference.html">CRD Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="opentelemetry-reference.html">OpenTelemetry Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Vulnerability Scanner</span>
+    <span class="version">0.14-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../../0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="../introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Reference
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.14-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="upgrade-path.html">0.14-dev</a>
+    <a class="version is-missing" href="../../../0.13/en/introduction.html">0.13</a>
+    <a class="version is-missing" href="../../../0.12/en/introduction.html">0.12</a>
+    <a class="version is-missing" href="../../../0.11/en/introduction.html">0.11</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/sbom-scanner/version-0.14/modules/en/pages/reference/upgrade-path.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:sbom-scanner" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Vulnerability Scanner 0.14-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">Upgrade path</h1>
+<div class="sect1">
+<h2 id="_versioning"><a class="anchor" href="#_versioning"></a>Versioning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vulnerability Scanner uses <a href="https://semver.org/">semantic versioning</a>. A
+version follows the <code>MAJOR.MINOR.PATCH</code> pattern. The supported version is
+the latest release.</p>
+</div>
+<div class="paragraph">
+<p>One deliverable follows this version: the <code>sbomscanner</code> Helm chart, in its
+<code>appVersion</code> field. The controller, the storage API server, the worker,
+and the MCP server images carry this version as their tag. All four images
+run the same version.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helm_chart_versions"><a class="anchor" href="#_helm_chart_versions"></a>Helm chart versions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A Helm chart has two version fields. The <code>appVersion</code> field holds the
+Vulnerability Scanner version described above. The <code>version</code> field is the
+version of the chart itself. It also follows semantic versioning, and it
+describes changes to the chart templates and to <code>values.yaml</code>.</p>
+</div>
+<div class="paragraph">
+<p>For Vulnerability Scanner, the two fields move together.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_components_outside_the_version"><a class="anchor" href="#_components_outside_the_version"></a>Components outside the version</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two components run with Vulnerability Scanner and follow their own versions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>NATS. The chart ships it as a subchart. A chart upgrade can move the
+NATS version, and the chart <code>version</code> field records such a change.</p>
+</li>
+<li>
+<p>The CloudNativePG operator and the PostgreSQL image. You install and
+upgrade the operator yourself. The chart creates only the <code>Cluster</code>
+resource that the operator reconciles. Read the release notes of the
+operator before you upgrade it, because it owns the database that holds
+every scan result.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upgrade_paths"><a class="anchor" href="#_upgrade_paths"></a>Upgrade paths</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can upgrade across several <code>PATCH</code> versions in one operation. You
+cannot upgrade across more than one <code>MINOR</code> or <code>MAJOR</code> version in one
+operation.</p>
+</div>
+<div class="paragraph">
+<p>For example, you can upgrade from <code>0.13.0</code> to <code>0.13.2</code> in one step. You
+cannot upgrade from <code>0.12.0</code> to <code>0.14.0</code> in one step. Upgrade from
+<code>0.12.0</code> to <code>0.13.x</code> first, then from <code>0.13.x</code> to <code>0.14.0</code>. To move
+across a <code>MAJOR</code> version, apply every <code>MINOR</code> version between the two.</p>
+</div>
+<div class="imageblock"><div class="mermaid content" style=" ">flowchart LR;
+  accTitle: Upgrade path support graph
+  accDescr: A diagram showing supported and unsupported upgrade paths for SBOM Scanner.
+  0.12.0(0.12.0)-->0.12.1(0.12.1);
+  0.12.1-->0.13.0(0.13.0);
+  0.13.0-->0.13.1(0.13.1);
+  0.12.0-->0.13.0;
+  0.13.1-->0.14.0(0.14.0);
+  0.13.0-->|Not recommended|0.14.0;
+  0.12.1-->|Not supported|0.14.0;
+  linkStyle 5 color:brown,stroke-width:2px,stroke-dasharray: 3 5
+  linkStyle 6 color:red,stroke-width:2px,stroke-dasharray: 3 5</div><div class="title">Figure 1. Example upgrade path support graph</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upgrade_order"><a class="anchor" href="#_upgrade_order"></a>Upgrade order</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Upgrade the <code>sbomscanner</code> Helm chart. There is no other
+Vulnerability Scanner component to upgrade. The chart upgrades the
+controller, the storage API server, the worker, the node scan worker, and
+the MCP server together.</p>
+</div>
+<div class="paragraph">
+<p>The storage API server runs the database migrations at startup, in its
+init container. Each storage replica runs them, and they are safe to run
+more than once. A new version that changes the database schema applies
+the change during this step. Back up the database before you upgrade a
+<code>MINOR</code> version. See
+<a href="../howtos/production-deployments.html#_postgresql_backups" class="xref page">Back up
+the database</a>.</p>
+</div>
+<div class="paragraph">
+<p>The scan messages that a worker has not yet processed stay in NATS during
+the upgrade. A new worker picks them up when it starts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_downgrades"><a class="anchor" href="#_downgrades"></a>Downgrades</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vulnerability Scanner does not support downgrades, and the project does not
+test them. A downgrade across a schema migration can leave the database
+in a state that the older storage API server does not read.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scan_results"><a class="anchor" href="#_scan_results"></a>Scan results</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../glossary.html#_registry" class="xref page"><code>Registry</code></a>, the <a href="../glossary.html#_scanjob" class="xref page"><code>ScanJob</code></a>, and the other configuration
+resources stay in etcd across upgrades. You do not rewrite or re-apply
+them. The scan results stay in PostgreSQL. A new version does not rescan
+on its own. The next scheduled scan produces results in the new version.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="compatibility.html">Compatibility</a></span>
+  <span class="next"><a href="crd-reference.html">CRD Reference</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

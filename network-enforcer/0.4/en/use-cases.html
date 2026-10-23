@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SUSE Security Network Enforcer use cases | Network Enforcer  0.4-dev</title>
+    <link rel="prev" href="personas.html">
+    <link rel="next" href="organization.html">
+    <meta name="description" content="Example use cases for SUSE Security Network Enforcer. Learn network policies from traffic, review them, monitor them, and enforce them on Istio ambient, Calico, or Cilium.">
+    <meta name="keywords" content="SUSE Security Network Enforcer, documentation, use cases">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-09-30"/>
+<link rel="stylesheet" href="../../../_/css/search.css">
+<link rel="icon" href="../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/network-enforcer/0.4/en/use-cases.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/network-enforcer/0.4/en/use-cases.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "SUSE Security Network Enforcer use cases |  0.4",
+  "headline": "SUSE Security Network Enforcer use cases",
+  "description": "Example use cases for SUSE Security Network Enforcer. Learn network policies from traffic, review them, monitor them, and enforce them on Istio ambient, Calico, or Cilium.",
+  "inLanguage": "en",
+  "dateModified": "2026-09-30T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.4",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="network-enforcer" data-version="0.4">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Network Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/verifying-network-enforcer.html">Verifying Network Enforcer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="explanations/phases.html">Phases: learn, monitor, protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/emergency-disable.html">Emergency disable</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/setup-development-env.html">Development environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/known_limitations.html">Known limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/crd.html">CRD API reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="personas.html">For who?</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Network Enforcer</span>
+    <span class="version">0.4-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          <a href="use-cases.html" title="Use cases" aria-label="Use cases">Use cases</a>
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.4-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="use-cases.html">0.4-dev</a>
+    <a class="version" href="../../0.3/en/use-cases.html">0.3</a>
+    <a class="version is-missing" href="../../0.2/en/introduction.html">0.2</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/network-enforcer/version-0.4/modules/en/pages/use-cases.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:network-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Network Enforcer 0.4-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">SUSE Security Network Enforcer use cases</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>These are example use cases for SUSE Security Network Enforcer. Each case names a
+<a href="personas.html" class="xref page">persona</a> and a goal. Then it explains how Network Enforcer
+meets that goal.</p>
+</div>
+<div class="paragraph">
+<p>Network Enforcer works in three phases: <a href="glossary.html#_learn-phase" class="xref page">learn</a>, <a href="glossary.html#_monitor" class="xref page">monitor</a>,
+and <a href="glossary.html#_protect" class="xref page">protect</a>. The use cases that follow move through these phases. See
+<a href="explanations/phases.html" class="xref page">SUSE Security Network Enforcer phases</a> for a full description of each phase.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_a_as_a_platform_engineer_i_want_a_starting_point_for_network_policies_without_writing_rules_by_hand"><a class="anchor" href="#_case_a_as_a_platform_engineer_i_want_a_starting_point_for_network_policies_without_writing_rules_by_hand"></a>Case A: As a platform engineer, I want a starting point for network policies without writing rules by hand.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>My cluster has workloads but no network policies. I know that I must add
+policies. I do not know which workloads talk to each other. That information
+is in the <a href="glossary.html#_flow" class="xref page">flow</a> records of the <a href="glossary.html#_data-plane" class="xref page">data plane</a>, not in a Kubernetes
+API object.</p>
+</div>
+<div class="paragraph">
+<p>I install Network Enforcer once, for the whole cluster. I point it at the
+<a href="glossary.html#_flow-source" class="xref page">flow source</a> of my data plane. Learning starts at once and needs no
+configuration per workload.</p>
+</div>
+<div class="paragraph">
+<p>For each Deployment, StatefulSet, and DaemonSet that carries traffic,
+Network Enforcer creates a <a href="glossary.html#_workloadnetworkpolicyproposal" class="xref page"><code>WorkloadNetworkPolicyProposal</code></a>. One proposal
+covers one workload and one <a href="glossary.html#_direction" class="xref page">direction</a>. The proposal contains the
+<a href="glossary.html#_peer" class="xref page">peer</a>s, protocols, and ports that Network Enforcer observed. This list
+is the <a href="glossary.html#_allow-list" class="xref page">allow-list</a>. Learning continues until I <a href="glossary.html#_promotion" class="xref page">promote</a> the
+proposal.</p>
+</div>
+<div class="paragraph">
+<p>Learning starts when the <a href="glossary.html#_controller" class="xref page">controller</a> starts. Traffic from before that
+moment is not in the proposals. If a workload is quiet, I exercise it or
+restart it so that its flows are observed.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="explanations/phases.html#_learn-phase" class="xref page">Learn phase</a> and
+<a href="reference/known_limitations.html#_learning-starts-when-the-controller-starts" class="xref page">Learning starts when the controller starts</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_b_as_a_namespace_owner_i_want_to_review_what_my_workload_talks_to_and_approve_it_myself"><a class="anchor" href="#_case_b_as_a_namespace_owner_i_want_to_review_what_my_workload_talks_to_and_approve_it_myself"></a>Case B: As a namespace owner, I want to review what my workload talks to, and approve it myself.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I know what my application does. I do not always know which other workloads
+connect to it. The proposal for my workload lives in my namespace. It is owned
+by my Deployment, StatefulSet, or DaemonSet. I read it with my normal
+Kubernetes permissions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">$ kubectl get wnpp -n my-namespace</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I review the peers and ports in the proposal. If the list is correct, I set
+the label <a href="glossary.html#_promote-label" class="xref page"><code>networkenforcer.kubewarden.io/promote</code></a> to <code>monitor</code> on the proposal.
+Network Enforcer creates a <a href="glossary.html#_workloadnetworkpolicy" class="xref page"><code>WorkloadNetworkPolicy</code></a> and removes the
+proposal. Nothing is enforced yet.</p>
+</div>
+<div class="paragraph">
+<p>If I delete the <code>WorkloadNetworkPolicy</code>, Network Enforcer learns a new
+proposal for the workload. If I delete the workload, Kubernetes removes its
+proposals with it.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="explanations/phases.html#_transitions" class="xref page">Transitions</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_c_as_an_sre_i_want_to_see_what_a_policy_blocks_before_it_blocks_anything"><a class="anchor" href="#_case_c_as_an_sre_i_want_to_see_what_a_policy_blocks_before_it_blocks_anything"></a>Case C: As an SRE, I want to see what a policy blocks before it blocks anything.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I do not want to break production with a wrong rule. I promote the proposal
+to <code>monitor</code> mode first. In this mode, Network Enforcer compares new flows
+with the policy. It records each flow that the policy does not allow as a
+<a href="glossary.html#_violation" class="xref page">violation</a>. The data plane does not drop the flow.</p>
+</div>
+<div class="paragraph">
+<p>I watch the <code>Active Violations</code> column of the <code>WorkloadNetworkPolicy</code>. I
+examine each violation. If the traffic is expected, I add a rule to the
+policy, so that the next flow is allowed. I then <a href="glossary.html#_acknowledged-violation" class="xref page">acknowledge</a> the
+existing violation. If the traffic is noise that I understand, I acknowledge
+the violation with the annotation <a href="glossary.html#_acknowledged-violation" class="xref page"><code>networkenforcer.kubewarden.io/acknowledge-&lt;id&gt;</code></a> and a reason.</p>
+</div>
+<div class="paragraph">
+<p>When the policy has no <a href="glossary.html#_active-violation" class="xref page">active violation</a>s for a period that I trust, I
+set <code>spec.mode</code> to <code>protect</code>. Network Enforcer creates the
+<a href="glossary.html#_native-policy-object" class="xref page">native policy object</a> on the data plane. If a problem occurs, I set
+<code>spec.mode</code> back to <code>monitor</code>. Network Enforcer removes the native policy
+object.</p>
+</div>
+<div class="paragraph">
+<p>On Calico and Cilium, monitor mode does not create an object in the data
+plane. The controller only sees the flows that the <a href="glossary.html#_scraper" class="xref page">scraper</a> receives. A
+flow that the scraper does not see is not reported.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="explanations/phases.html#_monitor-phase" class="xref page">Monitor phase</a>,
+<a href="explanations/phases.html#_protect-phase" class="xref page">Protect phase</a>, and
+<a href="quickstart.html#_acknowledge-a-violation" class="xref page">Acknowledge a violation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_d_as_a_security_engineer_i_want_to_know_when_a_workload_talks_to_a_peer_that_it_did_not_talk_to_before"><a class="anchor" href="#_case_d_as_a_security_engineer_i_want_to_know_when_a_workload_talks_to_a_peer_that_it_did_not_talk_to_before"></a>Case D: As a security engineer, I want to know when a workload talks to a peer that it did not talk to before.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An approved policy describes the expected traffic of a workload. A violation
+of that policy is a signal. In <code>monitor</code> mode the signal does not block. In
+<code>protect</code> mode the signal shows a blocked connection. In both modes I want a
+record.</p>
+</div>
+<div class="paragraph">
+<p>Network Enforcer writes the violations to the status of the
+<code>WorkloadNetworkPolicy</code>. The status keeps the 100 most recent
+<a href="glossary.html#_violation-record" class="xref page">violation record</a>s. For a longer history, I use OpenTelemetry.
+Network Enforcer emits a <code>policy_violation_observed</code> log event for each
+violation. Each event has a fixed set of attributes: the source workload, the
+destination workload, the protocol, the port, the mode, and the policy.</p>
+</div>
+<div class="paragraph">
+<p>I send the events to the <a href="glossary.html#_opentelemetry-collector" class="xref page">OpenTelemetry collector</a> that Network Enforcer
+installs, or to my own collector. From there they go to my dashboards or my
+SIEM. The attribute names do not change between providers. One query covers
+Istio, Calico, and Cilium clusters.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="explanations/architecture.html#_opentelemetry-collector" class="xref page">OpenTelemetry collector</a>,
+<a href="explanations/phases.html#_otlp-events" class="xref page">Where OTLP events go</a>, and
+<a href="reference/known_limitations.html#_violation-status-is-capped-at-100-records" class="xref page">Violation status is capped at 100 records</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_e_as_a_platform_team_i_want_policies_that_fit_the_data_plane_that_i_already_run"><a class="anchor" href="#_case_e_as_a_platform_team_i_want_policies_that_fit_the_data_plane_that_i_already_run"></a>Case E: As a platform team, I want policies that fit the data plane that I already run.</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I do not want to change my <a href="glossary.html#_cni" class="xref page">CNI</a> or install a new mesh to get network
+policies. Network Enforcer reads flows from the data plane that is already
+there. It writes policies in the native format of that data plane. I select
+the <a href="glossary.html#_provider" class="xref page">provider</a> once, at installation time.</p>
+</div>
+<div class="paragraph">
+<p><strong>Istio ambient.</strong> Network Enforcer reads the access logs of <a href="glossary.html#_ztunnel" class="xref page"><code>ztunnel</code></a>. It
+learns the ingress traffic of each workload. The policy identifies each peer
+by its SPIFFE <a href="glossary.html#_principal" class="xref page">principal</a>, which comes from the ServiceAccount of the
+workload. In <code>protect</code> mode, Network Enforcer creates an Istio
+<a href="glossary.html#_authorizationpolicy" class="xref page"><code>AuthorizationPolicy</code></a>. Workloads that share the <code>default</code> ServiceAccount
+also share one identity. The policy for them is wider than I want. A policy
+in the <a href="../../../admission-controller/1.38/en/introduction.html" class="xref page">SUSE Security Admission Controller</a> can
+require a dedicated ServiceAccount for each workload.</p>
+</div>
+<div class="paragraph">
+<p><strong>Calico and Cilium.</strong> Network Enforcer reads flows from <a href="glossary.html#_goldmane" class="xref page">Goldmane</a> or
+<a href="glossary.html#_hubble-relay" class="xref page">Hubble Relay</a>. It learns both ingress and egress traffic, for TCP and
+UDP. In <code>protect</code> mode, it creates a standard Kubernetes
+<a href="glossary.html#_networkpolicy" class="xref page"><code>NetworkPolicy</code></a>. The CNI enforces it. I can read the policy with the
+tools that I already use.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="glossary.html#_backend" class="xref page">backend</a> field, <code>spec.backend</code>, of a policy cannot change. If I
+move a cluster to a different provider, Network Enforcer learns new
+proposals.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="reference/compatibility.html#_provider-matrix" class="xref page">Provider matrix</a>,
+<a href="reference/compatibility.html#_capability-matrix" class="xref page">Capability matrix</a>,
+<a href="explanations/phases.html#_backend-selection" class="xref page">Backend selection</a>, and
+<a href="reference/known_limitations.html#_istio-learns-and-enforces-ingress-only" class="xref page">Istio learns and enforces ingress only</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_non_goals"><a class="anchor" href="#_non_goals"></a>Non-goals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Network Enforcer does not intend to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Observe traffic on its own. It reads the flows that the data plane already
+produces. It does not install a node agent or an eBPF probe.</p>
+</li>
+<li>
+<p>Replace the CNI or the service mesh. It needs one of them in place.</p>
+</li>
+<li>
+<p>Detect attacks or tell good traffic from bad traffic. If an attacker is
+active when learning starts, the flows of the attacker become rules. Review
+each proposal before you promote it.</p>
+</li>
+<li>
+<p>Set a default-deny posture for the cluster. Each policy covers one
+workload. The cluster posture is a separate decision.</p>
+</li>
+<li>
+<p>Provide a policy editor UI. The custom resources are the contract.</p>
+</li>
+<li>
+<p>Correlate flows across clusters. One controller serves one cluster.</p>
+</li>
+<li>
+<p>Keep a long-term flow archive. The status holds recent violations. Use
+OpenTelemetry export for history.</p>
+</li>
+<li>
+<p>Control processes or file access in a container. This is the role of the
+SUSE Security Runtime Enforcer.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="personas.html">For who?</a></span>
+  <span class="next"><a href="organization.html">Organization</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+<script src="../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

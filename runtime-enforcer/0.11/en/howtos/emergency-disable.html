@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emergency disable | Runtime Enforcer  0.11-dev</title>
+    <link rel="prev" href="production-deployments.html">
+    <link rel="next" href="learning_mode_configuration.html">
+    <meta name="description" content="Stop SUSE Security Runtime Enforcer from blocking a process during an incident, and keep track of which policies to restore afterward.">
+    <meta name="keywords" content="["SUSE Security Runtime Enforcer", kubewarden, emergency, incident, "monitor mode", disable]">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-14"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="https://documentation.suse.com/cloudnative/runtime-enforcer/0.11/en/howtos/emergency-disable.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="https://documentation.suse.com/cloudnative/runtime-enforcer/0.11/en/howtos/emergency-disable.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Emergency disable | SUSE Security Runtime Enforcer 0.11",
+  "headline": "Emergency disable",
+  "description": "Stop SUSE Security Runtime Enforcer from blocking a process during an incident, and keep track of which policies to restore afterward.",
+  "inLanguage": "en",
+  "dateModified": "2026-10-14T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "SUSE Security Runtime Enforcer",
+      "softwareVersion": "0.11",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="runtime-enforcer" data-version="0.11">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Runtime Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/verifying-runtime-enforcer.html">Verifying Runtime Enforcer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/phases.html">Phases: learn, monitor, protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="emergency-disable.html">Emergency disable</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="learning_mode_configuration.html">Learning mode configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="kubectl_plugin.html">kubectl plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="build.html">Build requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="setup-development-env.html">Development environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/known_limitations.html">Known limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/crd.html">CRD API reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/kubectl-plugin-cli.html">kubectl plugin CLI reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/resource-consumption.html">Resource consumption</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Runtime Enforcer</span>
+    <span class="version">0.11-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../../0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="../introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="https://documentation.suse.com" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="https://documentation.suse.com/cloudnative/runtime-enforcer" title="SUSE Security Runtime Enforcer" aria-label="SUSE Documentation - SUSE Security Runtime Enforcer">
+        SUSE Security Runtime Enforcer
+      </a>
+    </li>
+      <li>
+          Howtos
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.11-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="emergency-disable.html">0.11-dev</a>
+    <a class="version is-missing" href="../../../0.10/en/introduction.html">0.10</a>
+    <a class="version is-missing" href="../../../0.9/en/introduction.html">0.9</a>
+    <a class="version is-missing" href="../../../0.8/en/introduction.html">0.8</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/runtime-enforcer/version-0.11/modules/en/pages/howtos/emergency-disable.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:runtime-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Runtime Enforcer 0.11-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">Emergency disable</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>During an incident, a Runtime Enforcer policy can block a process that
+your team needs to run. This page gives two ways to stop the blocking,
+and how to restore protection afterward without losing track of what
+changed.</p>
+</div>
+<div class="paragraph">
+<p>The commands on this page use <code>jq</code> to filter JSON output. Install it
+from <a href="https://jqlang.org/" class="bare">https://jqlang.org/</a> if you do not already have it.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not scale the <a href="../glossary.html#_controller" class="xref page">controller</a> to zero to stop a policy from
+blocking. The controller takes no part in enforcement, so this does not
+work, and it stops other things that you need during an incident. See
+<a href="#_do_not_scale_the_controller_to_zero">Do not scale the controller
+to zero</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_enforcement_depends_on"><a class="anchor" href="#_what_enforcement_depends_on"></a>What enforcement depends on</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Runtime Enforcer enforces a policy in two places. Each agent loads the
+policy into the kernel, on its own node. The <code>spec.mode</code> field of the
+policy, <code>monitor</code> or <code>protect</code>, decides whether the kernel blocks a
+violation. The controller takes no part in enforcement. A controller
+that is down does not change what the kernel blocks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_stop_blocking"><a class="anchor" href="#_stop_blocking"></a>Stop blocking</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Runtime Enforcer gives you two ways to stop a policy from blocking.
+Both are reversible, and both leave every <code>WorkloadPolicy</code> in place.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Way</th>
+<th class="tableblock halign-left valign-top">Use it when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_remove_the_agent_from_every_node">Remove the agent from every
+node</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You want enforcement and monitoring to stop at once, on every node,
+with one command.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_switch_protect_policies_to_monitor_mode">Switch protect policies
+to monitor mode</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A pod in your cluster carries the
+<a href="troubleshooting.html#_required-plugins" class="xref page">required-plugins
+annotation</a>. Such a pod cannot start without the agent, so keep the
+agent running and change the policies instead.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_remove_the_agent_from_every_node"><a class="anchor" href="#_remove_the_agent_from_every_node"></a>Remove the agent from every node</h3>
+<div class="paragraph">
+<p>Patch the agent DaemonSet with a <code>nodeSelector</code> that matches no node in
+your cluster. Replace <code>runtime-enforcer</code> and its namespace with your
+release name, if you installed under another name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl patch daemonset runtime-enforcer-agent \
+  -n runtime-enforcer \
+  --type merge \
+  -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubewarden.io/emergency-disable":"true"}}}}}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The DaemonSet controller removes every agent pod at once, because no
+node carries that label. The eBPF program is not pinned to the kernel,
+so it is removed with the agent process. Enforcement and monitoring
+both stop, on every node, at once.</p>
+</div>
+<div class="paragraph">
+<p>While the agent is gone:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Runtime Enforcer learns nothing, so a <a href="../glossary.html#_workloadpolicyproposal" class="xref page"><code>WorkloadPolicyProposal</code></a>
+does not grow.</p>
+</li>
+<li>
+<p>A pod that starts runs without a policy, because the runtime does
+not call an agent that is not connected.</p>
+</li>
+<li>
+<p>A pod whose spec carries the
+<a href="troubleshooting.html#_required-plugins" class="xref page">required-plugins
+annotation</a> cannot start at all. If that applies to any workload in
+your cluster, use
+<a href="#_switch_protect_policies_to_monitor_mode">Switch protect
+policies to monitor mode</a> instead.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_restore_the_agent"><a class="anchor" href="#_restore_the_agent"></a>Restore the agent</h4>
+<div class="paragraph">
+<p>To restore, remove the key that you added:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl patch daemonset runtime-enforcer-agent \
+  -n runtime-enforcer \
+  --type merge \
+  -p '{"spec":{"template":{"spec":{"nodeSelector": null}}}}'</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This command clears the whole <code>nodeSelector</code> field. If
+<code>agent.nodeSelector</code> already held a value before the incident, patch in
+that value instead of <code>null</code>, so that you do not lose it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The new agent pod on each node
+<a href="../explanations/architecture.html#_an_agent_upgrade" class="xref page">binds every
+running pod again</a> before it reports ready. Protection resumes node by
+node, as each agent passes its startup probe.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switch_protect_policies_to_monitor_mode"><a class="anchor" href="#_switch_protect_policies_to_monitor_mode"></a>Switch protect policies to monitor mode</h3>
+<div class="paragraph">
+<p>Use this way when you keep the agent running. A policy in <code>monitor</code>
+mode reports a violation but does not block it. The agent applies the
+change <a href="../explanations/architecture.html#_a_mode_change" class="xref page">without
+restarting any pod</a>.</p>
+</div>
+<div class="paragraph">
+<p>Mark each policy that you switch, so that you switch back only those
+policies, and no others, once the incident is over.</p>
+</div>
+<div class="sect3">
+<h4 id="_mark_protect_policies"><a class="anchor" href="#_mark_protect_policies"></a>Mark the policies that are in protect mode</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>emergency.kubewarden.io/restore-mode</code> is a convention for this page.
+It is not a label that Runtime Enforcer reads, and the agent and the
+controller ignore it. Use any key that you want, as long as every step
+below uses the same one.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>List every policy whose <code>spec.mode</code> is <code>protect</code>, and add the label to
+each one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get workloadpolicy -A -o json \
+  | jq -r '.items[] | select(.spec.mode=="protect") | "\(.metadata.namespace) \(.metadata.name)"' \
+  | while read -r ns name; do
+      kubectl label workloadpolicy -n "$ns" "$name" emergency.kubewarden.io/restore-mode=protect
+    done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_switch_to_monitor"><a class="anchor" href="#_switch_to_monitor"></a>Switch the marked policies to monitor mode</h4>
+<div class="paragraph">
+<p>Patch every policy that carries the label:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get workloadpolicy -A -l emergency.kubewarden.io/restore-mode=protect -o json \
+  | jq -r '.items[] | "\(.metadata.namespace) \(.metadata.name)"' \
+  | while read -r ns name; do
+      kubectl patch workloadpolicy -n "$ns" "$name" --type merge -p '{"spec":{"mode":"monitor"}}'
+    done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command selects policies by the label, not by mode, so you can run
+it again without harm.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_confirm_monitor_mode"><a class="anchor" href="#_confirm_monitor_mode"></a>Make sure every policy is in monitor mode</h4>
+<div class="paragraph">
+<p>Check the mode of every policy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl runtime-enforcer policy show protection -A</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every policy that you marked now shows <code>Monitor</code>. A policy in <code>monitor</code>
+mode still reports a violation, so you keep a record of what ran during
+the incident.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_reduce_noise"><a class="anchor" href="#_reduce_noise"></a>Reduce the noise during the incident</h4>
+<div class="paragraph">
+<p>This section is optional. A policy in <code>monitor</code> mode still reports
+every violation, through two channels: the policy status, and
+OpenTelemetry, when telemetry is on.</p>
+</div>
+<div class="sect4">
+<h5 id="_policy_status"><a class="anchor" href="#_policy_status"></a>Policy status</h5>
+<div class="paragraph">
+<p>The controller reads the violation buffer of each agent on a timer.
+Raise <code>controller.wpStatusUpdateInterval</code> to read it less often:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  wpStatusUpdateInterval: 12h</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A longer interval stops the status from being a live view: it does not
+change until the next read. When the controller reads again, each
+policy shows at most its 100 most recent distinct violations. Each
+comes with an <code>occurrences</code> count, so nothing floods the status. Once
+you restore protection, set <code>controller.wpStatusUpdateInterval</code> back to
+its usual value. See
+<a href="production-deployments.html#_keep_the_status_sync_interval" class="xref page">Keep
+the status sync interval</a> for the default value.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_opentelemetry_events"><a class="anchor" href="#_opentelemetry_events"></a>OpenTelemetry events</h5>
+<div class="paragraph">
+<p>This interval does not change the OpenTelemetry events. The agent sends
+each one as it happens, regardless of the controller. Filter them at
+your collector instead. Match on the label that you added in
+<a href="#_mark_protect_policies">Mark the policies that are in protect
+mode</a>, or on the time window of the incident.</p>
+</div>
+<div class="paragraph">
+<p>Do not turn off telemetry with <code>telemetry.collectorStrategy=none</code>
+during the incident. That value change restarts every agent.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_restore_protection"><a class="anchor" href="#_restore_protection"></a>Restore protection</h4>
+<div class="paragraph">
+<p>Once the incident is over, switch the marked policies back to
+<code>protect</code>, make sure that the switch worked, then remove the label.</p>
+</div>
+<div class="paragraph">
+<p>Patch every policy that carries the label back to <code>protect</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get workloadpolicy -A -l emergency.kubewarden.io/restore-mode=protect -o json \
+  | jq -r '.items[] | "\(.metadata.namespace) \(.metadata.name)"' \
+  | while read -r ns name; do
+      kubectl patch workloadpolicy -n "$ns" "$name" --type merge -p '{"spec":{"mode":"protect"}}'
+    done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait for every policy to report <code>Ready</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl runtime-enforcer policy show protection -A</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A policy that still shows <code>Transitioning</code> has not reached every agent
+yet. See <a href="../explanations/architecture.html#_a_mode_change" class="xref page">A mode
+change</a> for what the two states mean.</p>
+</div>
+<div class="paragraph">
+<p>Once every policy is <code>Ready</code>, remove the label:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get workloadpolicy -A -l emergency.kubewarden.io/restore-mode=protect -o json \
+  | jq -r '.items[] | "\(.metadata.namespace) \(.metadata.name)"' \
+  | while read -r ns name; do
+      kubectl label workloadpolicy -n "$ns" "$name" emergency.kubewarden.io/restore-mode-
+    done</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Remove the label only after every policy is back to <code>protect</code> mode. If
+the restore step fails partway, the label still names the policies that
+you have not finished restoring.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_do_not"><a class="anchor" href="#_do_not"></a>Do not</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two actions look like they disable Runtime Enforcer, but do not.</p>
+</div>
+<div class="sect2">
+<h3 id="_do_not_scale_the_controller_to_zero"><a class="anchor" href="#_do_not_scale_the_controller_to_zero"></a>Do not scale the controller to zero</h3>
+<div class="paragraph">
+<p>The controller takes no part in enforcement. The agent reads
+<code>WorkloadPolicy</code> objects directly, so every policy keeps blocking while
+the controller is down.</p>
+</div>
+<div class="paragraph">
+<p>A controller that is down also blocks other work. Every admission
+webhook of Runtime Enforcer fails closed, so a policy deletion, a
+proposal, or a promotion waits until the controller returns.</p>
+</div>
+<div class="paragraph">
+<p>If you restart an agent while the controller is down, the restart does
+not finish. Learning is on by default, and each agent waits for the
+controller&#8217;s admission webhook before it starts. If an agent must
+restart during the incident, restore the controller first.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_do_not_delete_a_workloadpolicy"><a class="anchor" href="#_do_not_delete_a_workloadpolicy"></a>Do not delete a WorkloadPolicy</h3>
+<div class="paragraph">
+<p>A validating webhook rejects the deletion of a <code>WorkloadPolicy</code> while
+any pod in its namespace still carries the <a href="../glossary.html#_policy-label" class="xref page"><code>runtimeenforcer.kubewarden.io/policy</code></a>. There
+is no bypass for this check.</p>
+</div>
+<div class="paragraph">
+<p>Forcing the deletion, for example by removing the webhook configuration
+first, leaves pods with a label that names a policy that no longer
+exists. A pod like that does not start on its next restart, unless
+<code>agent.nriFailopen</code> is <code>true</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_see_also"><a class="anchor" href="#_see_also"></a>See also</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../explanations/architecture.html#_a_mode_change" class="xref page">A mode change</a>
+explains what <code>Transitioning</code> means and when a policy becomes
+<code>Ready</code>.</p>
+</li>
+<li>
+<p><a href="production-deployments.html" class="xref page">Configuring SUSE Security Runtime Enforcer for
+production</a> covers the controller replicas and the
+PodDisruptionBudget that keep the webhooks available during an
+incident.</p>
+</li>
+<li>
+<p><a href="../glossary.html#_fail-open" class="xref page">fail-open</a> defines what <code>agent.nriFailopen</code> changes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="production-deployments.html">Production deployments</a></span>
+  <span class="next"><a href="learning_mode_configuration.html">Learning mode configuration</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

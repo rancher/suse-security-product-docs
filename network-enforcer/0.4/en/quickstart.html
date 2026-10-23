@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SUSE Security Network Enforcer Quick Start | Network Enforcer  0.4-dev</title>
+    <link rel="prev" href="introduction.html">
+    <link rel="next" href="tutorials/verifying-network-enforcer.html">
+    <meta name="description" content="Follow the steps to prepare a cluster, deploy with Helm, and observe network policy proposals and enforcement">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-23"/>
+<link rel="stylesheet" href="../../../_/css/search.css">
+<link rel="icon" href="../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/network-enforcer/0.4/en/quickstart.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/network-enforcer/0.4/en/quickstart.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "SUSE Security Network Enforcer Quick Start |  0.4",
+  "headline": "SUSE Security Network Enforcer Quick Start",
+  "description": "Follow the steps to prepare a cluster, deploy with Helm, and observe network policy proposals and enforcement",
+  "inLanguage": "en",
+  "dateModified": "2026-10-23T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.4",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="network-enforcer" data-version="0.4">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Network Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/verifying-network-enforcer.html">Verifying Network Enforcer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="explanations/phases.html">Phases: learn, monitor, protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/emergency-disable.html">Emergency disable</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/setup-development-env.html">Development environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/known_limitations.html">Known limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/crd.html">CRD API reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Network Enforcer</span>
+    <span class="version">0.4-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          <a href="quickstart.html" title="Quick start" aria-label="Quick start">Quick start</a>
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.4-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="quickstart.html">0.4-dev</a>
+    <a class="version" href="../../0.3/en/quickstart.html">0.3</a>
+    <a class="version" href="../../0.2/en/installation/quickstart.html">0.2</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/network-enforcer/version-0.4/modules/en/pages/quickstart.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:network-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Network Enforcer 0.4-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">SUSE Security Network Enforcer Quick Start</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Welcome to the SUSE Security Network Enforcer Quick Start.</p>
+</div>
+<div class="paragraph">
+<p>This guide walks you through the following steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Preparing a cluster with one of the supported <a href="glossary.html#_data-plane" class="xref page">data plane</a> <a href="glossary.html#_provider" class="xref page">provider</a>s: <a href="glossary.html#_istio-ambient" class="xref page">Istio ambient</a>, <a href="glossary.html#_calico" class="xref page">Calico</a> or <a href="glossary.html#_cilium" class="xref page">Cilium</a>.</p>
+</li>
+<li>
+<p>Deploying Network Enforcer with <code>helm</code>.</p>
+</li>
+<li>
+<p>Deploying a simple workload and inspecting the <a href="glossary.html#_workloadnetworkpolicyproposal" class="xref page"><code>WorkloadNetworkPolicyProposal</code></a> resources that Network Enforcer learns from the observed traffic.</p>
+</li>
+<li>
+<p>Promoting those proposals into <a href="glossary.html#_workloadnetworkpolicy" class="xref page"><code>WorkloadNetworkPolicy</code></a> resources in <a href="glossary.html#_monitor" class="xref page">monitor</a> mode and observing <a href="glossary.html#_violation" class="xref page">violation</a>s without blocking traffic.</p>
+</li>
+<li>
+<p>Switching the policies to <a href="glossary.html#_protect" class="xref page">protect</a> mode and seeing enforcement in action.</p>
+</li>
+<li>
+<p>Marking a violation that you consider expected as <a href="glossary.html#_acknowledged-violation" class="xref page">acknowledged</a>.</p>
+</li>
+</ul>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you start, you need:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A Kubernetes cluster you can throw away, for example a <a href="https://kind.sigs.k8s.io/">kind</a> cluster.
+This guide creates one for you.</p>
+</li>
+<li>
+<p><code>kubectl</code>, <code>helm</code> and <code>curl</code> installed locally.</p>
+</li>
+<li>
+<p><a href="glossary.html#_cert-manager" class="xref page">cert-manager</a> and <code>cert-manager-csi-driver</code> in the cluster.
+They supply certificates for the admission webhook and the bundled
+<a href="glossary.html#_opentelemetry-collector" class="xref page">OpenTelemetry collector</a>. With the Istio provider in TLS mode <code>issuer</code>,
+they also supply certificates for the ztunnel log endpoint.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This page documents the <code>network-enforcer</code> chart for Network Enforcer 0.4.0.
+Every <code>--set</code> flag used here exists in <code>charts/network-enforcer/values.yaml</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_choose-your-provider"><a class="anchor" href="#_choose-your-provider"></a>Choose your provider</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Network Enforcer does not observe traffic on its own: it consumes <a href="glossary.html#_flow" class="xref page">flow</a> information from the data plane
+already running in your cluster, and it enforces policies with the <a href="glossary.html#_native-policy-object" class="xref page">native policy object</a> API of that data plane.
+Pick one provider and follow only its section.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Provider</th>
+<th class="tableblock halign-left valign-top"><code>controller.provider.name</code></th>
+<th class="tableblock halign-left valign-top">Learning source</th>
+<th class="tableblock halign-left valign-top">Enforced with</th>
+<th class="tableblock halign-left valign-top">Generated policy backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Istio ambient</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>istio</code> (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="glossary.html#_ztunnel" class="xref page"><code>ztunnel</code></a> access logs, tailed by the <code>istio-fluent-bit</code> DaemonSet and pushed to the controller over OTLP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Istio <a href="glossary.html#_authorizationpolicy" class="xref page"><code>AuthorizationPolicy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>backend: istio</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Calico</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>calico</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Calico <a href="glossary.html#_goldmane" class="xref page">Goldmane</a> flow API over mTLS (<code>goldmane.calico-system.svc:7443</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes <a href="glossary.html#_networkpolicy" class="xref page"><code>NetworkPolicy</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>backend: kubernetes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cilium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cilium</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="glossary.html#_hubble-relay" class="xref page">Hubble Relay</a> gRPC API over mutual TLS (<code>hubble-relay.kube-system.svc:443</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kubernetes <code>NetworkPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>backend: kubernetes</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each provider has its own endpoint value: <code>controller.provider.istio.endpoint</code>,
+<code>controller.provider.calico.endpoint</code>, and <code>controller.provider.cilium.endpoint</code>.
+The defaults are the values listed above. For <code>istio</code>, the value is the local
+OTLP port, <code>4317</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_option-1-istio-ambient"><a class="anchor" href="#_option-1-istio-ambient"></a>Option 1: Istio ambient</h3>
+<div class="paragraph">
+<p>The Istio ambient path keeps the cluster CNI in place and layers the ambient data plane on top of it,
+so a plain kind cluster with its default CNI is enough:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kind create cluster --name network-enforcer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Download <code>istioctl</code> and install the ambient profile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.30.3 sh -
+
+./istio-1.30.3/bin/istioctl install --set profile=ambient \
+  --set values.cni.ambient.ipv6=false \
+  --set values.pilot.env.AMBIENT_ENABLE_DRY_RUN_AUTHORIZATION_POLICY=true \
+  --set values.ztunnel.env.AUTHZ_POLICY_INFO_LOGGING=true \
+  --set values.ztunnel.logAsJson=true \
+  --skip-confirmation</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These <code>--set</code> flags are not optional for Network Enforcer:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AMBIENT_ENABLE_DRY_RUN_AUTHORIZATION_POLICY</code> lets <code>ztunnel</code> evaluate the <a href="glossary.html#_dry-run" class="xref page">dry-run</a> <code>AuthorizationPolicy</code>
+that <code>monitor</code> mode installs, without blocking traffic.</p>
+</li>
+<li>
+<p><code>AUTHZ_POLICY_INFO_LOGGING</code> makes <code>ztunnel</code> log the policy decision of every connection.</p>
+</li>
+<li>
+<p><code>logAsJson</code> makes <code>ztunnel</code> emit JSON access logs, which is the format the <code>istio-fluent-bit</code> pipeline
+shipped with the chart parses.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>values.cni.ambient.ipv6=false</code> flag is not required by Network Enforcer, but <code>istio-cni</code> programs
+IPv6 redirection rules by default and fails on IPv4-only nodes, which is what a default kind cluster
+gives you.
+Drop the flag if your cluster is dual-stack.</p>
+</div>
+<div class="paragraph">
+<p>Finally, enroll the namespaces you want to observe in the mesh.
+Do this <strong>before</strong> creating the workloads: <code>istio-cni</code> decides at pod creation time whether a pod&#8217;s traffic
+is redirected to the node <code>ztunnel</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl label namespace default istio.io/dataplane-mode=ambient</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Istio ambient authorization is L4 and identity based, which has three consequences for this guide:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Only TCP traffic is observed and enforced; UDP does not go through <code>ztunnel</code>.</p>
+</li>
+<li>
+<p>Rules are written in terms of SPIFFE <a href="glossary.html#_principal" class="xref page">principal</a>s, so every workload should have its own
+<code>ServiceAccount</code> — otherwise all workloads sharing the default service account share one identity.</p>
+</li>
+<li>
+<p>Authorization is enforced on the receiving side, so Network Enforcer only learns <strong>ingress</strong> proposals.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_option-2-calico"><a class="anchor" href="#_option-2-calico"></a>Option 2: Calico</h3>
+<div class="paragraph">
+<p>Calico is the cluster CNI, so create a kind cluster with the default CNI disabled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sSL https://raw.githubusercontent.com/kubewarden/network-enforcer/main/docs/yaml/kind_cluster.yaml \
+  | kind create cluster --name network-enforcer --config=-</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then install Calico. If you cloned this repository, run the helper script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./hack/setup-calico.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Otherwise, run it straight from the repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sSL https://raw.githubusercontent.com/kubewarden/network-enforcer/main/hack/setup-calico.sh | bash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script installs the Calico CRDs and the Tigera operator with
+<code>goldmane.enabled=true</code>. Then it waits for the ConfigMap <code>goldmane-ca-bundle</code>
+and the Secret <code>goldmane-key-pair</code> that Calico creates in <code>calico-system</code>, and
+for the Goldmane deployment.</p>
+</div>
+<div class="paragraph">
+<p>Network Enforcer reads that key pair and CA bundle from <code>calico-system</code> through
+the Kubernetes API. The chart creates a Role in <code>calico-system</code> for this. You
+do not copy a Secret, and you do not create the Network Enforcer namespace
+before the install. Goldmane always requires mutual TLS. There is no
+plain-text option.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Run the script <strong>before</strong> installing the Network Enforcer chart, so that the
+Goldmane key pair exists when the controller starts. You can install the
+chart in any namespace.</p>
+</div>
+<div class="paragraph">
+<p>The default TLS mode is <code>existingSecret</code>.
+The controller reads <code>tls.crt</code> and <code>tls.key</code> from <code>goldmane-key-pair</code>.
+It reads the CA from <code>goldmane-ca-bundle</code>, key <code>tigera-ca-bundle.crt</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you already have a client Secret in the release namespace, leave
+<code>controller.provider.calico.tls.existingSecret.namespace</code> empty.
+Set <code>controller.provider.calico.tls.existingSecret.name</code> to that Secret name,
+for example <code>net-enf-goldmane-client-certs</code>.
+The chart then mounts the Secret.
+The Secret must contain <code>tls.crt</code>, <code>tls.key</code>, and <code>ca.crt</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_option-3-cilium"><a class="anchor" href="#_option-3-cilium"></a>Option 3: Cilium</h3>
+<div class="paragraph">
+<p>Cilium is the cluster CNI, so create a kind cluster with the default CNI disabled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sSL https://raw.githubusercontent.com/kubewarden/network-enforcer/main/docs/yaml/kind_cluster.yaml \
+  | kind create cluster --name network-enforcer --config=-</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then install Cilium. If you cloned this repository, run the helper script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./hack/setup-cilium.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Otherwise, run it straight from the repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -sSL https://raw.githubusercontent.com/kubewarden/network-enforcer/main/hack/setup-cilium.sh | bash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script installs Cilium with the values Network Enforcer needs, and waits for the agent,
+the operator and Hubble Relay to be ready:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>hubble.enabled=true</code> and <code>hubble.relay.enabled=true</code>, because the controller reads flows from the
+Hubble Relay gRPC API.</p>
+</li>
+<li>
+<p><code>hubble.relay.tls.server.enabled=true</code> and <code>hubble.relay.tls.server.mtls=true</code>,
+because the controller talks to <code>hubble-relay.kube-system.svc:443</code> over
+mutual TLS. Cilium creates the client certificate in the Secret
+<code>hubble-relay-client-certs</code> in <code>kube-system</code>, and Network Enforcer reads it
+through the Kubernetes API.</p>
+</li>
+<li>
+<p><code>policyDenyResponse=icmp</code>, so denied egress traffic is answered with an ICMP error instead of being
+silently dropped.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use <code>CILIUM_VERSION</code> to pick a different Cilium version, for example
+<code>CILIUM_VERSION=1.19.7 ./hack/setup-cilium.sh</code>.</p>
+</div>
+<div class="paragraph">
+<p>Use <code>HUBBLE_RELAY_TLS</code> to select how the Hubble certificates are made. The
+default, <code>helm</code>, lets Cilium generate them. The value <code>certmanager</code> lets
+cert-manager issue them. The value <code>off</code> turns Relay TLS off. In that case,
+install the chart with <code>controller.provider.cilium.tls.mode=insecure</code> and an
+empty <code>controller.provider.cilium.tls.serverName</code>. The chart then talks to
+Relay on port <code>80</code> in plain text.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install-cert-manager-and-cert-manager-csi-driver"><a class="anchor" href="#_install-cert-manager-and-cert-manager-csi-driver"></a>Install cert-manager and cert-manager-csi-driver</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The admission webhook requires cert-manager and <code>cert-manager-csi-driver</code>,
+regardless of the provider or telemetry configuration. Install both before
+the chart:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm repo add jetstack https://charts.jetstack.io
+helm repo update
+
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --set crds.enabled=true \
+  --wait
+
+helm install cert-manager-csi-driver jetstack/cert-manager-csi-driver \
+  --namespace cert-manager \
+  --wait</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For more information on configuring cert-manager, see the
+<a href="https://cert-manager.io/docs/installation/helm">cert-manager documentation</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install-the-network-enforcer-chart"><a class="anchor" href="#_install-the-network-enforcer-chart"></a>Install the Network Enforcer chart</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm repo add kubewarden https://charts.kubewarden.io
+helm repo update</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Install the chart with the provider you prepared above (<code>istio</code>, <code>calico</code> or <code>cilium</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install network-enforcer kubewarden/network-enforcer \
+  --namespace network-enforcer \
+  --create-namespace \
+  --set controller.provider.name=istio \
+  --set controller.wnpStatusUpdateInterval=3s \
+  --wait</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>controller.wnpStatusUpdateInterval</code> is the interval at which the <a href="glossary.html#_controller" class="xref page">controller</a> refreshes the violations in
+the status of every <code>WorkloadNetworkPolicy</code>.
+It is lowered from its default (<code>30s</code>) to make this demo responsive; in production you rarely need to
+change it.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you cloned the repository you can install the very same chart from your checkout with
+<code>helm install network-enforcer ./charts/network-enforcer &#8230;&#8203;</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_verify-the-deployment"><a class="anchor" href="#_verify-the-deployment"></a>Verify the deployment</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get pods -n network-enforcer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the <code>istio</code> provider, the release runs the controller, the OpenTelemetry collector and the
+<code>istio-fluent-bit</code> DaemonSet that ships <code>ztunnel</code> access logs to the controller:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                                   READY   STATUS    RESTARTS   AGE
+network-enforcer-controller-manager-6b5c5f86b4-m7frg   1/1     Running   0          3m30s
+network-enforcer-istio-fluent-bit-hrk4x                1/1     Running   0          3m30s
+network-enforcer-otel-collector-b9554b8c6-95xr7        1/1     Running   0          3m30s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With <code>calico</code> or <code>cilium</code> there is no <code>istio-fluent-bit</code>, because the controller scrapes the provider API
+directly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                                                   READY   STATUS    RESTARTS   AGE
+network-enforcer-controller-manager-585c57cc67-s7rw7   1/1     Running   0          4m30s
+network-enforcer-otel-collector-b9554b8c6-8hhff        1/1     Running   0          4m30s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Network Enforcer is now running and ready to learn.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_learn-generate-workloadnetworkpolicyproposal-resources"><a class="anchor" href="#_learn-generate-workloadnetworkpolicyproposal-resources"></a>Learn: generate WorkloadNetworkPolicyProposal resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Network Enforcer observes the connections in the cluster and, for each endpoint of a connection, creates
+a <code>WorkloadNetworkPolicyProposal</code> (short name <code>wnpp</code>) describing the traffic it saw.
+A proposal is named after the workload and the traffic direction it covers:
+<code>&lt;workload-kind&gt;-&lt;workload-name&gt;-&lt;direction&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>Nothing is enforced at this stage: a proposal is only a suggestion.</p>
+</div>
+<div class="sect2">
+<h3 id="_deploy-a-simple-application"><a class="anchor" href="#_deploy-a-simple-application"></a>Deploy a simple application</h3>
+<div class="paragraph">
+<p>The sample application is a client, an echo server and a Service.
+The server listens on TCP <code>18080</code>, on TCP <code>18082</code> and on UDP <code>18081</code>; the Service exposes TCP <code>18080</code>,
+TCP <code>18082</code> and UDP <code>18083</code>.
+Only the traffic you actually generate is learned, which is what lets you produce a violation later.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/kubewarden/network-enforcer/main/docs/yaml/simple_application.yaml
+kubectl wait --for=condition=Ready pod -l app=http-server --timeout=300s
+kubectl wait --for=condition=Ready pod -l app=http-client --timeout=300s</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On the Istio ambient path, make sure the namespace carries the
+<code>istio.io/dataplane-mode=ambient</code> label before this step, otherwise the workloads are created outside
+the mesh and no traffic is observed.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generate-some-traffic"><a class="anchor" href="#_generate-some-traffic"></a>Generate some traffic</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl exec deployments/http-client -- sh -c 'printf tcp-payload | nc -w 2 http-service 18080'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command echoes back <code>tcp-payload</code>: the connection is allowed, and it is now the traffic
+Network Enforcer learns from.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_proposals-on-the-istio-provider"><a class="anchor" href="#_proposals-on-the-istio-provider"></a>Proposals on the Istio provider</h3>
+<div class="paragraph">
+<p>Istio ambient enforces authorization on the receiving side, so a single ingress proposal is created for
+the server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnpp</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                             AGE
+deployment-http-server-ingress   14s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnpp deployment-http-server-ingress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: networkenforcer.kubewarden.io/v1alpha1
+kind: WorkloadNetworkPolicyProposal
+metadata:
+  creationTimestamp: "2026-09-01T09:19:12Z"
+  generation: 1
+  name: deployment-http-server-ingress
+  namespace: default
+  resourceVersion: "1462"
+  uid: f8ed421f-ec9e-4e8e-874b-097500a570df
+spec:
+  targetRef:
+    kind: Deployment
+    name: http-server
+  direction: Ingress
+  backend: istio
+  istio:
+    rules:
+    - from:
+      - source:
+          principals:
+          - cluster.local/ns/default/sa/http-client-sa
+      to:
+      - operation:
+          ports:
+          - "18080"
+    selector:
+      matchLabels:
+        app: http-server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The proposal carries <code>backend: istio</code> and a constrained Istio policy: the client is identified by its
+SPIFFE principal (<code>cluster.local/ns/default/sa/http-client-sa</code>, derived from its <code>ServiceAccount</code>) and
+allowed to reach port <code>18080</code> of the pods selected by <code>app: http-server</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_proposals-on-the-calico-and-cilium-providers"><a class="anchor" href="#_proposals-on-the-calico-and-cilium-providers"></a>Proposals on the Calico and Cilium providers</h3>
+<div class="paragraph">
+<p>Both providers report full flows, so Network Enforcer creates an egress proposal for the client and an
+ingress proposal for the server.
+Learning is cluster-wide, so you also see proposals for the workloads that talk to each other in the
+system namespaces.
+The listing below is from a Calico cluster.
+On Cilium, the system names differ (<code>hubble-relay</code>, <code>cilium-operator</code>, …), but the two <code>default</code>
+proposals are the same:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnpp -A</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAMESPACE          NAME                                                    AGE
+calico-system      deployment-goldmane-ingress                             99s
+default            deployment-http-client-egress                           54s
+default            deployment-http-server-ingress                          54s
+kube-system        deployment-coredns-ingress                              99s
+network-enforcer   deployment-network-enforcer-controller-manager-egress   99s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnpp deployment-http-client-egress deployment-http-server-ingress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+items:
+- apiVersion: networkenforcer.kubewarden.io/v1alpha1
+  kind: WorkloadNetworkPolicyProposal
+  metadata:
+    creationTimestamp: "2026-09-01T09:25:45Z"
+    generation: 2
+    name: deployment-http-client-egress
+    namespace: default
+    resourceVersion: "1755"
+    uid: db599333-5945-45c0-927e-7290250bd631
+  spec:
+    targetRef:
+      kind: Deployment
+      name: http-client
+    direction: Egress
+    backend: kubernetes
+    kubernetes:
+      egress:
+      - ports:
+        - port: 18080
+          protocol: TCP
+        to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: default
+          podSelector:
+            matchLabels:
+              app: http-server
+      - ports:
+        - port: 53
+          protocol: UDP
+        to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      podSelector:
+        matchLabels:
+          app: http-client
+      policyTypes:
+      - Egress
+- apiVersion: networkenforcer.kubewarden.io/v1alpha1
+  kind: WorkloadNetworkPolicyProposal
+  metadata:
+    creationTimestamp: "2026-09-01T09:25:45Z"
+    generation: 1
+    name: deployment-http-server-ingress
+    namespace: default
+    resourceVersion: "1754"
+    uid: 12d6fc70-f49a-4eb8-876b-406ee4b6ae41
+  spec:
+    targetRef:
+      kind: Deployment
+      name: http-server
+    direction: Ingress
+    backend: kubernetes
+    kubernetes:
+      ingress:
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: default
+          podSelector:
+            matchLabels:
+              app: http-client
+        ports:
+        - port: 18080
+          protocol: TCP
+      podSelector:
+        matchLabels:
+          app: http-server
+      policyTypes:
+      - Ingress
+kind: List
+metadata:
+  resourceVersion: ""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here <code>spec.kubernetes</code> is a standard <code>networking.k8s.io/v1</code> <code>NetworkPolicySpec</code>: the client is allowed to
+reach the server on TCP <code>18080</code> and CoreDNS on UDP <code>53</code>, and the server is allowed to receive traffic
+from the client on TCP <code>18080</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_monitor-promote-proposals-into-workloadnetworkpolicy-resources"><a class="anchor" href="#_monitor-promote-proposals-into-workloadnetworkpolicy-resources"></a>Monitor: promote proposals into WorkloadNetworkPolicy resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To turn a proposal into a policy, label it with <a href="glossary.html#_promote-label" class="xref page"><code>networkenforcer.kubewarden.io/promote</code></a>.
+Use <code>monitor</code> for a passive policy, or <code>protect</code> to enforce it straight away.</p>
+</div>
+<div class="paragraph">
+<p>On the Istio provider:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl label wnpp deployment-http-server-ingress networkenforcer.kubewarden.io/promote=monitor</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Calico and Cilium providers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl label wnpp deployment-http-client-egress deployment-http-server-ingress networkenforcer.kubewarden.io/promote=monitor</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>One of the two Validating Admission Policies that the chart installs rejects any other value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ kubectl label wnpp deployment-http-server-ingress networkenforcer.kubewarden.io/promote=audit
+The workloadnetworkpolicyproposals "deployment-http-server-ingress" is invalid: : ValidatingAdmissionPolicy 'network-enforcer-wnpp-promote-label' with binding 'network-enforcer-wnpp-promote-label-binding' denied request: networkenforcer.kubewarden.io/promote must be "monitor" or "protect"</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>After a few seconds a <code>WorkloadNetworkPolicy</code> (short name <code>wnp</code>) exists for every promoted proposal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnp</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                             MODE      ACTIVE VIOLATIONS   AGE
+deployment-http-server-ingress   monitor   0                   8s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The promoted proposals are gone: once a policy exists, the proposal has served its purpose and the
+controller deletes it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ kubectl get wnpp
+No resources found in default namespace.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The policy copies the proposal&#8217;s target, direction, and backend rules. It also has <code>spec.mode</code> and a status:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnp deployment-http-server-ingress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: networkenforcer.kubewarden.io/v1alpha1
+kind: WorkloadNetworkPolicy
+metadata:
+  creationTimestamp: "2026-09-01T09:19:38Z"
+  generation: 1
+  labels:
+    networkenforcer.kubewarden.io/promoted-from: deployment-http-server-ingress
+  name: deployment-http-server-ingress
+  namespace: default
+  resourceVersion: "1549"
+  uid: fedfe10f-d9b3-4255-9a51-fd8e41fc1e48
+spec:
+  targetRef:
+    kind: Deployment
+    name: http-server
+  direction: Ingress
+  backend: istio
+  istio:
+    rules:
+    - from:
+      - source:
+          principals:
+          - cluster.local/ns/default/sa/http-client-sa
+      to:
+      - operation:
+          ports:
+          - "18080"
+    selector:
+      matchLabels:
+        app: http-server
+  mode: monitor
+status:
+  activeViolationCount: 0
+  observedGeneration: 1
+  violationCount: 0</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what-monitor-mode-installs"><a class="anchor" href="#_what-monitor-mode-installs"></a>What monitor mode installs</h3>
+<div class="paragraph">
+<p><code>monitor</code> is a passive mode: violations are reported in the policy status, but nothing is blocked.</p>
+</div>
+<div class="paragraph">
+<p>On the Istio provider, the controller creates a dry-run <code>AuthorizationPolicy</code> owned by the
+<code>WorkloadNetworkPolicy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get authorizationpolicy deployment-http-server-ingress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  annotations:
+    istio.io/dry-run: "true"
+  creationTimestamp: "2026-09-01T09:19:38Z"
+  generation: 1
+  name: deployment-http-server-ingress
+  namespace: default
+  ownerReferences:
+  - apiVersion: networkenforcer.kubewarden.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: WorkloadNetworkPolicy
+    name: deployment-http-server-ingress
+    uid: fedfe10f-d9b3-4255-9a51-fd8e41fc1e48
+  resourceVersion: "1544"
+  uid: d69ddbc8-521d-4c5e-a72c-5d6d5f95422b
+spec:
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/default/sa/http-client-sa
+    to:
+    - operation:
+        ports:
+        - "18080"
+  selector:
+    matchLabels:
+      app: http-server
+status:
+  conditions:
+  - lastTransitionTime: "2026-09-01T09:19:38.852356610Z"
+    message: attached to ztunnel
+    observedGeneration: "1"
+    reason: Accepted
+    status: "True"
+    type: ZtunnelAccepted</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Calico and Cilium providers, monitor mode installs nothing at all: the controller compares the
+flows reported by the provider against the policy and only records violations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ kubectl get networkpolicy
+No resources found</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_observe-a-violation"><a class="anchor" href="#_observe-a-violation"></a>Observe a violation</h3>
+<div class="paragraph">
+<p>Send traffic the policy does not allow.</p>
+</div>
+<div class="paragraph">
+<p>On the Istio provider, use TCP port <code>18082</code>, which the server echoes on but which is not part of the
+learned policy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl exec deployments/http-client -- sh -c 'printf tcp-payload | nc -w 2 http-service 18082'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Calico and Cilium providers you can use the UDP service port instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl exec deployments/http-client -- sh -c 'printf udp-payload | nc -u -w 2 http-service 18083'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The payload is still echoed back — monitor mode does not block — but the violation shows up in the
+policy status:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnp</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                             MODE      ACTIVE VIOLATIONS   AGE
+deployment-http-server-ingress   monitor   1                   29s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Istio provider the record is identity based and has no port, because <code>ztunnel</code> reports the policy
+decision for the connection:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnp deployment-http-server-ingress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">status:
+  activeViolationCount: 1
+  observedGeneration: 1
+  violationCount: 1
+  violations:
+  - action: monitor
+    denyingPolicyName: deployment-http-server-ingress
+    denyingPolicyNamespace: default
+    dest:
+      identity: cluster.local/ns/default/sa/http-server-sa
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-server
+      selector: {}
+    id: 0
+    protocol: TCP
+    source:
+      identity: cluster.local/ns/default/sa/http-client-sa
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-client
+      selector: {}
+    timestamp: "2026-09-01T09:19:53Z"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Calico and Cilium providers the record carries the destination port of the dropped flow — note
+that it is the <strong>container</strong> port (<code>18081</code>), not the Service port (<code>18083</code>) — and the workload selectors:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnp deployment-http-client-egress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">status:
+  activeViolationCount: 1
+  observedGeneration: 1
+  violationCount: 1
+  violations:
+  - action: monitor
+    denyingPolicyName: deployment-http-client-egress
+    denyingPolicyNamespace: default
+    dest:
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-server
+      selector:
+        matchLabels:
+          app: http-server
+    dstPort: 18081
+    id: 0
+    protocol: UDP
+    source:
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-client
+      selector:
+        matchLabels:
+          app: http-client
+    timestamp: "2026-09-01T09:27:30Z"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With Calico and Cilium the same flow is reported twice, once per side: the client egress policy and the
+server ingress policy each record a violation.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_protect-enforce-the-policy"><a class="anchor" href="#_protect-enforce-the-policy"></a>Protect: enforce the policy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you are confident the policy describes the traffic you want, switch it to <code>protect</code>.
+From that point on, traffic that violates it is blocked.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl patch wnp deployment-http-server-ingress \
+  --type='json' -p='[{"op":"replace","path":"/spec/mode","value":"protect"}]'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Calico and Cilium providers, patch both policies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl patch wnp deployment-http-client-egress deployment-http-server-ingress \
+  --type='json' -p='[{"op":"replace","path":"/spec/mode","value":"protect"}]'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What changes in the data plane depends on the provider.</p>
+</div>
+<div class="paragraph">
+<p>On the Istio provider the <code>AuthorizationPolicy</code> loses its <code>istio.io/dry-run</code> annotation and starts being
+enforced by <code>ztunnel</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get authorizationpolicy deployment-http-server-ingress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  creationTimestamp: "2026-09-01T09:19:38Z"
+  generation: 1
+  name: deployment-http-server-ingress
+  namespace: default
+  ownerReferences:
+  - apiVersion: networkenforcer.kubewarden.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: WorkloadNetworkPolicy
+    name: deployment-http-server-ingress
+    uid: fedfe10f-d9b3-4255-9a51-fd8e41fc1e48
+  resourceVersion: "1729"
+  uid: d69ddbc8-521d-4c5e-a72c-5d6d5f95422b
+spec:
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/default/sa/http-client-sa
+    to:
+    - operation:
+        ports:
+        - "18080"
+  selector:
+    matchLabels:
+      app: http-server
+status:
+  conditions:
+  - lastTransitionTime: "2026-09-01T09:19:38.852356610Z"
+    message: attached to ztunnel
+    observedGeneration: "1"
+    reason: Accepted
+    status: "True"
+    type: ZtunnelAccepted</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Calico and Cilium providers the controller now creates a real Kubernetes <code>NetworkPolicy</code> per
+policy, owned by the <code>WorkloadNetworkPolicy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ kubectl get networkpolicy
+NAME                             POD-SELECTOR      AGE
+deployment-http-client-egress    app=http-client   8s
+deployment-http-server-ingress   app=http-server   8s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get networkpolicy deployment-http-client-egress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2026-09-01T09:27:56Z"
+  generation: 1
+  name: deployment-http-client-egress
+  namespace: default
+  ownerReferences:
+  - apiVersion: networkenforcer.kubewarden.io/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: WorkloadNetworkPolicy
+    name: deployment-http-client-egress
+    uid: 2d693630-6634-4248-9ac6-724bc8460808
+  resourceVersion: "2089"
+  uid: 35ae13c0-b651-417f-a80c-0eb074fc4d8b
+spec:
+  egress:
+  - ports:
+    - port: 18080
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: default
+      podSelector:
+        matchLabels:
+          app: http-server
+  - ports:
+    - port: 53
+      protocol: UDP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+  podSelector:
+    matchLabels:
+      app: http-client
+  policyTypes:
+  - Egress</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Allowed traffic keeps working:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ kubectl exec deployments/http-client -- sh -c 'printf tcp-payload | nc -w 2 http-service 18080'
+tcp-payload</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Violating traffic is now dropped: the payload is not echoed back anymore.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Istio provider
+kubectl exec deployments/http-client -- sh -c 'printf tcp-payload | nc -w 2 http-service 18082'
+
+# Calico and Cilium providers
+kubectl exec deployments/http-client -- sh -c 'printf udp-payload | nc -u -w 2 http-service 18083'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The status keeps the old <code>monitor</code> record and adds a new one with <code>action: protect</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get wnp deployment-http-server-ingress -o yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">status:
+  activeViolationCount: 2
+  observedGeneration: 2
+  violationCount: 2
+  violations:
+  - action: protect
+    denyingPolicyName: deployment-http-server-ingress
+    denyingPolicyNamespace: default
+    dest:
+      identity: cluster.local/ns/default/sa/http-server-sa
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-server
+      selector: {}
+    id: 1
+    protocol: TCP
+    source:
+      identity: cluster.local/ns/default/sa/http-client-sa
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-client
+      selector: {}
+    timestamp: "2026-09-01T09:20:56Z"
+  - action: monitor
+    denyingPolicyName: deployment-http-server-ingress
+    denyingPolicyNamespace: default
+    dest:
+      identity: cluster.local/ns/default/sa/http-server-sa
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-server
+      selector: {}
+    id: 0
+    protocol: TCP
+    source:
+      identity: cluster.local/ns/default/sa/http-client-sa
+      namespace: default
+      ownerKind: Deployment
+      ownerName: http-client
+      selector: {}
+    timestamp: "2026-09-01T09:19:53Z"</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On the Calico and Cilium providers only the <strong>egress</strong> policy records new violations in protect mode:
+the traffic is dropped at the source, so it never reaches the destination and the ingress policy is
+never violated again.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_acknowledge-a-violation"><a class="anchor" href="#_acknowledge-a-violation"></a>Acknowledge a violation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A violation you consider expected can be acknowledged by annotating the policy with
+<a href="glossary.html#_acknowledged-violation" class="xref page"><code>networkenforcer.kubewarden.io/acknowledge-&lt;id&gt;</code></a>, where <code>&lt;id&gt;</code> is the <code>id</code> of the <a href="glossary.html#_violation-record" class="xref page">violation record</a> and the value is
+the reason:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl annotate wnp deployment-http-server-ingress \
+  'networkenforcer.kubewarden.io/acknowledge-0=known scanner probe'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The record moves from <code>status.violations</code> to <code>status.acknowledgedViolations</code>, <code>activeViolationCount</code>
+drops accordingly, and the annotation is consumed (the controller removes it once processed):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ kubectl get wnp
+NAME                             MODE      ACTIVE VIOLATIONS   AGE
+deployment-http-server-ingress   protect   1                   102s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">status:
+  acknowledgedViolations:
+  - acknowledgedAt: "2026-09-01T09:21:13Z"
+    reason: known scanner probe
+    violation:
+      action: monitor
+      denyingPolicyName: deployment-http-server-ingress
+      denyingPolicyNamespace: default
+      dest:
+        identity: cluster.local/ns/default/sa/http-server-sa
+        namespace: default
+        ownerKind: Deployment
+        ownerName: http-server
+        selector: {}
+      id: 0
+      protocol: TCP
+      source:
+        identity: cluster.local/ns/default/sa/http-client-sa
+        namespace: default
+        ownerKind: Deployment
+        ownerName: http-client
+        selector: {}
+      timestamp: "2026-09-01T09:19:53Z"
+  activeViolationCount: 1
+  observedGeneration: 2
+  violationCount: 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>violationCount</code> is not decremented: it counts every violation ever observed for the policy, while
+<code>activeViolationCount</code> only counts the records still listed in <code>status.violations</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_where-violations-are-exported"><a class="anchor" href="#_where-violations-are-exported"></a>Where violations are exported</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Besides the policy status, every violation is emitted as an OpenTelemetry log record to the collector
+deployed with the chart (<code>telemetry.collectorStrategy=default</code>).
+Tail the collector to see them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl logs -n network-enforcer deploy/network-enforcer-otel-collector --tail=20</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ResourceLog #0 [https://opentelemetry.io/schemas/1.41.0] service.name=unknown_service:controller telemetry.sdk.language=go telemetry.sdk.name=opentelemetry telemetry.sdk.version=1.44.0
+ScopeLog #0 network-enforcer
+ enforcement.provider=istio action=monitor source.workload.name=http-client source.workload.namespace=default source.workload.kind=Deployment source.workload.identity=cluster.local/ns/default/sa/http-client-sa destination.workload.name=http-server destination.workload.namespace=default destination.workload.kind=Deployment destination.workload.identity=cluster.local/ns/default/sa/http-server-sa network.transport=TCP policy.ref.namespace=default policy.ref.name=deployment-http-server-ingress destination.port=0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To send the signals to your own collector instead, set <code>telemetry.collectorStrategy=external</code> and
+configure <code>telemetry.externalCollector.*</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_clean-up"><a class="anchor" href="#_clean-up"></a>Clean up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Delete the throwaway cluster:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kind delete cluster --name network-enforcer</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="introduction.html">Introduction</a></span>
+  <span class="next"><a href="tutorials/verifying-network-enforcer.html">Verifying Network Enforcer</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+<script src="../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

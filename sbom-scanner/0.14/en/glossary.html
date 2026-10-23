@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glossary | Vulnerability Scanner  0.14-dev</title>
+    <link rel="prev" href="organization.html">
+    <link rel="next" href="disclosure.html">
+    <meta name="description" content="Terms used in the SUSE Security Vulnerability Scanner documentation: custom resources, components, and the standards and formats that the scanner works with.">
+    <meta name="keywords" content="SUSE Security Vulnerability Scanner, kubewarden, glossary">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-09-30"/>
+<link rel="stylesheet" href="../../../_/css/search.css">
+<link rel="icon" href="../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/sbom-scanner/0.14/en/glossary.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/sbom-scanner/0.14/en/glossary.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Glossary |  0.14",
+  "headline": "Glossary",
+  "description": "Terms used in the SUSE Security Vulnerability Scanner documentation: custom resources, components, and the standards and formats that the scanner works with.",
+  "inLanguage": "en",
+  "dateModified": "2026-09-30T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.14",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="sbom-scanner" data-version="0.14">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Vulnerability Scanner</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/verifying-sbom-scanner.html">Verifying Vulnerability Scanner</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/scanning-registries.html">Scanning Registries</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/scanning-workloads.html">Scanning Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/scanning-nodes.html">Scanning Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/querying-reports.html">Querying Reports</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Using the UI extension</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/dashboard.html">Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/registry-list.html">Registry List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/registry-create-edit.html">Creating and Editing a Registry</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/registry-detail.html">Registry Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/workload-scan-configuration.html">Workload Scan Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/workload-scan-registries.html">Workload Scan Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/image-list.html">Image List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/image-detail.html">Image Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/cve-detail.html">CVE Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/workload-interaction.html">Workload Interaction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="product-specific/ui-extension/vex-management.html">VEX Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/helm-values.html">Helm Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/private-registries.html">Private Registries</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/airgap-support.html">Airgap Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/vex.html">VEX Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/opentelemetry.html">OpenTelemetry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/mcp-server.html">MCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/collecting-logs.html">Collecting Logs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/common-problems.html">Common Problems</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/crd-reference.html">CRD Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/opentelemetry-reference.html">OpenTelemetry Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="organization.html">Organization</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Vulnerability Scanner</span>
+    <span class="version">0.14-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          <a href="glossary.html" title="Glossary" aria-label="Glossary">Glossary</a>
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.14-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="glossary.html">0.14-dev</a>
+    <a class="version" href="../../0.13/en/glossary.html">0.13</a>
+    <a class="version is-missing" href="../../0.12/en/introduction.html">0.12</a>
+    <a class="version is-missing" href="../../0.11/en/introduction.html">0.11</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/sbom-scanner/version-0.14/modules/en/pages/glossary.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:sbom-scanner" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Vulnerability Scanner 0.14-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">Glossary</h1>
+<div class="sect1">
+<h2 id="_a"><a class="anchor" href="#_a"></a>A</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_air-gapped-cluster"><a class="anchor" href="#_air-gapped-cluster"></a>Air-gapped cluster</h3>
+<div class="paragraph">
+<p>A cluster with no connection to the internet. To scan in such a cluster, you
+mirror the <a href="#_vulnerability-database">vulnerability databases</a> and the
+<a href="#_vex-hub">VEX Hub</a> repositories to servers inside the cluster network.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_artifactsnamespace"><a class="anchor" href="#_artifactsnamespace"></a>artifactsNamespace</h3>
+<div class="paragraph">
+<p>A field of the <a href="#_workloadscanconfiguration">WorkloadScanConfiguration</a>. It
+names one namespace that holds the <a href="#_managed-resource">managed resources</a> for
+all workloads. If the field is empty, each workload namespace holds its own
+managed resources. The <a href="#_workloadscanreport">WorkloadScanReport</a> always stays
+in the workload namespace.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_c"><a class="anchor" href="#_c"></a>C</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_catalog"><a class="anchor" href="#_catalog"></a>Catalog</h3>
+<div class="paragraph">
+<p>The list of repositories in a registry. The <code>catalogType</code> field of a
+<a href="#_registry">Registry</a> tells the scanner how to get this list. The default
+reads the <code>_catalog</code> endpoint of the registry. The <code>NoCatalog</code> value is for
+registries that do not expose this endpoint. With <code>NoCatalog</code>, you list the
+repositories in the <code>Registry</code> resource.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cel"><a class="anchor" href="#_cel"></a>CEL</h3>
+<div class="paragraph">
+<p>Common Expression Language. The language of the expressions in a
+<a href="#_match-condition">match condition</a>. The Kubernetes API uses CEL for
+validation rules.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cloudnativepg"><a class="anchor" href="#_cloudnativepg"></a>CloudNativePG</h3>
+<div class="paragraph">
+<p>A Kubernetes operator for PostgreSQL. Also written CNPG. The Helm chart uses
+it by default to run the database of the <a href="#_storage-component">storage
+component</a>. You can use an external PostgreSQL instance instead.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_controller"><a class="anchor" href="#_controller"></a>Controller</h3>
+<div class="paragraph">
+<p>The component that reconciles the custom resources. It creates scheduled
+<a href="#_scanjob">ScanJob</a> and <a href="#_nodescanjob">NodeScanJob</a> resources, serves the
+admission webhooks, and runs the workload scan and node scan features.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cve"><a class="anchor" href="#_cve"></a>CVE</h3>
+<div class="paragraph">
+<p>Common Vulnerabilities and Exposures. The public identifier of a
+vulnerability, for example <code>CVE-2024-1234</code>. Each entry in a
+<a href="#_vulnerabilityreport">VulnerabilityReport</a> has a CVE identifier.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cvss"><a class="anchor" href="#_cvss"></a>CVSS</h3>
+<div class="paragraph">
+<p>Common Vulnerability Scoring System. A number from 0 to 10 that rates the
+severity of a vulnerability. A <a href="#_vulnerabilityreport">VulnerabilityReport</a>
+records the CVSS score and vector from each vendor that published one.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_d"><a class="anchor" href="#_d"></a>D</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_digest"><a class="anchor" href="#_digest"></a>Digest</h3>
+<div class="paragraph">
+<p>The SHA256 hash that identifies one image manifest. Two tags that point to the
+same digest are the same image. Images with the same digest share one
+<a href="#_sbom">SBOM</a>. The <code>indexDigest</code> field holds the digest of the multi-platform
+index that referenced the image.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_i"><a class="anchor" href="#_i"></a>I</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_image"><a class="anchor" href="#_image"></a>Image</h3>
+<div class="paragraph">
+<p>A record of one container image that the scanner discovered. It holds the
+image metadata, the image layers, and the list of workloads that use the
+image. Namespaced. The scanner creates it. One multi-platform image produces
+one <code>Image</code> resource per platform.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_m"><a class="anchor" href="#_m"></a>M</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_managed-resource"><a class="anchor" href="#_managed-resource"></a>Managed resource</h3>
+<div class="paragraph">
+<p>A resource that the workload scan feature creates and owns. This includes the
+<a href="#_registry">Registry</a>, <a href="#_scanjob">ScanJob</a>, <a href="#_image">Image</a>,
+<a href="#_sbom">SBOM</a>, and <a href="#_vulnerabilityreport">VulnerabilityReport</a> resources for
+the images of a workload. Managed resources carry the label
+<code>sbomscanner.kubewarden.io/workloadscan: "true"</code>. Webhooks reject changes from
+users.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_match-condition"><a class="anchor" href="#_match-condition"></a>Match condition</h3>
+<div class="paragraph">
+<p>A named <a href="#_cel">CEL</a> expression on a repository of a <a href="#_registry">Registry</a>.
+It selects the image tags to scan. The <code>matchOperator</code> field combines several
+conditions with <code>And</code> or <code>Or</code>. A <a href="#_scanjob">ScanJob</a> can refer to a match
+condition by name to scan a subset of tags.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mcp-server"><a class="anchor" href="#_mcp-server"></a>MCP server</h3>
+<div class="paragraph">
+<p>An optional component that speaks the Model Context Protocol. It lets an AI
+assistant query vulnerability data and manage scan resources. It is
+experimental.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_n"><a class="anchor" href="#_n"></a>N</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_nats"><a class="anchor" href="#_nats"></a>NATS</h3>
+<div class="paragraph">
+<p>The message broker between the <a href="#_controller">controller</a> and the
+<a href="#_worker">workers</a>. The Helm chart deploys it as a StatefulSet.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodesbom"><a class="anchor" href="#_nodesbom"></a>NodeSBOM</h3>
+<div class="paragraph">
+<p>The <a href="#_sbom">SBOM</a> of the file system of one node, in <a href="#_spdx">SPDX</a> format.
+Cluster-scoped. The node <a href="#_worker">worker</a> creates it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodescanconfiguration"><a class="anchor" href="#_nodescanconfiguration"></a>NodeScanConfiguration</h3>
+<div class="paragraph">
+<p>The resource that enables node scanning. It holds the node selector, the
+<a href="#_scan-interval">scan interval</a>, the skip patterns, and the
+<a href="#_platform-filter">platform filter</a>. Cluster-scoped. One instance, named
+<code>default</code>. You create it. Without it, no node is scanned.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodescanjob"><a class="anchor" href="#_nodescanjob"></a>NodeScanJob</h3>
+<div class="paragraph">
+<p>A request to scan one node. Cluster-scoped. The <a href="#_controller">controller</a>
+creates it on the <a href="#_scan-interval">scan interval</a> or after a
+<a href="#_rescan-annotation">rescan annotation</a>. You can create one for a scan on
+demand.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodevulnerabilityreport"><a class="anchor" href="#_nodevulnerabilityreport"></a>NodeVulnerabilityReport</h3>
+<div class="paragraph">
+<p>The vulnerability scan result for one node. It has the same report structure
+as a <a href="#_vulnerabilityreport">VulnerabilityReport</a>. Cluster-scoped. The node
+<a href="#_worker">worker</a> creates it.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_o"><a class="anchor" href="#_o"></a>O</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_oci"><a class="anchor" href="#_oci"></a>OCI</h3>
+<div class="paragraph">
+<p>Open Container Initiative. The standards for container images, registries,
+and artifacts. The scanner catalogs OCI images only. It skips other OCI
+artifacts, for example signatures, attestations, and Helm charts.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_opentelemetry"><a class="anchor" href="#_opentelemetry"></a>OpenTelemetry</h3>
+<div class="paragraph">
+<p>The framework that the scanner uses to export traces and metrics. The export
+uses the OTLP protocol over gRPC. It is off until you set a collector
+endpoint.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_p"><a class="anchor" href="#_p"></a>P</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_platform-filter"><a class="anchor" href="#_platform-filter"></a>Platform filter</h3>
+<div class="paragraph">
+<p>A list of operating system, architecture, and variant entries. It limits the
+scan to the platforms that you run. Without a filter, the scanner scans all
+platforms of a multi-platform image. The <code>platforms</code> field exists on the
+<a href="#_registry">Registry</a>, the
+<a href="#_workloadscanconfiguration">WorkloadScanConfiguration</a>, and the
+<a href="#_nodescanconfiguration">NodeScanConfiguration</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_private-registry"><a class="anchor" href="#_private-registry"></a>Private registry</h3>
+<div class="paragraph">
+<p>A registry that needs credentials. You store the credentials in a
+<code>kubernetes.io/dockerconfigjson</code> Secret and refer to it in the <code>authSecret</code>
+field of the <a href="#_registry">Registry</a>. The <code>caBundle</code> field adds a private
+certificate authority.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_purl"><a class="anchor" href="#_purl"></a>PURL</h3>
+<div class="paragraph">
+<p>Package URL. A string that identifies one package in one ecosystem, for
+example <code>pkg:deb/debian/openssl@3.0.11</code>. Each vulnerability in a
+<a href="#_vulnerabilityreport">VulnerabilityReport</a> names the PURL of the affected
+package.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_r"><a class="anchor" href="#_r"></a>R</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_registry"><a class="anchor" href="#_registry"></a>Registry</h3>
+<div class="paragraph">
+<p>The resource that describes a container registry to scan. It holds the URI,
+the <a href="#_catalog">catalog</a> type, the repositories and
+<a href="#_match-condition">match conditions</a>, the credentials, the
+<a href="#_platform-filter">platform filter</a>, and the <a href="#_scan-interval">scan
+interval</a>. Namespaced. You create it. The workload scan feature also creates
+<a href="#_managed-resource">managed</a> <code>Registry</code> resources. If you delete a
+<code>Registry</code>, the scanner deletes its images, SBOMs, reports, and scan jobs.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rescan-annotation"><a class="anchor" href="#_rescan-annotation"></a>Rescan annotation</h3>
+<div class="paragraph">
+<p>The annotation <code>sbomscanner.kubewarden.io/node-rescan-requested: "true"</code> on
+the <a href="#_nodescanconfiguration">NodeScanConfiguration</a>. It starts a scan of all
+matching nodes at once, without a wait for the <a href="#_scan-interval">scan
+interval</a>. The <a href="#_controller">controller</a> removes the annotation after it
+creates the <a href="#_nodescanjob">NodeScanJob</a> resources.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_s"><a class="anchor" href="#_s"></a>S</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_sbom"><a class="anchor" href="#_sbom"></a>SBOM</h3>
+<div class="paragraph">
+<p>Software Bill of Materials. The list of packages in an image or on a node.
+The scanner generates one <a href="#_spdx">SPDX</a> document per image and stores it in
+an <code>SBOM</code> resource. Namespaced. The <a href="#_worker">worker</a> creates it. When the
+<a href="#_vulnerability-database">vulnerability database</a> changes, the scanner reads
+the stored SBOM again. It does not pull the image again.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scan-interval"><a class="anchor" href="#_scan-interval"></a>Scan interval</h3>
+<div class="paragraph">
+<p>A duration that turns on scheduled scans. The <code>scanInterval</code> field exists on
+the <a href="#_registry">Registry</a>, the
+<a href="#_workloadscanconfiguration">WorkloadScanConfiguration</a>, and the
+<a href="#_nodescanconfiguration">NodeScanConfiguration</a>. If the field is not set,
+the scanner does not scan on a schedule. You then create a
+<a href="#_scanjob">ScanJob</a> or a <a href="#_nodescanjob">NodeScanJob</a> by hand.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scanjob"><a class="anchor" href="#_scanjob"></a>ScanJob</h3>
+<div class="paragraph">
+<p>A request to scan one <a href="#_registry">Registry</a>. It works like a Kubernetes
+<code>Job</code>. Its status conditions report the stages: scheduled, in progress,
+complete, or failed. Namespaced, in the namespace of the <code>Registry</code>. You
+create it for a scan on demand. The <a href="#_controller">controller</a> creates it on
+the <a href="#_scan-interval">scan interval</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spdx"><a class="anchor" href="#_spdx"></a>SPDX</h3>
+<div class="paragraph">
+<p>System Package Data Exchange. The document format of each <a href="#_sbom">SBOM</a> and
+<a href="#_nodesbom">NodeSBOM</a>. The scanner stores SPDX as JSON.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_storage-component"><a class="anchor" href="#_storage-component"></a>Storage component</h3>
+<div class="paragraph">
+<p>A Kubernetes extension API server. It serves the
+<code>storage.sbomscanner.kubewarden.io</code> API group: <a href="#_image">Image</a>,
+<a href="#_sbom">SBOM</a>, <a href="#_vulnerabilityreport">VulnerabilityReport</a>,
+<a href="#_workloadscanreport">WorkloadScanReport</a>, <a href="#_nodesbom">NodeSBOM</a>, and
+<a href="#_nodevulnerabilityreport">NodeVulnerabilityReport</a>. It stores these
+resources in PostgreSQL instead of etcd.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_suppressed-vulnerability"><a class="anchor" href="#_suppressed-vulnerability"></a>Suppressed vulnerability</h3>
+<div class="paragraph">
+<p>A vulnerability that a <a href="#_vex">VEX</a> statement marks as not applicable. The
+report keeps the entry with <code>suppressed: true</code> and the VEX status. The
+severity counts in the report summary do not include suppressed
+vulnerabilities.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_t"><a class="anchor" href="#_t"></a>T</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_traceparent-annotation"><a class="anchor" href="#_traceparent-annotation"></a>traceparent annotation</h3>
+<div class="paragraph">
+<p>The annotation <code>sbomscanner.kubewarden.io/traceparent</code> on a
+<a href="#_scanjob">ScanJob</a> or <a href="#_nodescanjob">NodeScanJob</a>. It carries a W3C trace
+context. A client that already has a trace, for example a CI pipeline, sets
+it so that the scan becomes part of that trace.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_trivy"><a class="anchor" href="#_trivy"></a>Trivy</h3>
+<div class="paragraph">
+<p>The scanner engine inside the <a href="#_worker">worker</a>. It generates the
+<a href="#_sbom">SBOM</a> and matches it against the
+<a href="#_vulnerability-database">vulnerability database</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_v"><a class="anchor" href="#_v"></a>V</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_vex"><a class="anchor" href="#_vex"></a>VEX</h3>
+<div class="paragraph">
+<p>Vulnerability Exploitability eXchange. A document in which a software vendor
+states whether a <a href="#_cve">CVE</a> affects a product. The scanner applies VEX
+statements during a scan and marks the matched entries as
+<a href="#_suppressed-vulnerability">suppressed</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vex-hub"><a class="anchor" href="#_vex-hub"></a>VEX Hub</h3>
+<div class="paragraph">
+<p>A repository that collects <a href="#_vex">VEX</a> documents from many projects. The
+scanner reads the repositories that you configure with
+<a href="#_vexhub">VEXHub</a> resources.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vexhub"><a class="anchor" href="#_vexhub"></a>VEXHub</h3>
+<div class="paragraph">
+<p>The resource that points at one <a href="#_vex-hub">VEX Hub</a> repository. It holds the
+URL and an <code>enabled</code> flag. The scanner applies all enabled <code>VEXHub</code> resources
+to every scan. Cluster-scoped. You create it. The Helm chart creates two by
+default, for the Rancher and the Aqua Security repositories.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vulnerability-database"><a class="anchor" href="#_vulnerability-database"></a>Vulnerability database</h3>
+<div class="paragraph">
+<p>The data that <a href="#_trivy">Trivy</a> matches an <a href="#_sbom">SBOM</a> against. The
+<a href="#_worker">worker</a> pulls two <a href="#_oci">OCI</a> artifacts: the main database and
+the Java database. In an <a href="#_air-gapped-cluster">air-gapped cluster</a>, you
+mirror both to an internal registry.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vulnerabilityreport"><a class="anchor" href="#_vulnerabilityreport"></a>VulnerabilityReport</h3>
+<div class="paragraph">
+<p>The scan result for one <a href="#_image">Image</a> on one platform. It holds a summary
+with the count per severity, and the list of vulnerabilities per target. Each
+vulnerability names the <a href="#_cve">CVE</a>, the package and its <a href="#_purl">PURL</a>, the
+installed and fixed versions, the layer, the severity, and the
+<a href="#_cvss">CVSS</a> scores. Namespaced. The <a href="#_worker">worker</a> creates it.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_w"><a class="anchor" href="#_w"></a>W</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_worker"><a class="anchor" href="#_worker"></a>Worker</h3>
+<div class="paragraph">
+<p>The component that does the scan work. It reads scan messages from
+<a href="#_nats">NATS</a>, catalogs the registry, generates the <a href="#_sbom">SBOM</a>, and
+scans it with <a href="#_trivy">Trivy</a>. For node scans, a worker runs on each node as
+a DaemonSet and reads the host file system.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_workload"><a class="anchor" href="#_workload"></a>Workload</h3>
+<div class="paragraph">
+<p>The top-level owner of a Pod. The workload scan feature follows the owner
+references of a Pod up to the Deployment, StatefulSet, DaemonSet, Job, or
+CronJob. It creates one <a href="#_workloadscanreport">WorkloadScanReport</a> per
+workload.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_workloadscanconfiguration"><a class="anchor" href="#_workloadscanconfiguration"></a>WorkloadScanConfiguration</h3>
+<div class="paragraph">
+<p>The resource that enables workload scanning. It holds the namespace selector,
+the <a href="#_artifactsnamespace">artifactsNamespace</a>, the <a href="#_scan-interval">scan
+interval</a>, the credentials, and the <a href="#_platform-filter">platform filter</a>.
+Cluster-scoped. One instance, named <code>default</code>. You create it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_workloadscanreport"><a class="anchor" href="#_workloadscanreport"></a>WorkloadScanReport</h3>
+<div class="paragraph">
+<p>The vulnerability view of one <a href="#_workload">workload</a>. It lists the containers
+of the workload, their images, and the vulnerabilities of each image. It has
+one summary for the whole workload. Namespaced, in the namespace of the
+workload. The <a href="#_controller">controller</a> creates it. Users cannot change it.</p>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="organization.html">Organization</a></span>
+  <span class="next"><a href="disclosure.html">Security disclosure</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+<script src="../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

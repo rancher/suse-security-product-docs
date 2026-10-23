@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Known limitations | Network Enforcer  0.2</title>
+    <link rel="prev" href="compatibility.html">
+    <link rel="next" href="troubleshooting.html">
+    <meta name="description" content="Understand the current known limitations of the network-enforcer and how they affect deployment and policy enforcement">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-09-18"/>
+<link rel="stylesheet" href="../../../_/css/search.css">
+<link rel="icon" href="../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/network-enforcer/0.2/en/known_limitations.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/network-enforcer/0.2/en/known_limitations.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Known limitations |  0.2",
+  "headline": "Known limitations",
+  "description": "Understand the current known limitations of the network-enforcer and how they affect deployment and policy enforcement",
+  "inLanguage": "en",
+  "dateModified": "2026-09-18T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.2",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="network-enforcer" data-version="0.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Network Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="installation/quickstart.html">Quick Start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="installation/uninstall.html">Uninstall</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Concepts &amp; Operations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="phases.html">Phases: Learn, Monitor, Protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="known_limitations.html">Known Limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="crd.html">CRD API Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Development</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="setup-development-env.html">Development Environment</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Network Enforcer</span>
+    <span class="version">0.2</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version is-current">
+              <a href="introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Concepts &amp; Operations
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.2</button>
+  <div class="version-menu">
+    <a class="version" href="../../0.4/en/reference/known_limitations.html">0.4-dev</a>
+    <a class="version" href="../../0.3/en/reference/known_limitations.html">0.3</a>
+    <a class="version is-current" href="known_limitations.html">0.2</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/network-enforcer/version-0.2/modules/en/pages/known_limitations.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:network-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+<h1 class="page">Known limitations</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document tracks the current, known limitations of SUSE Security Network Enforcer.
+Some are explicit design decisions, and some are constraints inherited from
+the data-plane provider (Istio ambient, Calico, or Cilium) or from Kubernetes.
+The goal is to help you understand the limitations and make informed decisions
+about your network-enforcer deployment.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_egress-outside-the-cluster-is-not-learned"><a class="anchor" href="#_egress-outside-the-cluster-is-not-learned"></a>Egress outside the cluster is not learned</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learning only records traffic between cluster workloads. Flows to destinations
+outside the cluster are dropped.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: external egress traffic does not produce proposal rules.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_protocol-coverage"><a class="anchor" href="#_protocol-coverage"></a>Protocol coverage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Istio supports TCP only. Calico and Cilium support TCP and UDP.
+Other protocols, including SCTP and ICMP, are not learned.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: unsupported protocols do not appear in proposals.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_istio-learns-and-enforces-ingress-only"><a class="anchor" href="#_istio-learns-and-enforces-ingress-only"></a>Istio learns and enforces ingress only</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Istio ambient L4 authorization is enforced on the destination ztunnel,
+inbound, and TCP only. Learning therefore creates only an <strong>ingress</strong>
+proposal on the destination workload. There is no egress
+<code>WorkloadNetworkPolicy</code> on the Istio path, and UDP is never learned or
+enforced.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: Istio-backed protect mode never blocks egress at the source.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_host-network-workloads-are-not-supported"><a class="anchor" href="#_host-network-workloads-are-not-supported"></a>Host-network workloads are not supported</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>network-enforcer does not learn or enforce policies for pods with
+<code>hostNetwork: true</code>. Those pods are not presented as normal workload
+endpoints. Therefore, Kubernetes <code>NetworkPolicy</code> (Calico and Cilium)
+and Istio <code>AuthorizationPolicy</code> do not cover them the way they cover
+cluster-networked pods.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: host-network traffic does not produce a useful allow list, and
+violations from those pods may be missing or attributed to a raw IP. Keep
+application workloads off the host network if you want network-enforcer to
+cover them.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_short-lived-pods-can-miss-learning-and-violation-records"><a class="anchor" href="#_short-lived-pods-can-miss-learning-and-violation-records"></a>Short-lived pods can miss learning and violation records</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Scrapers resolve a flow to a workload by looking up the live Pod.
+If the Pod is gone before that lookup finishes, the flow is skipped.
+The same gap applies to monitor and protect: the OpenTelemetry log may still
+be emitted, but associating it with a <code>WorkloadNetworkPolicy</code> can fail.</p>
+</div>
+<div class="paragraph">
+<p>Protect-mode enforcement remains effective while the pod exists. A failed lookup
+affects learning and violation reporting, not enforcement by an existing policy.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: short-lived Pods can leave thin or empty proposals, and their denies
+may never show up on <code>WorkloadNetworkPolicy</code> status.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_learning-starts-when-the-controller-starts"><a class="anchor" href="#_learning-starts-when-the-controller-starts"></a>Learning starts when the controller starts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>network-enforcer does not reconstruct pre-existing traffic.
+It only records flows seen after the controller is running, so long-lived
+idle workloads yield thin or empty proposals until you generate traffic
+or restart them.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: installing network-enforcer onto an already-running cluster does
+not produce a complete historical allow list. Generate the traffic you care
+about (or restart those workloads) while the controller is up if you want
+complete proposals.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_kubernetes-1-30-or-later-is-required"><a class="anchor" href="#_kubernetes-1-30-or-later-is-required"></a>Kubernetes 1.30 or later is required</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>network-enforcer uses Kubernetes Validating Admission Policy (VAP) to enforce
+admission-time protections on <code>WorkloadNetworkPolicyProposal</code> objects
+(for example, rejecting <code>networkenforcer.kubewarden.io/promote</code> unless the
+value is <code>monitor</code> or <code>protect</code>, and preventing existing <code>ownerReferences</code>
+from being removed or rewritten).</p>
+</div>
+<div class="paragraph">
+<p>VAP is only available as <code>admissionregistration.k8s.io/v1</code> starting in
+Kubernetes 1.30. Earlier Kubernetes versions exposed it as
+<code>admissionregistration.k8s.io/v1beta1</code>, but network-enforcer does not
+support that API. This is a design decision.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: network-enforcer is not compatible with Kubernetes versions
+before 1.30.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_spec-backend-is-immutable"><a class="anchor" href="#_spec-backend-is-immutable"></a><code>spec.backend</code> is immutable</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>spec.backend</code> is <code>istio</code> or <code>kubernetes</code> and cannot be changed in place.
+There is no migration path that converts an Istio-backed proposal or
+policy into a Kubernetes-backed one, or vice versa.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: switching between Istio and a Kubernetes backend requires deleting
+the old objects and relearning them.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_violation-status-is-capped-at-100-records"><a class="anchor" href="#_violation-status-is-capped-at-100-records"></a>Violation status is capped at 100 records</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>WorkloadNetworkPolicy</code> status keeps at most <strong>100</strong> active records in
+<code>status.violations</code> and <strong>100</strong> in <code>status.acknowledgedViolations</code>.
+Oldest entries are dropped when the cap is reached.</p>
+</div>
+<div class="paragraph">
+<p>There is no corresponding cap on the number of peers or ports written
+into a <code>WorkloadNetworkPolicyProposal</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Impact</strong>: a noisy workload can lose older violation records from status
+while <code>status.violationCount</code> keeps growing. Use OpenTelemetry export if
+you need a longer history.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="compatibility.html">Compatibility</a></span>
+  <span class="next"><a href="troubleshooting.html">Troubleshooting</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+<script src="../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

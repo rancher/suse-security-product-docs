@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuring SUSE Security Vulnerability Scanner for production | Vulnerability Scanner  0.14-dev</title>
+    <link rel="prev" href="helm-values.html">
+    <link rel="next" href="private-registries.html">
+    <meta name="description" content="Configure the controller, the storage API server, the worker, PostgreSQL, and NATS of SUSE Security Vulnerability Scanner for high availability and reliable resource use.">
+    <meta name="keywords" content="["SUSE Security Vulnerability Scanner", kubewarden, kubernetes, production, replicas, postgresql, nats, backups, admission policies, pod security admission]">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-13"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/sbom-scanner/0.14/en/howtos/production-deployments.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/sbom-scanner/0.14/en/howtos/production-deployments.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Configuring SUSE Security Vulnerability Scanner for production |  0.14",
+  "headline": "Configuring SUSE Security Vulnerability Scanner for production",
+  "description": "Configure the controller, the storage API server, the worker, PostgreSQL, and NATS of SUSE Security Vulnerability Scanner for high availability and reliable resource use.",
+  "inLanguage": "en",
+  "dateModified": "2026-10-13T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.14",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="sbom-scanner" data-version="0.14">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Vulnerability Scanner</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/verifying-sbom-scanner.html">Verifying Vulnerability Scanner</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/scanning-registries.html">Scanning Registries</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/scanning-workloads.html">Scanning Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/scanning-nodes.html">Scanning Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/querying-reports.html">Querying Reports</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Using the UI extension</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/dashboard.html">Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-list.html">Registry List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-create-edit.html">Creating and Editing a Registry</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-detail.html">Registry Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-configuration.html">Workload Scan Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-registries.html">Workload Scan Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-list.html">Image List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-detail.html">Image Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/cve-detail.html">CVE Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-interaction.html">Workload Interaction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/vex-management.html">VEX Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="helm-values.html">Helm Values</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="private-registries.html">Private Registries</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="airgap-support.html">Airgap Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="vex.html">VEX Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="opentelemetry.html">OpenTelemetry</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="mcp-server.html">MCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="collecting-logs.html">Collecting Logs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="common-problems.html">Common Problems</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/crd-reference.html">CRD Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/opentelemetry-reference.html">OpenTelemetry Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Vulnerability Scanner</span>
+    <span class="version">0.14-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../../0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="../introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Howtos
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.14-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="production-deployments.html">0.14-dev</a>
+    <a class="version is-missing" href="../../../0.13/en/introduction.html">0.13</a>
+    <a class="version is-missing" href="../../../0.12/en/introduction.html">0.12</a>
+    <a class="version is-missing" href="../../../0.11/en/introduction.html">0.11</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/sbom-scanner/version-0.14/modules/en/pages/howtos/production-deployments.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:sbom-scanner" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Vulnerability Scanner 0.14-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">Configuring SUSE Security Vulnerability Scanner for production</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page gives configuration for Vulnerability Scanner in a production
+cluster. It covers the replicas of each component, PostgreSQL, NATS, the
+node scan <a href="../glossary.html#_worker" class="xref page">worker</a>, and the other chart values
+that matter at scale.</p>
+</div>
+<div class="paragraph">
+<p>For the full list of chart values, see
+<a href="helm-values.html" class="xref page">Helm Values Configuration</a>. For how the
+components work together, see
+<a href="../explanations/architecture.html" class="xref page">Architecture</a>. For the cluster
+requirements, see <a href="../reference/compatibility.html" class="xref page">Compatibility</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_replicas"><a class="anchor" href="#_replicas"></a>Replicas</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The chart sets <code>controller.replicas</code>, <code>storage.replicas</code>, and
+<code>worker.replicas</code> to <code>3</code> by default. Each component uses its replicas in a
+different way.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../glossary.html#_controller" class="xref page">controller</a> runs with leader election.
+The leader reconciles the custom resources and runs the two scheduled-scan
+runners. Every replica serves the admission webhooks. The webhooks use
+<code>failurePolicy: Fail</code>, and they cover only the Vulnerability Scanner custom
+resources. When the controller is down, a change to a <a href="../glossary.html#_registry" class="xref page"><code>Registry</code></a>, a
+<a href="../glossary.html#_scanjob" class="xref page"><code>ScanJob</code></a>, or a scan configuration waits. Nothing else in the cluster
+waits on the controller.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../glossary.html#_storage-component" class="xref page">storage API server</a> has no
+leader. Every replica serves any request, and each replica checks the
+database as part of its own readiness probe. When the database is
+unreachable, every storage replica turns not ready at the same time. See
+<a href="#_storage_api_server_and_kubectl">Storage API server and kubectl</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="../glossary.html#_worker" class="xref page">worker</a> is the throughput knob. Each worker
+pod processes one message at a time, from one shared queue. Raise
+<code>worker.replicas</code> to scan more images at once:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">worker:
+  replicas: 5</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scheduling_current_limits"><a class="anchor" href="#_scheduling_current_limits"></a>Scheduling: current limits of the chart</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The chart has no <code>tolerations</code>, <code>nodeSelector</code>, <code>affinity</code>, or
+<code>priorityClassName</code> value for the controller, the storage API server, the
+worker, or the MCP server. It has no PodDisruptionBudget for any of them
+either. With three replicas of a component and no anti-affinity, every
+replica of that component can land on one node.</p>
+</div>
+<div class="paragraph">
+<p>The node scan worker, covered next, has the same gap, and it also reuses
+<code>worker.resources</code>, so you cannot size it apart from the worker Deployment.</p>
+</div>
+<div class="paragraph">
+<p>NATS and PostgreSQL are not affected. The NATS subchart ships its own
+PodDisruptionBudget. The CloudNativePG operator manages its own
+PodDisruptionBudgets for the database pods.</p>
+</div>
+<div class="paragraph">
+<p>These are limits of the current chart, not a setting you can change today.
+They are going to be addressed in future releases.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_storage_api_server_and_kubectl"><a class="anchor" href="#_storage_api_server_and_kubectl"></a>Storage API server and kubectl</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The storage API server is registered as a Kubernetes aggregated API, in
+the group <code>storage.sbomscanner.kubewarden.io</code>. When no storage replica is
+ready, for example during a database outage, that aggregated API turns
+unavailable. A request for one of its kinds, such as <a href="../glossary.html#_image" class="xref page"><code>Image</code></a> or
+<a href="../glossary.html#_vulnerabilityreport" class="xref page"><code>VulnerabilityReport</code></a>, fails. Requests for ordinary Kubernetes resources
+keep working.</p>
+</div>
+<div class="paragraph">
+<p>The controller and the worker wait for the storage API at startup, so a
+storage outage also delays a fresh controller or worker pod. Keep
+<code>storage.replicas</code> at <code>3</code> or more, and keep the database reachable.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_postgresql"><a class="anchor" href="#_postgresql"></a>PostgreSQL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>PostgreSQL holds every scan result: <a href="../glossary.html#_image" class="xref page"><code>Image</code></a>, <a href="../glossary.html#_sbom" class="xref page"><code>SBOM</code></a>,
+<a href="../glossary.html#_vulnerabilityreport" class="xref page"><code>VulnerabilityReport</code></a>, <a href="../glossary.html#_workloadscanreport" class="xref page"><code>WorkloadScanReport</code></a>, <a href="../glossary.html#_nodesbom" class="xref page"><code>NodeSBOM</code></a>, and
+<a href="../glossary.html#_nodevulnerabilityreport" class="xref page"><code>NodeVulnerabilityReport</code></a>. The <a href="../glossary.html#_registry" class="xref page"><code>Registry</code></a>, the <a href="../glossary.html#_scanjob" class="xref page"><code>ScanJob</code></a>, and the
+other configuration resources live in etcd and do not depend on it. If you
+lose the database, Vulnerability Scanner rebuilds the current reports the
+next time it scans. It cannot rebuild the history of past reports, or the
+SBOM of an image that a registry no longer carries.</p>
+</div>
+<div class="paragraph">
+<p>By default, the chart deploys PostgreSQL with the CloudNativePG operator.
+<code>storage.postgres.cnpg.instances</code> defaults to <code>3</code>. These extra instances
+give failover. They do not add write capacity: every instance writes
+through one primary. See
+<a href="helm-values.html#using-cloudnativepg-recommended" class="xref page">Using
+CloudNativePG</a>.</p>
+</div>
+<div class="paragraph">
+<p><code>storage.postgres.cnpg.storage.size</code> starts small. You can raise it later,
+and CloudNativePG resizes the existing volume. You cannot lower it. Raise
+the value with headroom before your first large scan. Set
+<code>storage.postgres.cnpg.storage.storageClass</code> to a storage class with the
+performance that your scan volume needs, rather than keep the cluster
+default.</p>
+</div>
+<div class="paragraph">
+<p>You install and upgrade the CloudNativePG operator yourself. The chart
+only creates the <code>Cluster</code> resource that the operator reconciles.</p>
+</div>
+<div class="sect2">
+<h3 id="_postgresql_backups"><a class="anchor" href="#_postgresql_backups"></a>Back up the database</h3>
+<div class="paragraph">
+<p>The chart does not configure a backup on its own. Use
+<code>storage.postgres.cnpg.merge</code> to add a backup configuration to the CNPG
+<code>Cluster</code> resource. This value deep-merges into the <code>Cluster</code> spec, so you
+can set any field that the chart does not expose directly. A list in
+<code>merge</code> replaces the chart-managed list; it does not append to it.</p>
+</div>
+<div class="paragraph">
+<p>This example adds the Barman Cloud plugin:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  postgres:
+    cnpg:
+      merge:
+        plugins:
+          - name: barman-cloud.cloudnative-pg.io
+            isWALArchiver: true
+            parameters:
+              barmanObjectName: my-object-store
+        backup:
+          retentionPolicy: "30d"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before you install this configuration, install the Barman Cloud plugin
+next to the CloudNativePG operator. Then create the <code>ObjectStore</code>
+resource that the plugin parameter names. After the install, create a
+<code>ScheduledBackup</code> that targets the <code>Cluster</code> named
+<code>&lt;release&gt;-sbomscanner-cnpg-cluster</code>. See the
+<a href="https://cloudnative-pg.io/documentation/current/backup/">CloudNativePG
+backup documentation</a> for the plugin and the <code>ObjectStore</code> and
+<code>ScheduledBackup</code> fields.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_use_your_own_postgresql"><a class="anchor" href="#_use_your_own_postgresql"></a>Use your own PostgreSQL</h3>
+<div class="paragraph">
+<p>Turn off CloudNativePG for your own backup process, your own
+high-availability setup, or sizing that an in-cluster database cannot
+give you. Point Vulnerability Scanner at a PostgreSQL instance that you
+manage instead. See
+<a href="helm-values.html#using-an-external-postgresql-instance" class="xref page">Using
+an external PostgreSQL instance</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nats"><a class="anchor" href="#_nats"></a>NATS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The chart deploys <a href="../glossary.html#_nats" class="xref page">NATS</a> as a subchart, with
+<a href="https://docs.nats.io/reference/jetstream/">JetStream</a> on.
+By default it runs three pods, each with its own persistent
+volume on the cluster default storage class. NATS carries the scan
+messages between the controller and the workers, and the watch events
+between the storage replicas. The messages that a worker has not yet
+processed survive a worker or a controller restart. They stay on the
+NATS volume until a worker acknowledges them. The subchart creates its
+own PodDisruptionBudget.</p>
+</div>
+<div class="paragraph">
+<p>The <code>nats</code> values block configures this subchart directly. Do not edit it
+by hand; a value set elsewhere in the chart already shapes it to work with
+Vulnerability Scanner.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_node_scan_worker"><a class="anchor" href="#_node_scan_worker"></a>Node scan worker</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With <code>controller.nodeScan.enabled</code> at its default of <code>true</code>, the chart
+deploys a second worker as a DaemonSet, one pod on every node. This pod
+reads the root file system of its node to produce a <a href="../glossary.html#_nodesbom" class="xref page"><code>NodeSBOM</code></a> and a
+<a href="../glossary.html#_nodevulnerabilityreport" class="xref page"><code>NodeVulnerabilityReport</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>Reading every file on the node needs either the UID <code>0</code> or the Linux
+capability <code>DAC_READ_SEARCH</code>. Both the <code>baseline</code> and the <code>restricted</code> Pod
+Security Admission levels forbid that capability, so the pod needs UID
+<code>0</code> regardless. The pod mounts the root file system read-only, and it adds
+no other capability. See
+<a href="../tutorials/scanning-nodes.html#_pod_security_admission" class="xref page">Pod Security
+Admission</a> for the full reasoning.</p>
+</div>
+<div class="paragraph">
+<p>If you do not need node scanning, turn it off. The DaemonSet is removed,
+and every remaining pod in the release meets the <code>restricted</code> level:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  nodeScan:
+    enabled: false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See
+<a href="../tutorials/scanning-nodes.html#disabling-node-scanning" class="xref page">Disabling node
+scanning</a> for the difference between this value and disabling scans
+through the <code>NodeScanConfiguration</code> resource.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_admission_policies_and_pod_security_admission"><a class="anchor" href="#_admission_policies_and_pod_security_admission"></a>Admission policies and Pod Security Admission</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>What an admission policy accepts depends on whether node scanning is on.</p>
+</div>
+<div class="paragraph">
+<p>With <code>controller.nodeScan.enabled: false</code>, the controller, the storage API
+server, the worker, the MCP server, and NATS all run as non-root and drop
+every capability. None of them use a host namespace or a <code>hostPath</code>
+volume. They meet the <code>restricted</code> Pod Security Admission level, and no
+SUSE Security Admission Controller recommended policy rejects them.</p>
+</div>
+<div class="paragraph">
+<p>With node scanning on, the node scan worker fails both the <code>baseline</code> and
+the <code>restricted</code> level. In <code>protect</code> mode, three of the Admission Controller
+recommended policies reject it:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Policy</th>
+<th class="tableblock halign-left valign-top">Rejects the node scan worker because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>do-not-share-host-paths</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The root file system, <code>/</code>, is not under <code>/tmp</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>do-not-run-as-root</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>runAsUser</code> is <code>0</code> and <code>runAsNonRoot</code> is <code>false</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>drop-capabilities</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">It adds <code>DAC_READ_SEARCH</code>, and the allowed list of the policy is empty.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Exclude the Vulnerability Scanner namespace from these policies, with the
+<code>recommendedPolicies.skipAdditionalNamespaces</code> value of the
+Admission Controller Helm chart. The default exclusion list of that chart
+already contains <code>cattle-sbomscanner-system</code>. If you install
+Vulnerability Scanner into a namespace with another name, such as
+<code>sbomscanner</code> from the quick start, add that name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">recommendedPolicies:
+  skipAdditionalNamespaces:
+    - sbomscanner</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Keep the namespace at the <code>privileged</code> Pod Security Admission level, or
+use <code>audit</code> or <code>warn</code> mode only.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="../../../../admission-controller/1.38/en/howtos/security-hardening/security-hardening.html" class="xref page">Security
+hardening</a> for the full list of recommended policies, and
+<a href="../../../../admission-controller/1.38/en/howtos/pod-security-admission-with-kubewarden.html" class="xref page">Pod
+Security Admission</a> for the three levels.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_telemetry"><a class="anchor" href="#_telemetry"></a>Telemetry</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vulnerability Scanner has no bundled OpenTelemetry collector. Set
+<code>otel.endpoint</code> to the OTLP/gRPC endpoint of a collector that you already
+operate. The export stays off while this value is empty:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">otel:
+  endpoint: "https://otel-collector.observability.svc.cluster.local:4317"
+  caSecretName: "sbomscanner-otel-ca"
+  clientCertificateSecretName: "sbomscanner-otel-client"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both Secrets must exist in the Vulnerability Scanner namespace before you set
+these values. See
+<a href="helm-values.html#_opentelemetry" class="xref page">OpenTelemetry</a> for what
+each value does, and <a href="opentelemetry.html" class="xref page">OpenTelemetry</a> for
+the full setup, including the exported traces and metrics. The MCP server
+does not export telemetry.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scan_scope_and_intervals"><a class="anchor" href="#_scan_scope_and_intervals"></a>Scan scope and intervals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The chart has no value that limits the scan scope or the scan frequency.
+Each lives in a custom resource instead:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Registry.spec.scanInterval</code> sets how often the registry runner rescans
+a <a href="../glossary.html#_registry" class="xref page"><code>Registry</code></a>. Leave it unset to scan only on demand. See
+<a href="../tutorials/scanning-registries.html" class="xref page">Scanning Registries</a>.</p>
+</li>
+<li>
+<p><code>WorkloadScanConfiguration.spec.namespaceSelector</code> and <code>.scanInterval</code>
+set which namespaces the workload scan covers, and how often it
+rescans them. See
+<a href="../tutorials/scanning-workloads.html" class="xref page">Scanning Workloads</a>.</p>
+</li>
+<li>
+<p><code>NodeScanConfiguration.spec.nodeSelector</code>, <code>.platforms</code>, and
+<code>.scanInterval</code> set which nodes the node scan covers, and how often. See
+<a href="../tutorials/scanning-nodes.html" class="xref page">Scanning Nodes</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A validating webhook rejects a <code>scanInterval</code> under one minute, on every
+one of these resources. Vulnerability Scanner runs one <a href="../glossary.html#_scanjob" class="xref page"><code>ScanJob</code></a> per
+<a href="../glossary.html#_registry" class="xref page"><code>Registry</code></a> at a time; split a large registry into several <code>Registry</code>
+resources to scan it in parallel.</p>
+</div>
+<div class="paragraph">
+<p>Turn off a feature that you do not use, so that the controller does not
+reconcile it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  workloadScan:
+    enabled: false
+  nodeScan:
+    enabled: false</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_air_gap"><a class="anchor" href="#_air_gap"></a>Air-gapped clusters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A production cluster without internet access needs its own sources for
+the vulnerability databases, the PostgreSQL operand image, and the
+default VEX feeds:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">worker:
+  trivyDBRepository: "my-registry.example.com/aquasecurity/trivy-db"
+  trivyJavaDBRepository: "my-registry.example.com/aquasecurity/trivy-java-db"
+controller:
+  defaultVEXHubResources: false
+storage:
+  postgres:
+    cnpg:
+      imageName: "my-registry.example.com/postgresql:18.1"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="airgap-support.html" class="xref page">Air Gap Support</a> for the full
+setup, including how to self-host a VEX Hub.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_production_configuration"><a class="anchor" href="#_example_production_configuration"></a>Example production configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example combines the configuration from this page into one Helm
+values file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">worker:
+  replicas: 5
+
+storage:
+  postgres:
+    cnpg:
+      storage:
+        storageClass: fast-ssd
+        size: 20Gi
+      merge:
+        plugins:
+          - name: barman-cloud.cloudnative-pg.io
+            isWALArchiver: true
+            parameters:
+              barmanObjectName: my-object-store
+        backup:
+          retentionPolicy: "30d"
+
+otel:
+  endpoint: "https://otel-collector.observability.svc.cluster.local:4317"
+  caSecretName: "sbomscanner-otel-ca"
+  clientCertificateSecretName: "sbomscanner-otel-client"
+
+controller:
+  nodeScan:
+    enabled: true
+mcp:
+  enabled: false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apply the file at install or upgrade time:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install sbomscanner kubewarden/sbomscanner \
+  --namespace sbomscanner \
+  --create-namespace \
+  -f production-values.yaml \
+  --wait</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="helm-values.html">Helm Values</a></span>
+  <span class="next"><a href="private-registries.html">Private Registries</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

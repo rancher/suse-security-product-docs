@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glossary | Runtime Enforcer  0.11-dev</title>
+    <link rel="prev" href="organization.html">
+    <link rel="next" href="disclosure.html">
+    <meta name="description" content="Terms used in the SUSE Security Runtime Enforcer documentation: custom resources, labels, components, phases, and the kernel and runtime features that the enforcer depends on.">
+    <meta name="keywords" content="SUSE Security Runtime Enforcer, kubewarden, glossary">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-13"/>
+<link rel="stylesheet" href="../../../_/css/search.css">
+<link rel="icon" href="../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="https://documentation.suse.com/cloudnative/runtime-enforcer/0.11/en/glossary.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="https://documentation.suse.com/cloudnative/runtime-enforcer/0.11/en/glossary.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Glossary | SUSE Security Runtime Enforcer 0.11",
+  "headline": "Glossary",
+  "description": "Terms used in the SUSE Security Runtime Enforcer documentation: custom resources, labels, components, phases, and the kernel and runtime features that the enforcer depends on.",
+  "inLanguage": "en",
+  "dateModified": "2026-10-13T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "SUSE Security Runtime Enforcer",
+      "softwareVersion": "0.11",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="runtime-enforcer" data-version="0.11">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Runtime Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/verifying-runtime-enforcer.html">Verifying Runtime Enforcer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="explanations/phases.html">Phases: learn, monitor, protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/emergency-disable.html">Emergency disable</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/learning_mode_configuration.html">Learning mode configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/kubectl_plugin.html">kubectl plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/build.html">Build requirements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="howtos/setup-development-env.html">Development environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/known_limitations.html">Known limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/crd.html">CRD API reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/kubectl-plugin-cli.html">kubectl plugin CLI reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="reference/resource-consumption.html">Resource consumption</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="organization.html">Organization</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Runtime Enforcer</span>
+    <span class="version">0.11-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="https://documentation.suse.com" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="https://documentation.suse.com/cloudnative/runtime-enforcer" title="SUSE Security Runtime Enforcer" aria-label="SUSE Documentation - SUSE Security Runtime Enforcer">
+        SUSE Security Runtime Enforcer
+      </a>
+    </li>
+      <li>
+          <a href="glossary.html" title="Glossary" aria-label="Glossary">Glossary</a>
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.11-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="glossary.html">0.11-dev</a>
+    <a class="version is-missing" href="../../0.10/en/introduction.html">0.10</a>
+    <a class="version is-missing" href="../../0.9/en/introduction.html">0.9</a>
+    <a class="version is-missing" href="../../0.8/en/introduction.html">0.8</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/runtime-enforcer/version-0.11/modules/en/pages/glossary.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:runtime-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Runtime Enforcer 0.11-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">Glossary</h1>
+<div class="sect1">
+<h2 id="_a"><a class="anchor" href="#_a"></a>A</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_acknowledged-violation"><a class="anchor" href="#_acknowledged-violation"></a>Acknowledged violation</h3>
+<div class="paragraph">
+<p>A <a href="#_violation">violation</a> that you mark as accepted, with a reason. You add
+the annotation <code>runtimeenforcer.kubewarden.io/acknowledge-&lt;id&gt;</code> to the
+<a href="#_workloadpolicy">WorkloadPolicy</a>, with the reason as the value. The
+<code>&lt;id&gt;</code> is the <code>id</code> of the <a href="#_violation-record">violation record</a>. The
+<a href="#_controller">controller</a> moves the record to
+<code>status.acknowledgedViolations</code>, keeps the reason, and removes the
+annotation. The <a href="#_kubectl-plugin">kubectl plugin</a> command <code>policy ack</code> sets
+the annotation for you.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_active-violation"><a class="anchor" href="#_active-violation"></a>Active violation</h3>
+<div class="paragraph">
+<p>A <a href="#_violation-record">violation record</a> that is still in
+<code>status.violations</code>. It is not <a href="#_acknowledged-violation">acknowledged</a>, and
+its executable is not in the <a href="#_allow-list">allow-list</a>. The field
+<code>status.activeViolationCount</code> holds the number of active violations. This is
+the number that needs a decision.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_agent"><a class="anchor" href="#_agent"></a>Agent</h3>
+<div class="paragraph">
+<p>The component that runs on each node, as a DaemonSet. It loads the
+<a href="#_ebpf">eBPF</a> programs, learns the executables that containers run, and
+enforces the <a href="#_workloadpolicy">WorkloadPolicy</a> that each pod is
+<a href="#_binding">bound</a> to. It is also an <a href="#_nri">NRI</a> plugin, so it sees each
+container before the first process starts. It serves
+<a href="#_grpc">gRPC</a> to the <a href="#_controller">controller</a> and the
+<a href="#_debugger">debugger</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_allow-list"><a class="anchor" href="#_allow-list"></a>Allow-list</h3>
+<div class="paragraph">
+<p>The list of executables that a container can run. It is the field
+<code>spec.rulesByContainer[&lt;container&gt;].executables.allowed</code> of a
+<a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a> or a
+<a href="#_workloadpolicy">WorkloadPolicy</a>. Each entry is an absolute
+<a href="#_executable-path">executable path</a>. A process that is not in the
+allow-list is a <a href="#_violation">violation</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_b"><a class="anchor" href="#_b"></a>B</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_binding"><a class="anchor" href="#_binding"></a>Binding</h3>
+<div class="paragraph">
+<p>The link between a pod and its <a href="#_workloadpolicy">WorkloadPolicy</a>. You set
+the <a href="#_policy-label">policy label</a> on the pod, in the pod template of the
+workload. The label must be present when the pod is created. A
+<a href="#_validating-admission-policy">Validating Admission Policy</a> rejects changes
+to the label on a running pod.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_btf"><a class="anchor" href="#_btf"></a>BTF</h3>
+<div class="paragraph">
+<p>BPF Type Format. Kernel type information that the <a href="#_ebpf">eBPF</a> programs of
+the <a href="#_agent">agent</a> need. The kernel must have <code>CONFIG_DEBUG_INFO_BTF=y</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_c"><a class="anchor" href="#_c"></a>C</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_cert-manager"><a class="anchor" href="#_cert-manager"></a>cert-manager</h3>
+<div class="paragraph">
+<p>A prerequisite. Together with the cert-manager CSI driver, it issues and
+mounts TLS certificates. The <a href="#_agent">agent</a>, the
+<a href="#_controller">controller</a>, and the <a href="#_opentelemetry-collector">OpenTelemetry
+collector</a> use these certificates to talk to each other.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_containerd-and-cri-o"><a class="anchor" href="#_containerd-and-cri-o"></a>containerd and CRI-O</h3>
+<div class="paragraph">
+<p>The container runtimes that SUSE Security Runtime Enforcer supports. Both must have
+<a href="#_nri">NRI</a> enabled. The <code>cri-dockerd</code> runtime is not supported.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_controller"><a class="anchor" href="#_controller"></a>Controller</h3>
+<div class="paragraph">
+<p>The component that owns the policy resources. It runs as a Deployment. It
+handles <a href="#_promotion">promotion</a>. It serves the admission webhooks, one of
+which completes the owner reference of each new
+<a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a>. It reads the
+<a href="#_violation-record">violation records</a> from each <a href="#_agent">agent</a> over
+<a href="#_grpc">gRPC</a> and writes them to the <a href="#_workloadpolicy">WorkloadPolicy</a>
+status on each <a href="#_status-sync-interval">status sync</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_d"><a class="anchor" href="#_d"></a>D</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_debugger"><a class="anchor" href="#_debugger"></a>Debugger</h3>
+<div class="paragraph">
+<p>An optional Deployment. It compares the pods and containers that each
+<a href="#_agent">agent</a> knows about with the pods in the Kubernetes API. Use it when
+a <a href="#_workloadpolicy">WorkloadPolicy</a> does not apply to a pod that you expect
+it to. It is off by default.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_e"><a class="anchor" href="#_e"></a>E</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_ebpf"><a class="anchor" href="#_ebpf"></a>eBPF</h3>
+<div class="paragraph">
+<p>Extended Berkeley Packet Filter. A way to run small programs inside the Linux
+kernel. The <a href="#_agent">agent</a> loads an eBPF program that runs before each
+process starts in a container. The program checks the
+<a href="#_executable-path">executable path</a> against the <a href="#_allow-list">allow-list</a>.
+In <a href="#_protect">protect</a> mode, it refuses the start.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_executable-path"><a class="anchor" href="#_executable-path"></a>Executable path</h3>
+<div class="paragraph">
+<p>The absolute path of the file that a process runs, for example
+<code>/usr/bin/curl</code>. The <a href="#_agent">agent</a> records this path during learning and
+compares it with the <a href="#_allow-list">allow-list</a> during enforcement. When a
+container runs a script, the agent records the path of the script. It does
+not record the interpreter. The allow-list matches paths only. It does not
+match arguments, hashes, or patterns.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_f"><a class="anchor" href="#_f"></a>F</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_fail-open"><a class="anchor" href="#_fail-open"></a>Fail-open</h3>
+<div class="paragraph">
+<p>The behavior when a pod carries a <a href="#_policy-label">policy label</a> that names a
+<a href="#_workloadpolicy">WorkloadPolicy</a> that does not exist. By default, the
+<a href="#_agent">agent</a> does not start the container. This is the safe default. If
+you set the Helm value <code>agent.nriFailopen=true</code>, the container starts without
+protection.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_g"><a class="anchor" href="#_g"></a>G</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_grpc"><a class="anchor" href="#_grpc"></a>gRPC</h3>
+<div class="paragraph">
+<p>The protocol between the <a href="#_agent">agent</a> on each node and the
+<a href="#_controller">controller</a> or the <a href="#_debugger">debugger</a>. The controller uses
+it to read the <a href="#_violation-record">violation records</a> that the agent holds.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_k"><a class="anchor" href="#_k"></a>K</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_kubectl-plugin"><a class="anchor" href="#_kubectl-plugin"></a>kubectl plugin</h3>
+<div class="paragraph">
+<p>The <code>kubectl runtime-enforcer</code> command. It sets the labels and annotations
+that drive <a href="#_promotion">promotion</a>, <a href="#_mode">mode</a> changes, changes to the
+<a href="#_allow-list">allow-list</a>, and <a href="#_acknowledged-violation">acknowledgement</a>.
+The <code>policy show protection</code> subcommand lists each workload with its policy,
+mode, and status. You can do each task without the plugin, with <code>kubectl
+label</code>, <code>kubectl annotate</code>, or <code>kubectl edit</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_l"><a class="anchor" href="#_l"></a>L</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_learn-phase"><a class="anchor" href="#_learn-phase"></a>Learn phase</h3>
+<div class="paragraph">
+<p>The first <a href="#_phase">phase</a>. The <a href="#_agent">agent</a> observes the executables
+that each container runs and writes them to a
+<a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a>. Nothing is blocked.
+Learning starts when the agent starts. It stops for a workload when you
+<a href="#_promotion">promote</a> its proposal. A proposal holds at most 100
+executables.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_learning-namespace-selector"><a class="anchor" href="#_learning-namespace-selector"></a>Learning namespace selector</h3>
+<div class="paragraph">
+<p>The Helm value <code>learning.namespaceSelector</code>. It limits the
+<a href="#_learn-phase">learn phase</a> to the namespaces that match a label selector.
+The default selects all namespaces. The value <code>{}</code> turns learning off.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_m"><a class="anchor" href="#_m"></a>M</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_mode"><a class="anchor" href="#_mode"></a>Mode</h3>
+<div class="paragraph">
+<p>The field <code>spec.mode</code> of a <a href="#_workloadpolicy">WorkloadPolicy</a>. The values are
+<a href="#_monitor"><code>monitor</code></a> and <a href="#_protect"><code>protect</code></a>. You change the mode with
+<code>kubectl edit</code> or with the <a href="#_kubectl-plugin">kubectl plugin</a>. A mode change
+applies to running pods without a restart.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_monitor"><a class="anchor" href="#_monitor"></a>Monitor</h3>
+<div class="paragraph">
+<p>A <a href="#_phase">phase</a> and a <a href="#_mode">mode</a>. The <a href="#_agent">agent</a> reports each
+executable that is not in the <a href="#_allow-list">allow-list</a> as a
+<a href="#_violation">violation</a>. It does not block the executable. A
+<a href="#_promotion">promoted</a> proposal starts in this mode.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_n"><a class="anchor" href="#_n"></a>N</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_node-issue-code"><a class="anchor" href="#_node-issue-code"></a>Node issue code</h3>
+<div class="paragraph">
+<p>The <code>code</code> field of each entry in <code>status.nodesWithIssues</code> of a
+<a href="#_workloadpolicy">WorkloadPolicy</a>. The values are <code>Ready</code>, <code>Missing</code>,
+<code>Failed</code>, and <code>Transitioning</code>. The map holds at most 20 nodes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nri"><a class="anchor" href="#_nri"></a>NRI</h3>
+<div class="paragraph">
+<p>Node Resource Interface. An interface of the container runtime that lets a
+plugin act when a container is created or started. The <a href="#_agent">agent</a> is an
+NRI plugin. Through NRI, it learns the cgroup of each container and attaches
+the <a href="#_workloadpolicy">WorkloadPolicy</a> before the first process starts. NRI
+must be enabled in <a href="#_containerd-and-cri-o">containerd or CRI-O</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_o"><a class="anchor" href="#_o"></a>O</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_opentelemetry-collector"><a class="anchor" href="#_opentelemetry-collector"></a>OpenTelemetry collector</h3>
+<div class="paragraph">
+<p>The service that receives the <a href="#_violation">violation</a> events from the
+<a href="#_agent">agent</a>. The Helm chart can deploy one for you, or you can point the
+agent at your own. The agent emits a <code>policy_violation</code> event for each
+violation and a <code>policy_violation_acknowledged</code> event for each
+<a href="#_acknowledged-violation">acknowledgement</a>. The bundled collector exports a
+Prometheus counter of violations. The <a href="#_controller">controller</a> exports a
+gauge of <a href="#_active-violation">active violations</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_p"><a class="anchor" href="#_p"></a>P</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_phase"><a class="anchor" href="#_phase"></a>Phase</h3>
+<div class="paragraph">
+<p>One of the three stages of the Runtime Enforcer workflow:
+<a href="#_learn-phase">learn</a>, <a href="#_monitor">monitor</a>, and <a href="#_protect">protect</a>.
+Monitor and protect are also the two values of the <a href="#_mode">mode</a> field.
+Learn has no mode. In the learn phase, the workload has a
+<a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a> and no
+<a href="#_workloadpolicy">WorkloadPolicy</a>. Do not confuse the phase with the
+<a href="#_status-phase">status phase</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_policy-label"><a class="anchor" href="#_policy-label"></a>Policy label</h3>
+<div class="paragraph">
+<p>The label <code>runtimeenforcer.kubewarden.io/policy</code> on a pod. Its value is the
+name of a <a href="#_workloadpolicy">WorkloadPolicy</a> in the same namespace. It
+creates the <a href="#_binding">binding</a> between the pod and the policy. A pod
+without this label is not enforced.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_promote-label"><a class="anchor" href="#_promote-label"></a>Promote label</h3>
+<div class="paragraph">
+<p>The label <code>runtimeenforcer.kubewarden.io/promote</code> on a
+<a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a>. The value is <code>monitor</code> or
+<code>protect</code>. It starts the <a href="#_promotion">promotion</a>. If you remove the label
+before the controller acts, learning continues.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_promoted-from-label"><a class="anchor" href="#_promoted-from-label"></a>Promoted-from label</h3>
+<div class="paragraph">
+<p>The label <code>runtimeenforcer.kubewarden.io/promoted-from</code> on a
+<a href="#_workloadpolicy">WorkloadPolicy</a>. Its value is the name of the
+<a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a> that the policy came from.
+The <a href="#_controller">controller</a> sets it. The controller uses it to know that
+the workload has a policy, so that it does not create a new proposal.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_promotion"><a class="anchor" href="#_promotion"></a>Promotion</h3>
+<div class="paragraph">
+<p>The step from a <a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a> to a
+<a href="#_workloadpolicy">WorkloadPolicy</a>. You set the <a href="#_promote-label">promote
+label</a> on the proposal, or you run <code>kubectl runtime-enforcer proposal
+promote</code>. The <a href="#_controller">controller</a> creates the policy with the same
+<a href="#_allow-list">allow-list</a>, sets the <a href="#_promoted-from-label">promoted-from
+label</a>, and deletes the proposal. The policy starts in
+<a href="#_monitor"><code>monitor</code></a> mode unless you ask for <code>protect</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_protect"><a class="anchor" href="#_protect"></a>Protect</h3>
+<div class="paragraph">
+<p>A <a href="#_phase">phase</a> and a <a href="#_mode">mode</a>. The <a href="#_ebpf">eBPF</a> program refuses
+to start each executable that is not in the <a href="#_allow-list">allow-list</a>. The
+process gets the error <code>EPERM</code>, "operation not permitted". The
+<a href="#_agent">agent</a> also records a <a href="#_violation">violation</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_r"><a class="anchor" href="#_r"></a>R</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_required-plugins-annotation"><a class="anchor" href="#_required-plugins-annotation"></a>Required plugins annotation</h3>
+<div class="paragraph">
+<p>The pod annotation <code>required-plugins.noderesource.dev</code>. Its value is a list
+of <a href="#_nri">NRI</a> plugin names, for example <code>'["runtime-enforcer-agent"]'</code>.
+The container runtime refuses to start the pod when a named plugin is not
+present. Use it to make sure that no pod starts without the
+<a href="#_agent">agent</a>. It needs containerd 2.2 or later, or CRI-O 1.34 or later.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_s"><a class="anchor" href="#_s"></a>S</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_status-phase"><a class="anchor" href="#_status-phase"></a>Status phase</h3>
+<div class="paragraph">
+<p>The field <code>status.phase</code> of a <a href="#_workloadpolicy">WorkloadPolicy</a>. It has
+three values. <code>Ready</code> means that all the targeted nodes enforce the policy.
+<code>Failed</code> means that at least one node has a problem. <code>Transitioning</code> means
+that some nodes are still changing <a href="#_mode">mode</a>. See
+<a href="#_node-issue-code">node issue code</a> for the detail per node. This is not the
+same as the workflow <a href="#_phase">phase</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_status-sync-interval"><a class="anchor" href="#_status-sync-interval"></a>Status sync interval</h3>
+<div class="paragraph">
+<p>The period at which the <a href="#_controller">controller</a> reads the
+<a href="#_violation-record">violation records</a> from each <a href="#_agent">agent</a> and writes
+them to the <a href="#_workloadpolicy">WorkloadPolicy</a> status. The default is 30
+seconds. A violation can take up to 30 seconds to appear in <code>kubectl</code>. The
+<a href="#_opentelemetry-collector">OpenTelemetry</a> events arrive at once.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_v"><a class="anchor" href="#_v"></a>V</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_validating-admission-policy"><a class="anchor" href="#_validating-admission-policy"></a>Validating Admission Policy</h3>
+<div class="paragraph">
+<p>A Kubernetes admission rule written in CEL. Runtime Enforcer installs one
+that makes the <a href="#_policy-label">policy label</a> immutable on a running pod.
+This needs Kubernetes 1.31 or later.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_violation"><a class="anchor" href="#_violation"></a>Violation</h3>
+<div class="paragraph">
+<p>The start of a process whose <a href="#_executable-path">executable path</a> is not in
+the <a href="#_allow-list">allow-list</a> of its container. In <a href="#_monitor">monitor</a> mode
+the process runs. In <a href="#_protect">protect</a> mode it does not. In both modes the
+<a href="#_agent">agent</a> emits an event to the
+<a href="#_opentelemetry-collector">OpenTelemetry collector</a> and keeps a
+<a href="#_violation-record">violation record</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_violation-record"><a class="anchor" href="#_violation-record"></a>Violation record</h3>
+<div class="paragraph">
+<p>One entry in <code>status.violations</code> or <code>status.acknowledgedViolations</code> of a
+<a href="#_workloadpolicy">WorkloadPolicy</a>. It holds the <code>id</code>, the pod, the
+container, the <a href="#_executable-path">executable path</a>, the node, and the
+<a href="#_mode">mode</a>. It also holds the workload, the first and last time seen, and
+the number of occurrences. Each list holds the 100 most recent records. The
+field <code>status.violationCount</code> counts all the records that the policy ever
+had. This count includes the trimmed records.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_w"><a class="anchor" href="#_w"></a>W</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_workload"><a class="anchor" href="#_workload"></a>Workload</h3>
+<div class="paragraph">
+<p>A Deployment, StatefulSet, DaemonSet, Job, or CronJob. The
+<a href="#_learn-phase">learn phase</a> creates one
+<a href="#_workloadpolicyproposal">WorkloadPolicyProposal</a> per workload. A standalone
+Pod or a ReplicaSet is not a workload for learning. You can still
+<a href="#_binding">bind</a> such a pod to a <a href="#_workloadpolicy">WorkloadPolicy</a> that you
+write by hand.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_workloadpolicy"><a class="anchor" href="#_workloadpolicy"></a>WorkloadPolicy</h3>
+<div class="paragraph">
+<p>The resource that holds the enforced <a href="#_allow-list">allow-list</a> of a
+workload, per container, and its <a href="#_mode">mode</a>. Namespaced. The
+<a href="#_controller">controller</a> creates it on <a href="#_promotion">promotion</a>. You can
+also write one by hand. Pods <a href="#_binding">bind</a> to it with the
+<a href="#_policy-label">policy label</a>. Its status holds the
+<a href="#_status-phase">status phase</a>, the <a href="#_violation-record">violation records</a>,
+and the <a href="#_node-issue-code">node issue codes</a>. You cannot delete it while a
+pod refers to it. It has no cluster-specific state, so you can store it in
+Git and apply it to other clusters.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_workloadpolicyproposal"><a class="anchor" href="#_workloadpolicyproposal"></a>WorkloadPolicyProposal</h3>
+<div class="paragraph">
+<p>The resource that holds the <a href="#_allow-list">allow-list</a> learned for one
+<a href="#_workload">workload</a>, per container. Namespaced. The <a href="#_agent">agent</a>
+creates and updates it during the <a href="#_learn-phase">learn phase</a>. Its name is the kind and the name of the workload, for example
+<code>deploy-nginx</code>. It is owned by the workload, so Kubernetes deletes it with
+the workload. Nothing is enforced while a workload has only a proposal.
+<a href="#_promotion">Promotion</a> replaces it with a
+<a href="#_workloadpolicy">WorkloadPolicy</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="organization.html">Organization</a></span>
+  <span class="next"><a href="disclosure.html">Security disclosure</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+<script src="../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

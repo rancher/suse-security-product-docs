@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verifying SUSE Security Vulnerability Scanner | Vulnerability Scanner  0.13</title>
+    <link rel="prev" href="../quickstart.html">
+    <link rel="next" href="../user-guide/scanning-registries.html">
+    <meta name="description" content="Verify the signatures, the SBOMs, and the provenance of the SUSE Security Vulnerability Scanner container images and Helm chart.">
+    <meta name="keywords" content="SUSE Security Vulnerability Scanner, kubewarden, kubernetes, security, verification, cosign, sbom, provenance">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-09-30"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/sbom-scanner/0.13/en/tutorials/verifying-sbom-scanner.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/sbom-scanner/0.13/en/tutorials/verifying-sbom-scanner.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Verifying SUSE Security Vulnerability Scanner |  0.13",
+  "headline": "Verifying SUSE Security Vulnerability Scanner",
+  "description": "Verify the signatures, the SBOMs, and the provenance of the SUSE Security Vulnerability Scanner container images and Helm chart.",
+  "inLanguage": "en",
+  "dateModified": "2026-09-30T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.13",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="sbom-scanner" data-version="0.13">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Vulnerability Scanner</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="verifying-sbom-scanner.html">Verifying Vulnerability Scanner</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">User guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/scanning-registries.html">Scanning Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/scanning-workloads.html">Scanning Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/scanning-nodes.html">Scanning Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/querying-reports.html">Querying Reports</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/airgap-support.html">Airgap Support</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/private-registries.html">Private Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/vex.html">VEX Support</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/mcp-server.html">MCP Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/opentelemetry.html">OpenTelemetry</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Using the UI extension</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/dashboard.html">Dashboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-list.html">Registry List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-create-edit.html">Creating and Editing a Registry</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/registry-detail.html">Registry Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-configuration.html">Workload Scan Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-scan-registries.html">Workload Scan Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-list.html">Image List</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/image-detail.html">Image Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/cve-detail.html">CVE Detail</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/workload-interaction.html">Workload Interaction</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../product-specific/ui-extension/vex-management.html">VEX Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installation/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../installation/helm-values.html">Helm Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../troubleshooting/collecting-logs.html">Collecting Logs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../troubleshooting/common-problems.html">Common Problems</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/crd-reference.html">CRD Reference</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/opentelemetry-reference.html">OpenTelemetry Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Vulnerability Scanner</span>
+    <span class="version">0.13</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-current is-latest">
+              <a href="../introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Tutorials
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.13</button>
+  <div class="version-menu">
+    <a class="version" href="../../../0.14/en/tutorials/verifying-sbom-scanner.html">0.14-dev</a>
+    <a class="version is-current" href="verifying-sbom-scanner.html">0.13</a>
+    <a class="version is-missing" href="../../../0.12/en/introduction.html">0.12</a>
+    <a class="version is-missing" href="../../../0.11/en/introduction.html">0.11</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/sbom-scanner/version-0.13/modules/en/pages/tutorials/verifying-sbom-scanner.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:sbom-scanner" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+<h1 class="page">Verifying SUSE Security Vulnerability Scanner</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The SUSE Security Vulnerability Scanner project signs what it publishes, so that you can check that
+an artifact is the one the project built. For each release, the project
+publishes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Signed container images, one per component.</p>
+</li>
+<li>
+<p>A signed Software Bill of Materials (SBOM) and a signed provenance
+attestation for each image and architecture.</p>
+</li>
+<li>
+<p>A signed Helm chart.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The signatures use <a href="https://docs.sigstore.dev">Sigstore</a> in keyless mode. The
+signing certificate names the GitHub Actions workflow that built the
+artifact. Each <code>cosign</code> command below passes two values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--certificate-oidc-issuer</code>: always
+<code>https://token.actions.githubusercontent.com</code>.</p>
+</li>
+<li>
+<p><code>--certificate-identity</code>: the workflow file and the Git ref of the release.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Vulnerability Scanner builds and signs with two workflows, so the identity
+differs by artifact type:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Container images:
+<code>https://github.com/kubewarden/sbomscanner/.github/workflows/container-build.yml@refs/tags/v0.13.0</code></p>
+</li>
+<li>
+<p>SBOM and provenance files on the release page:
+<code>https://github.com/kubewarden/sbomscanner/.github/workflows/attestation.yml@refs/tags/v0.13.0</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Use the exact identity, with the release tag, as the commands below do. A
+pattern such as <code>https://github.com/kubewarden/*</code> passed to
+<code>--certificate-identity-regexp</code> accepts an artifact from any workflow in any
+repository of the organization. The exact identity accepts only an artifact
+that the named workflow built.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The examples use the release <code>v0.13.0</code> and the chart version
+<code>0.13.0</code>. Replace them with the versions that you verify.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_container_images"><a class="anchor" href="#_container_images"></a>Container images</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vulnerability Scanner publishes four images, all at <code>ghcr.io/kubewarden/sbomscanner/</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>controller</code></p>
+</li>
+<li>
+<p><code>worker</code></p>
+</li>
+<li>
+<p><code>storage</code></p>
+</li>
+<li>
+<p><code>mcp</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The build workflow signs each single-architecture image and the
+multi-architecture index. To verify the controller image, run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">cosign verify \
+  --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+  --certificate-identity="https://github.com/kubewarden/sbomscanner/.github/workflows/container-build.yml@refs/tags/v0.13.0" \
+  ghcr.io/kubewarden/sbomscanner/controller:v0.13.0
+
+Verification for ghcr.io/kubewarden/sbomscanner/controller:v0.13.0 --
+The following checks were performed on each of these signatures:
+  - The cosign claims were validated
+  - Existence of the claims in the transparency log was verified offline
+  - The code-signing certificate was verified using trusted certificate authority certificates
+
+&lt;snipped json&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same command, with <code>worker</code>, <code>storage</code>, or <code>mcp</code> in place of
+<code>controller</code>, verifies the other images.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sbom_and_provenance"><a class="anchor" href="#_sbom_and_provenance"></a>SBOM and provenance attestations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For each image and each architecture, the release workflow extracts an SBOM in
+SPDX format and a provenance attestation in SLSA format. It signs each file
+and attaches the files to the GitHub release. The names follow this pattern:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SBOMscanner-&lt;component&gt;-attestation-&lt;arch&gt;-provenance.intoto.jsonl</code></p>
+</li>
+<li>
+<p><code>SBOMscanner-&lt;component&gt;-attestation-&lt;arch&gt;-sbom.json</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each file has a Sigstore bundle with the same name and the suffix
+<code>.bundle.sigstore</code>. Download the file and its bundle from the
+<a href="https://github.com/kubewarden/sbomscanner/releases">release page</a>, then
+verify the provenance. Note the identity: these files are signed by the
+<code>attestation.yml</code> workflow, not by <code>container-build.yml</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">cosign verify-blob \
+  --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+  --certificate-identity="https://github.com/kubewarden/sbomscanner/.github/workflows/attestation.yml@refs/tags/v0.13.0" \
+  --bundle SBOMscanner-controller-attestation-amd64-provenance.intoto.jsonl.bundle.sigstore \
+  SBOMscanner-controller-attestation-amd64-provenance.intoto.jsonl
+
+Verified OK</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the SBOM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">cosign verify-blob \
+  --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+  --certificate-identity="https://github.com/kubewarden/sbomscanner/.github/workflows/attestation.yml@refs/tags/v0.13.0" \
+  --bundle SBOMscanner-controller-attestation-amd64-sbom.json.bundle.sigstore \
+  SBOMscanner-controller-attestation-amd64-sbom.json
+
+Verified OK</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After the check, you can read the files. The SBOM lists the packages in the
+image. The provenance names the source commit, the builder, and the build
+parameters.</p>
+</div>
+<div class="paragraph">
+<p>The same attestations are also attached to each image in the registry, in
+the format that Docker uses. The signed copies are the release assets. To
+read the registry copy, list the attestation manifest with
+<a href="https://github.com/google/go-containerregistry/tree/main/cmd/crane"><code>crane</code></a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">crane manifest ghcr.io/kubewarden/sbomscanner/controller:v0.13.0 \
+  | jq '.manifests[] | select(.annotations["vnd.docker.reference.type"]=="attestation-manifest")'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then fetch the manifest by its digest and read each layer with <code>crane blob</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helm_chart"><a class="anchor" href="#_helm_chart"></a>Helm chart</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Vulnerability Scanner chart is in the Helm repository at
+<a href="https://charts.kubewarden.io" class="bare">https://charts.kubewarden.io</a> and, as an OCI artifact, at
+<code>ghcr.io/kubewarden/charts/sbomscanner</code>. The OCI copy is signed. The chart
+is released from the <code>kubewarden/helm-charts</code> repository, so the identity
+names that workflow:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">cosign verify \
+  --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+  --certificate-identity="https://github.com/kubewarden/helm-charts/.github/workflows/helm-chart-release.yml@refs/heads/main" \
+  ghcr.io/kubewarden/charts/sbomscanner:0.13.0
+
+Verification for ghcr.io/kubewarden/charts/sbomscanner:0.13.0 --
+The following checks were performed on each of these signatures:
+  - The cosign claims were validated
+  - Existence of the claims in the transparency log was verified offline
+  - The code-signing certificate was verified using trusted certificate authority certificates
+
+&lt;snipped json&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The chart also has a GitHub build provenance attestation. The GitHub CLI
+verifies it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">gh attestation verify oci://ghcr.io/kubewarden/charts/sbomscanner:0.13.0 \
+  --repo kubewarden/helm-charts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To list every image that the chart deploys, render it and extract the image
+fields:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm template sbomscanner oci://ghcr.io/kubewarden/charts/sbomscanner \
+  --version 0.13.0 \
+  | yq '..|.image? | select(.)' \
+  | sort -u</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify each Vulnerability Scanner image in that list as the
+<a href="#_container_images">container images</a> section shows.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_third_party_images"><a class="anchor" href="#_third_party_images"></a>Third-party images</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The chart also deploys images that the Vulnerability Scanner project does not
+build and does not sign:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The NATS server and its configuration reloader, from the <code>nats</code> subchart.</p>
+</li>
+<li>
+<p>The PostgreSQL image that the CloudNativePG operator runs, when
+<code>storage.postgres.cnpg.enabled</code> is <code>true</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The worker also pulls the Trivy vulnerability databases from
+<code>public.ecr.aws/aquasecurity/</code> as OCI artifacts. Verify these with the method
+that their own projects document.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="../quickstart.html">Quick start</a></span>
+  <span class="next"><a href="../user-guide/scanning-registries.html">Scanning Registries</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

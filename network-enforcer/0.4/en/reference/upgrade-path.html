@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Upgrade path | Network Enforcer  0.4-dev</title>
+    <link rel="prev" href="compatibility.html">
+    <link rel="next" href="known_limitations.html">
+    <meta name="description" content="Upgrade SUSE Security Network Enforcer with the supported version steps, one minor version at a time.">
+    <meta name="keywords" content="["SUSE Security Network Enforcer", kubewarden, "upgrade path", support, versioning]">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-23"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/network-enforcer/0.4/en/reference/upgrade-path.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/network-enforcer/0.4/en/reference/upgrade-path.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Upgrade path |  0.4",
+  "headline": "Upgrade path",
+  "description": "Upgrade SUSE Security Network Enforcer with the supported version steps, one minor version at a time.",
+  "inLanguage": "en",
+  "dateModified": "2026-10-23T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.4",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="network-enforcer" data-version="0.4">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Network Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/verifying-network-enforcer.html">Verifying Network Enforcer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/phases.html">Phases: learn, monitor, protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/emergency-disable.html">Emergency disable</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../howtos/setup-development-env.html">Development environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="known_limitations.html">Known limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="crd.html">CRD API reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Network Enforcer</span>
+    <span class="version">0.4-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../../0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="../introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Reference
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.4-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="upgrade-path.html">0.4-dev</a>
+    <a class="version is-missing" href="../../../0.3/en/introduction.html">0.3</a>
+    <a class="version is-missing" href="../../../0.2/en/introduction.html">0.2</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/network-enforcer/version-0.4/modules/en/pages/reference/upgrade-path.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:network-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Network Enforcer 0.4-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">Upgrade path</h1>
+<div class="sect1">
+<h2 id="_versioning"><a class="anchor" href="#_versioning"></a>Versioning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Network Enforcer uses <a href="https://semver.org/">semantic versioning</a>. A version
+follows the <code>MAJOR.MINOR.PATCH</code> pattern. The supported version is the
+latest release.</p>
+</div>
+<div class="paragraph">
+<p>One deliverable follows this version: the <code>network-enforcer</code> Helm chart,
+in its <code>appVersion</code> field. The controller image carries this version as
+its tag. Network Enforcer has no separate CLI or plugin to keep in step.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_helm_chart_versions"><a class="anchor" href="#_helm_chart_versions"></a>Helm chart versions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A Helm chart has two version fields. The <code>appVersion</code> field holds the
+Network Enforcer version described above. The <code>version</code> field is the
+version of the chart itself. It also follows semantic versioning, and it
+describes changes to the chart templates and to <code>values.yaml</code>.</p>
+</div>
+<div class="paragraph">
+<p>The two fields do not move together. When you plan an upgrade, read
+the <code>appVersion</code> of the target chart.</p>
+</div>
+<div class="paragraph">
+<p>The chart also ships two third-party images that follow their own
+versions. One is fluent-bit, with the Istio provider. The other is the
+OpenTelemetry collector, with the default telemetry strategy. A chart
+upgrade can move these images. The chart <code>version</code> field records such a
+change.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upgrade_paths"><a class="anchor" href="#_upgrade_paths"></a>Upgrade paths</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can upgrade across several <code>PATCH</code> versions in one operation. You
+cannot upgrade across more than one <code>MINOR</code> or <code>MAJOR</code> version in one
+operation.</p>
+</div>
+<div class="paragraph">
+<p>For example, you can upgrade from <code>0.3.0</code> to <code>0.3.2</code> in one step. You
+cannot upgrade from <code>0.2.0</code> to <code>0.4.0</code> in one step. Upgrade from <code>0.2.0</code>
+to <code>0.3.x</code> first, then from <code>0.3.x</code> to <code>0.4.0</code>. To move across a <code>MAJOR</code>
+version, apply every <code>MINOR</code> version between the two.</p>
+</div>
+<div class="imageblock"><div class="mermaid content" style=" ">flowchart LR;
+  accTitle: Upgrade path support graph
+  accDescr: A diagram showing supported and unsupported upgrade paths for Network Enforcer.
+  0.2.0(0.2.0)-->0.2.1(0.2.1);
+  0.2.1-->0.3.0(0.3.0);
+  0.3.0-->0.3.1(0.3.1);
+  0.2.0-->0.3.0;
+  0.3.1-->0.4.0(0.4.0);
+  0.3.0-->|Not recommended|0.4.0;
+  0.2.1-->|Not supported|0.4.0;
+  linkStyle 5 color:brown,stroke-width:2px,stroke-dasharray: 3 5
+  linkStyle 6 color:red,stroke-width:2px,stroke-dasharray: 3 5</div><div class="title">Figure 1. Example upgrade path support graph</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_breaking_changes"><a class="anchor" href="#_breaking_changes"></a>Breaking and important changes between versions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_v0_3_to_v0_4"><a class="anchor" href="#_v0_3_to_v0_4"></a>0.3.x to 0.4.0</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>WorkloadNetworkPolicy</code> and <code>WorkloadNetworkPolicyProposal</code> require
+<code>spec.targetRef</code> and <code>spec.direction</code>. The Kubernetes backend requires
+<code>spec.kubernetes.policyTypes</code> to contain only that direction. Istio accepts
+<code>Ingress</code> only.</p>
+</li>
+<li>
+<p>Only one policy can target a workload and direction in a namespace.
+Platform and application teams must combine their rules in that policy.</p>
+</li>
+<li>
+<p>A new validating webhook fails closed. An outage blocks policy creates
+and updates, but not proposal writes, policy deletes, or status updates.
+The chart requires cert-manager and its CSI driver for webhook certificates.</p>
+</li>
+<li>
+<p>The controller checks the policy selector against workload pod templates.
+Overlapping selectors produce <code>Ready=False</code> with reason
+<code>SelectorOverlapsWorkload</code>. They can still affect other workloads.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upgrade_order"><a class="anchor" href="#_upgrade_order"></a>Upgrade order</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Upgrade the <code>network-enforcer</code> Helm chart. There is no other component to
+upgrade. The chart upgrades the controller and, with the Istio provider,
+the fluent-bit DaemonSet together.</p>
+</div>
+<div class="paragraph">
+<p>The native policy objects that the controller rendered stay in place
+during the upgrade. The data plane keeps enforcing them while the
+controller pod restarts. See
+<a href="../explanations/architecture.html" class="xref page">Architecture</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_downgrades"><a class="anchor" href="#_downgrades"></a>Downgrades</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Network Enforcer does not support downgrades, and the project does not
+test them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_policies"><a class="anchor" href="#_policies"></a>Policies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <code>WorkloadNetworkPolicy</code> carries no version of its own. It holds a mode,
+a backend, a target workload, a direction, and an allow-list. It stays in
+the cluster across Network Enforcer upgrades. A breaking change can require
+manifest updates, as described in <a href="#_breaking_changes">Breaking changes</a>.
+The <code>spec.backend</code> field cannot change after creation. See
+<a href="known_limitations.html#_spec-backend-is-immutable" class="xref page"><code>spec.backend</code>
+is immutable</a>.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="compatibility.html">Compatibility</a></span>
+  <span class="next"><a href="known_limitations.html">Known limitations</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

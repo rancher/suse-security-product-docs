@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Helm Values Configuration | Vulnerability Scanner  0.12</title>
+    <link rel="prev" href="uninstall.html">
+    <link rel="next" href="../troubleshooting/collecting-logs.html">
+    <meta name="description" content="Configure SUSE Security Vulnerability Scanner Helm chart values for deployment and storage.">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-06-15"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/sbom-scanner/0.12/en/installation/helm-values.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/sbom-scanner/0.12/en/installation/helm-values.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Helm Values Configuration |  0.12",
+  "headline": "Helm Values Configuration",
+  "description": "Configure SUSE Security Vulnerability Scanner Helm chart values for deployment and storage.",
+  "inLanguage": "en",
+  "dateModified": "2026-06-15T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.12",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="sbom-scanner" data-version="0.12">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Vulnerability Scanner</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quickstart</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">User guide</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/scanning-registries.html">Scanning Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/scanning-workloads.html">Scanning Workloads</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/scanning-nodes.html">Scanning Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/querying-reports.html">Querying Reports</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/airgap-support.html">Airgap Support</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/private-registries.html">Private Registries</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/vex.html">VEX Support</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-guide/mcp-server.html">MCP Server</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="helm-values.html">Helm Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../troubleshooting/collecting-logs.html">Collecting Logs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../troubleshooting/common-problems.html">Common Problems</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/crd-reference.html">CRD Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Vulnerability Scanner</span>
+    <span class="version">0.12</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../network-enforcer/0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../network-enforcer/0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../network-enforcer/0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../../network-enforcer/0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../../0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version is-current">
+              <a href="../introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Howtos
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.12</button>
+  <div class="version-menu">
+    <a class="version" href="../../../0.14/en/howtos/helm-values.html">0.14-dev</a>
+    <a class="version" href="../../../0.13/en/installation/helm-values.html">0.13</a>
+    <a class="version is-current" href="helm-values.html">0.12</a>
+    <a class="version" href="../../../0.11/en/installation/helm-values.html">0.11</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/sbom-scanner/version-0.12/modules/en/pages/installation/helm-values.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:sbom-scanner" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+<h1 class="page">Helm Values Configuration</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document describes the available configuration options for the SUSE Security Vulnerability Scanner Helm chart.</p>
+</div>
+<div class="paragraph">
+<p>You can customize these values in two ways:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a custom values file (e.g., <code>my-values.yaml</code>) with your overrides and pass it to Helm:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install sbomscanner ./chart -f my-values.yaml</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Use <code>--set</code> flags to override specific values directly:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install sbomscanner ./chart --set controller.replicas=5 --set storage.postgres.cnpg.instances=5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more details on customizing Helm charts, see the <a href="https://helm.sh/docs/intro/using_helm/#customizing-the-chart-before-installing">Helm documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_log_levels"><a class="anchor" href="#_log_levels"></a>Log Levels</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can configure the log level for each Vulnerability Scanner component to control the verbosity of the logs.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  logLevel: "info"
+
+storage:
+  logLevel: "info"
+
+worker:
+  logLevel: "info"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Available log levels are: <code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resource_limits_and_requests"><a class="anchor" href="#_resource_limits_and_requests"></a>Resource Limits and Requests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each component has default resource limits and requests that you can customize based on your cluster&#8217;s capacity and workload requirements.</p>
+</div>
+<div class="sect2">
+<h3 id="_controller"><a class="anchor" href="#_controller"></a>Controller</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 2Gi
+    requests:
+      cpu: 250m
+      memory: 300Mi</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_storage"><a class="anchor" href="#_storage"></a>Storage</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 3Gi
+    requests:
+      cpu: 250m
+      memory: 300Mi</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_worker"><a class="anchor" href="#_worker"></a>Worker</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">worker:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 300Mi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adjust these values based on your workload. The storage component typically needs more memory due to SBOM processing.</p>
+</div>
+<div class="paragraph">
+<p>For more information on resource management, see the <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">Kubernetes documentation on resource requests and limits</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_postgresql_configuration"><a class="anchor" href="#_postgresql_configuration"></a>PostgreSQL Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Vulnerability Scanner requires a PostgreSQL database to store SBOM data. You have two options: use the built-in <a href="https://cloudnative-pg.io/">CloudNativePG (CNPG) operator</a> or connect to an external PostgreSQL instance.</p>
+</div>
+<div class="sect2">
+<h3 id="using-cloudnativepg-recommended"><a class="anchor" href="#using-cloudnativepg-recommended"></a>Using CloudNativePG (Recommended)</h3>
+<div class="paragraph">
+<p>By default, Vulnerability Scanner deploys a PostgreSQL cluster using the CloudNativePG operator. This is the easiest way to get started.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  postgres:
+    cnpg:
+      enabled: true
+      instances: 3
+      imageName: ""
+      storage:
+        size: 1Gi
+        resizeInUseVolumes: true
+        storageClass: ""
+        pvcTemplate: {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Configuration options:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>instances</code>: Number of PostgreSQL replicas (default: 3)</p>
+</li>
+<li>
+<p><code>imageName</code>: Full image reference for the PostgreSQL container (e.g. <code>my-registry.example.com/postgresql:18.1</code>). Useful for air-gapped environments where the default CNPG operand image is not reachable. If empty, CNPG uses its default operand image.</p>
+</li>
+<li>
+<p><code>storage.size</code>: Size of the persistent volume. You can increase this value later, and changes will be automatically applied to existing PVCs. Size cannot be decreased. See the <a href="https://cloudnative-pg.io/documentation/current/storage/#volume-expansion">CNPG documentation</a> for more details.</p>
+</li>
+<li>
+<p><code>storage.resizeInUseVolumes</code>: Automatically resize PVCs (default: true)</p>
+</li>
+<li>
+<p><code>storage.storageClass</code>: Specify a storage class. If empty, uses the cluster&#8217;s default storage class.</p>
+</li>
+<li>
+<p><code>storage.pvcTemplate</code>: Custom PVC template if you need advanced configuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more configuration options, refer to the <a href="https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/#postgresql-cnpg-io-v1-ClusterSpec">CloudNativePG Cluster configuration documentation</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-an-external-postgresql-instance"><a class="anchor" href="#using-an-external-postgresql-instance"></a>Using an External PostgreSQL Instance</h3>
+<div class="paragraph">
+<p>If you already have a PostgreSQL instance or prefer to manage it separately, disable CNPG and provide connection details.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  postgres:
+    cnpg:
+      enabled: false
+    authSecretName: "my-postgres-credentials"
+    caSecretName: "my-postgres-ca"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Steps to configure external PostgreSQL:</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a <code>Secret</code> with the PostgreSQL connection URI:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: my-postgres-credentials
+  namespace: default
+stringData:
+  uri: "postgresql://user:password@postgres.example.com:5432/sbomscanner?sslmode=require"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The URI format follows the <a href="https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS">PostgreSQL connection URI specification</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Any <code>sslmode</code> or other <code>ssl*</code> parameters in the URI are ignored.<br>
+Vulnerability Scanner always enforces CA verification when connecting to the database,<br>
+using the CA certificate specified in the <code>caSecretName</code> secret.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Create a <code>Secret</code> with the CA certificate used to verify the PostgreSQL server certificate:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: my-postgres-ca
+  namespace: default
+stringData:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    ...
+    -----END CERTIFICATE-----</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Reference the secrets in your Helm values:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">storage:
+  postgres:
+    authSecretName: "my-postgres-credentials"
+    caSecretName: "my-postgres-ca"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Please note:</strong> When using an external PostgreSQL instance, make sure the database is already created and accessible from your Kubernetes cluster.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_default_vexhub_resources"><a class="anchor" href="#_default_vexhub_resources"></a>Default VEXHub Resources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>On chart install, Vulnerability Scanner seeds two <code>VEXHub</code> resources pointing to the public <code>github.com/rancher/vexhub</code> and <code>github.com/aquasecurity/vexhub</code> repositories. They are created via a <code>post-install</code> hook and are not tracked by the Helm release, so you can freely modify, disable, or delete them afterwards without Helm reverting your changes on subsequent upgrades.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  defaultVEXHubResources: true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set this to <code>false</code> to skip seeding the defaults — for example in air-gapped environments where the public repositories are not reachable. See <a href="../user-guide/airgap-support.html#self-hosting-vex-hub" class="xref page">Air Gap Support</a> for details on configuring a self-hosted VEX Hub.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="uninstall.html">Uninstall</a></span>
+  <span class="next"><a href="../troubleshooting/collecting-logs.html">Collecting Logs</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

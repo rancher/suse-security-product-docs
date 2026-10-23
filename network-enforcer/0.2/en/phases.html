@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SUSE Security Network Enforcer phases: learn, monitor, protect | Network Enforcer  0.2</title>
+    <link rel="prev" href="installation/uninstall.html">
+    <link rel="next" href="architecture.html">
+    <meta name="description" content="Learn how to move between the learn, monitor, and protect phases to manage network policies, observe traffic flows, create proposals, and update policies">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-09-18"/>
+<link rel="stylesheet" href="../../../_/css/search.css">
+<link rel="icon" href="../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/network-enforcer/0.2/en/phases.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/network-enforcer/0.2/en/phases.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "SUSE Security Network Enforcer phases: learn, monitor, protect |  0.2",
+  "headline": "SUSE Security Network Enforcer phases: learn, monitor, protect",
+  "description": "Learn how to move between the learn, monitor, and protect phases to manage network policies, observe traffic flows, create proposals, and update policies",
+  "inLanguage": "en",
+  "dateModified": "2026-09-18T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.2",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="network-enforcer" data-version="0.2">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Network Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Installation</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="installation/quickstart.html">Quick Start</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="installation/uninstall.html">Uninstall</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Concepts &amp; Operations</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="phases.html">Phases: Learn, Monitor, Protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="architecture.html">Architecture</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="known_limitations.html">Known Limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="crd.html">CRD API Reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Development</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="setup-development-env.html">Development Environment</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Network Enforcer</span>
+    <span class="version">0.2</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../0.4/en/introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version is-current">
+              <a href="introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Concepts &amp; Operations
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.2</button>
+  <div class="version-menu">
+    <a class="version" href="../../0.4/en/explanations/phases.html">0.4-dev</a>
+    <a class="version" href="../../0.3/en/explanations/phases.html">0.3</a>
+    <a class="version is-current" href="phases.html">0.2</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/network-enforcer/version-0.2/modules/en/pages/phases.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:network-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+<h1 class="page">SUSE Security Network Enforcer phases: learn, monitor, protect</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document explains the three <strong>phases</strong> of Network Enforcer and how to move between them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_learn-phase"><a class="anchor" href="#_learn-phase"></a>Learn phase</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_learn-phase-what-happens-during-this-phase"><a class="anchor" href="#_learn-phase-what-happens-during-this-phase"></a>What happens during this phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Traffic is not blocked.</strong></p>
+</li>
+<li>
+<p>Network-enforcer observes flows after the controller is running, and turns those flows into <code>WorkloadNetworkPolicyProposal</code> objects.</p>
+</li>
+<li>
+<p><strong>Istio backend</strong> (<code>controller.provider.name</code> <code>istio</code>): Istio ambient L4 authorization is enforced on the receiving side, so learning creates <strong>only an ingress</strong> proposal on the destination workload.</p>
+</li>
+<li>
+<p><strong>Kubernetes backend</strong> (<code>controller.provider.name</code> <code>calico</code> or <code>cilium</code>): each observed connection updates <strong>two</strong> proposals, one per endpoint and direction.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Source workload: an <strong>egress</strong> proposal that allows traffic to the destination.</p>
+</li>
+<li>
+<p>Destination workload: an <strong>ingress</strong> proposal that allows traffic from the source.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Learn is based on <strong>flows observed after the controller is running</strong>. Network-enforcer does <strong>not</strong> reconstruct traffic that happened before it started.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>That means:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If a workload was already running before network-enforcer started, <strong>we cannot propose the full set of peers it already talked to in the past</strong>.</p>
+</li>
+<li>
+<p>You will only learn flows that occur after the controller is running (for long-lived pods that rarely open new connections, you may learn little or nothing until you generate traffic or restart the workload).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Operationally, if you want complete proposals, install network-enforcer first and then <strong>(re)start</strong> the workloads you want to learn, or generate the traffic you care about while the controller is running.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how-to-enter-and-leave-the-learn-phase"><a class="anchor" href="#_how-to-enter-and-leave-the-learn-phase"></a>How to enter and leave the <code>Learn</code> phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Enter</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploy the controller with a provider (<code>controller.provider.name</code>: <code>istio</code>, <code>calico</code>, or <code>cilium</code>). See <a href="#_backend-selection">Backend selection</a>.</p>
+</li>
+<li>
+<p>No per-workload configuration is required. Proposals are created as flows are observed.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Leave</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Promote the proposal. See <a href="#_transitions">Transitions</a>.</p>
+</li>
+<li>
+<p>Promotion creates a <code>WorkloadNetworkPolicy</code> (in <code>monitor</code> or <code>protect</code> mode, depending on the label value) and then deletes the proposal.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_learn-phase-crds-created-updated-during-this-phase"><a class="anchor" href="#_learn-phase-crds-created-updated-during-this-phase"></a>CRDs created/updated during this phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Created/updated</strong>: <code>WorkloadNetworkPolicyProposal</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Name format is <code>&lt;kind&gt;-&lt;name&gt;-&lt;ingress|egress&gt;</code>, where <code>&lt;kind&gt;</code> is the owning workload kind lowercased (<code>deployment</code>, <code>statefulset</code>, <code>daemonset</code>), <code>&lt;name&gt;</code> is the owning workload name as-is, and the direction suffix is lowercase. Examples: <code>deployment-http-client-egress</code>, <code>deployment-http-server-ingress</code>.</p>
+</li>
+<li>
+<p>Istio produces only the ingress name (<code>…-ingress</code>) for each destination workload. There is one proposal per workload <strong>and</strong> direction for the Kubernetes backend.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_monitor-phase"><a class="anchor" href="#_monitor-phase"></a>Monitor phase</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_monitor-phase-what-happens-during-this-phase"><a class="anchor" href="#_monitor-phase-what-happens-during-this-phase"></a>What happens during this phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Traffic is not blocked.</strong></p>
+</li>
+<li>
+<p>When an observed flow is <strong>not allowed</strong> by the <code>WorkloadNetworkPolicy</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>the flow still goes through</p>
+</li>
+<li>
+<p>a <strong>violation</strong> is recorded on the policy status with <code>action: monitor</code></p>
+</li>
+<li>
+<p>the same event is also exported as an OpenTelemetry log (see <a href="#_otlp-events">Where OTLP events go</a>)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Monitor evaluation is best-effort. The Istio backend relies on ztunnel dry-run logs, which cover inbound TCP connections through the mesh; UDP and traffic that never hits ztunnel are not observed. The Kubernetes backend reuses the same observed flows that drive learning: if a flow is never seen by the scraper, it is never reported as a violation.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_monitor-phase-how-to-enter-and-leave-the-phase"><a class="anchor" href="#_monitor-phase-how-to-enter-and-leave-the-phase"></a>How to enter and leave the phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Enter</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Promote a <code>WorkloadNetworkPolicyProposal</code> with <code>networkenforcer.kubewarden.io/promote=monitor</code> (see <a href="#_transitions">Transitions</a>), or create a <code>WorkloadNetworkPolicy</code> whose <code>.spec.mode</code> is <code>monitor</code>.</p>
+</li>
+<li>
+<p>Ensure <code>.spec.mode: monitor</code> and that the backend-specific rules are populated (<code>spec.istio</code> or <code>spec.kubernetes</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Leave</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Monitor → Protect</strong>: patch the <code>WorkloadNetworkPolicy</code> and set <code>.spec.mode: protect</code>.</p>
+</li>
+<li>
+<p><strong>Monitor → Learn</strong>: delete the <code>WorkloadNetworkPolicy</code>. Learning resumes on the next observed flow. See <a href="#_transitions">Transitions</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_monitor-phase-crds-created-updated-during-this-phase"><a class="anchor" href="#_monitor-phase-crds-created-updated-during-this-phase"></a>CRDs created/updated during this phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Used/updated</strong>: <code>WorkloadNetworkPolicy</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>.spec.mode: monitor</code> records violations without blocking traffic. The Istio backend still renders an <code>AuthorizationPolicy</code>, annotated with <code>istio.io/dry-run=true</code> so ztunnel does not deny the flow. The Kubernetes backend creates no <code>NetworkPolicy</code>, so the CNI does not enforce anything.</p>
+</li>
+<li>
+<p>Status fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>status.violationCount</code>: count of violation records ever observed for this policy, including entries that have since been trimmed or cleared because the flow is now allowed.</p>
+</li>
+<li>
+<p><code>status.activeViolationCount</code>: number of currently active (non-cleared, non-acknowledged) records.</p>
+</li>
+<li>
+<p><code>status.violations</code>: the most recent active records, capped at <strong>100</strong>. Oldest entries are dropped when the cap is reached.</p>
+</li>
+<li>
+<p><code>status.acknowledgedViolations</code>: the most recent acknowledged records, also capped at <strong>100</strong>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_protect-phase"><a class="anchor" href="#_protect-phase"></a>Protect phase</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_protect-phase-what-happens-during-this-phase"><a class="anchor" href="#_protect-phase-what-happens-during-this-phase"></a>What happens during this phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Traffic is blocked</strong> when it violates the allow-list.</p>
+</li>
+<li>
+<p>On a denied flow:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>a <strong>violation</strong> is recorded on the policy status with <code>action: protect</code></p>
+</li>
+<li>
+<p>the same event is also exported as an OpenTelemetry log (see <a href="#_otlp-events">Where OTLP events go</a>)</p>
+</li>
+<li>
+<p>the connection fails (timeout, reset, or "connection refused", depending on the CNI or mesh)</p>
+</li>
+<li>
+<p>depending on what was blocked this can cause application errors, crash loops, or failed jobs</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Enforcement is backend-specific:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Istio backend</strong>: the controller creates and keeps in sync a <code>security.istio.io/AuthorizationPolicy</code> with <code>action: ALLOW</code> and the learned principals/ports. In protect mode the dry-run annotation is removed, so ztunnel enforces the policy on inbound connections.</p>
+</li>
+<li>
+<p><strong>Kubernetes backend</strong>: the controller creates and keeps in sync a <code>networking.k8s.io/NetworkPolicy</code> with the same name and namespace as the <code>WorkloadNetworkPolicy</code>. The CNI (Calico or Cilium) enforces it. Switching <code>.spec.mode</code> back to <code>monitor</code> <strong>deletes</strong> that <code>NetworkPolicy</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both rendered objects are owned by the <code>WorkloadNetworkPolicy</code> (<code>ownerReferences</code>). Deleting the <code>WorkloadNetworkPolicy</code> garbage-collects the <code>AuthorizationPolicy</code> or <code>NetworkPolicy</code>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The Istio backend learns and enforces only on the destination (ingress), so there is no source-versus-destination split. Kubernetes NetworkPolicy is directional and is applied independently on each endpoint. An egress deny is enforced <strong>at the source</strong>. The packet never arrives, so the destination&#8217;s <strong>ingress</strong> policy records nothing. That is why, after you switch both Kubernetes policies to protect, a violating flow shows up only on the source (egress) <code>WorkloadNetworkPolicy</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_protect-phase-how-to-enter-and-leave-the-phase"><a class="anchor" href="#_protect-phase-how-to-enter-and-leave-the-phase"></a>How to enter and leave the phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Enter</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Promote a proposal with <code>networkenforcer.kubewarden.io/promote=protect</code>, or patch an existing <code>WorkloadNetworkPolicy</code> and set <code>.spec.mode: protect</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Leave</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Protect → Monitor</strong>: update the <code>WorkloadNetworkPolicy</code> and set <code>.spec.mode: monitor</code>.</p>
+</li>
+<li>
+<p><strong>Protect → Learn</strong>: delete the <code>WorkloadNetworkPolicy</code>. Learning resumes on the next observed flow. See <a href="#_transitions">Transitions</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_protect-phase-crds-created-updated-during-this-phase"><a class="anchor" href="#_protect-phase-crds-created-updated-during-this-phase"></a>CRDs created/updated during this phase</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Used/updated</strong>: <code>WorkloadNetworkPolicy</code> (same CRD as monitor; only <code>.spec.mode</code> changes).</p>
+</li>
+<li>
+<p><strong>Created/updated by the reconciler</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Istio backend: <code>AuthorizationPolicy</code> (<code>security.istio.io/v1</code>)</p>
+</li>
+<li>
+<p>Kubernetes backend: <code>NetworkPolicy</code> (<code>networking.k8s.io/v1</code>)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_transitions"><a class="anchor" href="#_transitions"></a>Transitions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Promotion is explicit. Network-enforcer does not turn a proposal into a policy until you ask.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Promote a proposal</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Set the label <code>networkenforcer.kubewarden.io/promote=monitor</code> or <code>networkenforcer.kubewarden.io/promote=protect</code> on the <code>WorkloadNetworkPolicyProposal</code>.</p>
+</li>
+<li>
+<p>The proposal reconciler copies the backend spec onto a new <code>WorkloadNetworkPolicy</code> in the same name and namespace, sets <code>.spec.mode</code> from the label value, and adds <code>networkenforcer.kubewarden.io/promoted-from: &lt;proposal-name&gt;</code> so the promotion relationship is explicit.</p>
+</li>
+<li>
+<p>The proposal is then deleted.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Leftover proposals</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>After promotion, a scraper can recreate a proposal at the same name before caches catch up. If a <code>WorkloadNetworkPolicy</code> already exists with <code>networkenforcer.kubewarden.io/promoted-from=&lt;proposal-name&gt;</code>, the leftover proposal is deleted. That usually happens as soon as the recreate is watched; if both objects sit idle, it is picked up on the next controller-runtime resync (defaulted to 10h).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Return to learning</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Delete the <code>WorkloadNetworkPolicy</code>. The next observed flow creates or updates a <code>WorkloadNetworkPolicyProposal</code> again. If a leftover proposal is still around after you delete the policy, learning resumes by updating that object; delete it first if you want a clean slate.</p>
+</li>
+<li>
+<p>Creating a <code>WorkloadNetworkPolicy</code> by hand <strong>without</strong> <code>networkenforcer.kubewarden.io/promoted-from</code> does <strong>not</strong> remove a same-named proposal. Delete the proposal yourself in that case.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>ValidatingAdmissionPolicy</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>The Helm chart installs a cluster-scoped <code>ValidatingAdmissionPolicy</code> (and binding) that rejects <code>WorkloadNetworkPolicyProposal</code> CREATE/UPDATE when <code>networkenforcer.kubewarden.io/promote</code> is present and is set to anything other than <code>monitor</code> or <code>protect</code>. The check runs only when the label is set; proposals without the label are admitted as usual.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_backend-selection"><a class="anchor" href="#_backend-selection"></a>Backend selection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>controller.provider.name</code> selects both the scraper that feeds learning and the <code>spec.backend</code> written onto generated objects:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>controller.provider.name</code></th>
+<th class="tableblock halign-left valign-top"><code>spec.backend</code></th>
+<th class="tableblock halign-left valign-top">Generated payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>istio</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>istio</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spec.istio</code> (rendered as an Istio <code>AuthorizationPolicy</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>calico</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spec.kubernetes</code> (a standard <code>NetworkPolicy</code> spec)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cilium</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kubernetes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spec.kubernetes</code> (a standard <code>NetworkPolicy</code> spec)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>spec.backend</code> is <strong>immutable</strong>. You cannot convert an Istio-backed proposal or policy into a kubernetes one (or the other way around) in place.</p>
+</div>
+<div class="paragraph">
+<p>Exactly one of <code>spec.istio</code> or <code>spec.kubernetes</code> must be populated, matching <code>spec.backend</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_otlp-events"><a class="anchor" href="#_otlp-events"></a>Where OTLP events go</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Violations always land on <code>WorkloadNetworkPolicy</code> status (<code>status.violations</code>).</p>
+</div>
+<div class="paragraph">
+<p>When telemetry is enabled, the controller also exports OpenTelemetry logs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Default Helm chart</strong> (<code>telemetry.collectorStrategy=default</code>): an in-cluster OTEL collector. The controller sends OTLP/gRPC to <code><a href="https://&lt;fullname&gt;-otel-collector.&lt;namespace&gt;.svc.cluster.local:4317" class="bare">https://&lt;fullname&gt;-otel-collector.&lt;namespace&gt;.svc.cluster.local:4317</a></code>. The collector&#8217;s logs pipeline dumps records with the debug exporter.</p>
+</li>
+<li>
+<p><strong>External collector</strong> (<code>telemetry.collectorStrategy=external</code>): the same exporter points at <code>telemetry.externalCollector.endpoint</code>.</p>
+</li>
+<li>
+<p><strong>Disabled</strong> (<code>telemetry.collectorStrategy=none</code>): no OTLP export; status still records violations.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Event names:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>policy_violation_observed</code> — emitted for each monitor or protect violation, with <code>action=monitor</code> or <code>action=protect</code>.</p>
+</li>
+<li>
+<p><code>policy_violation_acknowledged</code> — emitted after a <code>networkenforcer.kubewarden.io/acknowledge-&lt;id&gt;</code> annotation is applied and the status patch succeeds.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quick-mapping-to-crds"><a class="anchor" href="#_quick-mapping-to-crds"></a>Quick mapping to CRDs</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">Custom resources</th>
+<th class="tableblock halign-left valign-top">What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Learn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WorkloadNetworkPolicyProposal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Observed flows are merged into proposals (per workload and direction on Kubernetes; ingress-only on Istio). Nothing is enforced.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monitor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WorkloadNetworkPolicy</code> (<code>.spec.mode: monitor</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Violations are recorded (and, on Istio, an <code>AuthorizationPolicy</code> is rendered but not enforced). Traffic is not blocked.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WorkloadNetworkPolicy</code> (<code>.spec.mode: protect</code>) plus an Istio <code>AuthorizationPolicy</code> or Kubernetes <code>NetworkPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Violations are recorded <strong>and</strong> blocked at the data plane.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Important: the <code>WorkloadNetworkPolicy</code> CRD only supports <code>monitor</code> and <code>protect</code> (<code>.spec.mode</code>, defaults to <code>monitor</code>). <code>Learn</code> is implemented as <code>WorkloadNetworkPolicyProposal</code> generation.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="installation/uninstall.html">Uninstall</a></span>
+  <span class="next"><a href="architecture.html">Architecture</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../_/js/site.js"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+<script src="../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>

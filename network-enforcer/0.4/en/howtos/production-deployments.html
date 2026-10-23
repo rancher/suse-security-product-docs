@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Configuring SUSE Security Network Enforcer for production | Network Enforcer  0.4-dev</title>
+    <link rel="prev" href="uninstall.html">
+    <link rel="next" href="emergency-disable.html">
+    <meta name="description" content="Configure the controller, the fluent-bit DaemonSet, the PriorityClass, and the telemetry of SUSE Security Network Enforcer for high availability, scheduling, and reliable resource use.">
+    <meta name="keywords" content="["SUSE Security Network Enforcer", kubewarden, kubernetes, production, replicas, poddisruptionbudget, affinity, tolerations, priorityclass, resources, admission policies, pod security admission]">
+    <meta name="generator" content="Antora 3.2.1">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+<meta http-equiv="last-modified" content="2026-10-23"/>
+<link rel="stylesheet" href="../../../../_/css/search.css">
+<link rel="icon" href="../../../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="../../../../_/css/font-styles.css">
+<link rel="stylesheet" href="../../../../_/fonts/css/all.css">
+<link rel="stylesheet" href="../../../../_/css/site-extra.css">
+<link rel="stylesheet" href="../../../../_/css/vendor/tabs.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap&family=SUSE+Mono:ital,wght@0,100..800;1,100..800" rel="stylesheet">
+<link rel="stylesheet" href="../../../../_/css/vendor/light.css">
+<script src="/docserv/res/lightheaded/analytics.js" type="text/javascript"></script>
+<script type="module">
+  import { defineCustomElements, setAssetPath } from 'https://static.scc.suse.com/shared-header/1.19/shared-header.esm.js';
+  defineCustomElements();
+  setAssetPath("https://static.scc.suse.com/shared-header/1.19/assets");
+</script>
+<!-- Default English link -->
+<link href="/network-enforcer/0.4/en/howtos/production-deployments.html" hreflang="x-default" rel="alternate"/>
+<!-- Link for the currently processed page -->
+<link href="/network-enforcer/0.4/en/howtos/production-deployments.html" hrefLang="en-US" rel="alternate" />
+
+<!-- JSON-LD for doc metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "name": "Configuring SUSE Security Network Enforcer for production |  0.4",
+  "headline": "Configuring SUSE Security Network Enforcer for production",
+  "description": "Configure the controller, the fluent-bit DaemonSet, the PriorityClass, and the telemetry of SUSE Security Network Enforcer for high availability, scheduling, and reliable resource use.",
+  "inLanguage": "en",
+  "dateModified": "2026-10-23T00:00:00Z",
+  "author": {
+    "@type": "Organization",
+    "name": "SUSE Product & Solution Documentation Team",
+    "url": "https://documentation.suse.com"
+  },
+  "mentions": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "",
+      "softwareVersion": "0.4",
+      "applicationCategory": "Cloud Infrastructure",
+      "operatingSystem": "Linux"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "SUSE",
+    "url": "https://documentation.suse.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+    }
+  }
+}
+</script>
+<!-- end JSON-LD for doc metadata -->
+
+<!-- SUVA - Begin Ask Geeko-->
+<!--
+searchUnifyChatbot ("Ask Geeko") Copyright ©2024 Grazitti Interactive - All Rights Reserved. NOTICE: All information contained herein is, and remains the property of Grazitti Interactive and its suppliers, if any. The intellectual and technical concepts contained herein are proprietary to Grazitti Interactive and its suppliers and may be covered by India, U.S. and Foreign Patents, patents in process, and are protected by trade secret or copyright law. Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from Grazitti Interactive.
+-->
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/Allow/an.js?c485cb3c-93d4-4942-99e8-91f3b8ca5636"></script>
+<script type="text/javascript" src="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/js/index.js?q=gAAAAABp3JBN9VuEJTi5tFafLIMwgMkCPdJS3Qm56lSYx93ir3Twt9hgSvd3OHEt6-nYfSbY3yHq0Zv8PRPsSy4nbqZiaJ4cZvRc6ItVZdvwz9Urf35cH6OUyPOwdA0phlS-zVIznQ2rWW438p-91NlTHuxJuOFpnA=="></script>
+<link rel="stylesheet" href="https://suse.searchunify.com/suva-resources/suva_clients_custom/c485cb3c-93d4-4942-99e8-91f3b8ca5636/css/index.css">
+<div id="searchUnifyChatbot"></div>
+<!-- SUVA - End Ask Geeko-->
+<!--BEGIN QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+<script type='text/javascript' src="../../../../_/js/qualtrics.js" defer></script>
+<!--END QUALTRICS WEBSITE FEEDBACK SNIPPET-->
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<script type="module">
+  const diagrams = document.querySelectorAll(".mermaid");
+  if (diagrams.length) {
+    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.esm.min.mjs");
+    mermaid.initialize({ startOnLoad: false });
+    await mermaid.run({ nodes: diagrams });
+  }
+</script>
+<shared-header
+    language="en"
+    application="documentation-portal"
+    enable-search='false'
+    languages='{
+        "en": { "label": "English", "url": "https://documentation.suse.com/en-us/" },
+        "de": { "label": "Deutsch", "url": "https://documentation.suse.com/de-de/" },
+        "fr": { "label": "Français", "url": "https://documentation.suse.com/fr-fr/" },
+        "es": { "label": "Español", "url": "https://documentation.suse.com/es-es/" },
+        "zh_CN": { "label": "中文", "url": "https://documentation.suse.com/zh-cn/" },
+        "pt_BR": { "label": "Português Brasileiro", "url": "https://documentation.suse.com/pt-br/" }
+    }'>
+</shared-header>
+<div class="body">
+<div class="nav-container" data-component="network-enforcer" data-version="0.4">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title">Network Enforcer</h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../quickstart.html">Quick start</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Tutorials</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/verifying-network-enforcer.html">Verifying Network Enforcer</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Explanations</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/phases.html">Phases: learn, monitor, protect</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../explanations/architecture.html">Architecture</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Howtos</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="uninstall.html">Uninstall</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="production-deployments.html">Production deployments</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="emergency-disable.html">Emergency disable</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="setup-development-env.html">Development environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle" aria-label="Toggle expand/collapse"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/compatibility.html">Compatibility</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/upgrade-path.html">Upgrade path</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/known_limitations.html">Known limitations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../reference/crd.html">CRD API reference</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../personas.html">For who?</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../use-cases.html">Use cases</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../organization.html">Organization</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../glossary.html">Glossary</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../disclosure.html">Security disclosure</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Network Enforcer</span>
+    <span class="version">0.4-dev</span>
+  </div>
+  <ul class="components">
+        <li class="component">
+          <div class="title"><a href="../../../../admission-controller/1.38/en/introduction.html">Admission Controller</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../admission-controller/1.39/en/introduction.html">1.39-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../admission-controller/1.38/en/introduction.html">1.38</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.37/en/introduction.html">1.37</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.36/en/introduction.html">1.36</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.35/en/introduction.html">1.35</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.34/en/introduction.html">1.34</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.33/en/introduction.html">1.33</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.32/en/introduction.html">1.32</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.31/en/introduction.html">1.31</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.30/en/introduction.html">1.30</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.29/en/introduction.html">1.29</a>
+            </li>
+            <li class="version">
+              <a href="../../../../admission-controller/1.28/en/introduction.html">1.28</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component is-current">
+          <div class="title"><a href="../../../0.3/en/introduction.html">Network Enforcer</a></div>
+          <ul class="versions">
+            <li class="version is-current">
+              <a href="../introduction.html">0.4-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../0.3/en/introduction.html">0.3</a>
+            </li>
+            <li class="version">
+              <a href="../../../0.2/en/introduction.html">0.2</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../runtime-enforcer/0.10/en/introduction.html">Runtime Enforcer</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.11/en/introduction.html">0.11-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../runtime-enforcer/0.10/en/introduction.html">0.10</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.9/en/introduction.html">0.9</a>
+            </li>
+            <li class="version">
+              <a href="../../../../runtime-enforcer/0.8/en/introduction.html">0.8</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../kubewarden/1.0/en/introduction.html">SUSE Security</a></div>
+          <ul class="versions">
+            <li class="version is-latest">
+              <a href="../../../../kubewarden/1.0/en/introduction.html">1.0</a>
+            </li>
+          </ul>
+        </li>
+        <li class="component">
+          <div class="title"><a href="../../../../sbom-scanner/0.13/en/introduction.html">Vulnerability Scanner</a></div>
+          <ul class="versions">
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.14/en/introduction.html">0.14-dev</a>
+            </li>
+            <li class="version is-latest">
+              <a href="../../../../sbom-scanner/0.13/en/introduction.html">0.13</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.12/en/introduction.html">0.12</a>
+            </li>
+            <li class="version">
+              <a href="../../../../sbom-scanner/0.11/en/introduction.html">0.11</a>
+            </li>
+          </ul>
+        </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+<ul>
+    <li>
+  <a class="home-link-dsc" href="" title="SUSE Documentation Home" aria-label="SUSE Documentation Home"></a>
+    </li>
+    <li>
+      <a href="" title="" aria-label="SUSE Documentation - ">
+        
+      </a>
+    </li>
+      <li>
+          Howtos
+      </li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">0.4-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="production-deployments.html">0.4-dev</a>
+    <a class="version is-missing" href="../../../0.3/en/introduction.html">0.3</a>
+    <a class="version is-missing" href="../../../0.2/en/introduction.html">0.2</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/rancher/suse-security-product-docs/edit/main/docs/network-enforcer/version-0.4/modules/en/pages/howtos/production-deployments.adoc"><strong>Edit</strong></a></div>
+        <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <label class="visual-search-label-bc" for="search-input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+          <input label="Search" aria-label="Search" id="search-input" type="text" placeholder="Search the docs" >
+          <label class="filter checkbox" style="display: none">
+            <input type="checkbox" data-facet-filter="component:network-enforcer" checked> Only this project
+          </label>
+        </div>
+      </div>
+</div>
+  <div class="content">
+<aside
+  class="toc sidebar"
+  data-title="On this page" data-levels="2">
+  <div class="toc-menu">
+        <!-- start qualtrics -->
+    <div id='ZN_8qZUmklKYbBqAYe'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+    <div id="qualtrics_container"></div>
+    <!-- end qualtrics -->
+  </div>
+</aside>
+
+<aside class="toc sidebar docsurvey-sidebar">
+  <div class="toc-menu">
+      </div>
+</aside>
+<article class="doc">
+    <div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is unreleased documentation for Network Enforcer 0.4-dev.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+                        <h1 class="page">Configuring SUSE Security Network Enforcer for production</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page gives configuration for Network Enforcer in a production cluster.
+It covers the <a href="../glossary.html#_controller" class="xref page">controller</a>, the fluent-bit DaemonSet of the Istio
+<a href="../glossary.html#_provider" class="xref page">provider</a>, the PriorityClass, the telemetry, and the other chart
+values that matter at scale.</p>
+</div>
+<div class="paragraph">
+<p>For the provider and Kubernetes requirements, see
+<a href="../reference/compatibility.html" class="xref page">Compatibility</a>. For how the components
+work together, see <a href="../explanations/architecture.html" class="xref page">Architecture</a>. For
+the debug tools, see <a href="troubleshooting.html" class="xref page">Troubleshooting</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_controller"><a class="anchor" href="#_controller"></a>Controller</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="../glossary.html#_controller" class="xref page">controller</a> runs as a Kubernetes Deployment with leader
+election. One replica is active at a time. It reads <a href="../glossary.html#_flow" class="xref page">flow</a>s from the
+data plane, writes proposals and policies, and updates the policy status.</p>
+</div>
+<div class="paragraph">
+<p>The controller also serves a validating admission webhook. An outage blocks
+<code>WorkloadNetworkPolicy</code> creates and updates, including mode changes.
+Learning and status updates stop, but existing <a href="../glossary.html#_native-policy-object" class="xref page">native policy object</a>s
+remain enforced.</p>
+</div>
+<div class="paragraph">
+<p>The Kubernetes API server must reach the webhook Service over HTTPS.
+The chart requires cert-manager and its CSI driver for certificates.
+See <a href="troubleshooting.html#_admission_webhook" class="xref page">Admission webhook</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_controller_replicas"><a class="anchor" href="#_controller_replicas"></a>Controller replicas</h3>
+<div class="paragraph">
+<p><code>controller.replicas</code> defaults to <code>1</code>. Only the leader does the work. An
+extra replica is a warm standby. It shortens the failover time, and it
+does not add throughput.</p>
+</div>
+<div class="paragraph">
+<p>With the Istio provider, keep <code>controller.replicas</code> at <code>1</code>. The controller
+is the OTLP server that receives the <a href="../glossary.html#_ztunnel" class="xref page"><code>ztunnel</code></a> logs from fluent-bit,
+and only the leader listens on that port.</p>
+</div>
+<div class="paragraph">
+<p>With the Calico or the Cilium provider, you can run two replicas:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  replicas: 2</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_schedule_the_controller"><a class="anchor" href="#_schedule_the_controller"></a>Schedule the controller</h3>
+<div class="paragraph">
+<p>Use <code>controller.tolerations</code>, <code>controller.nodeSelector</code>, and
+<code>controller.affinity</code> to control where the controller pods run. For
+example, spread two replicas across different nodes with
+<code>podAntiAffinity</code>. This example matters only when <code>controller.replicas</code> is
+more than <code>1</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: controller
+            topologyKey: kubernetes.io/hostname</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_controller_resources"><a class="anchor" href="#_set_controller_resources"></a>Set controller resources</h3>
+<div class="paragraph">
+<p><code>controller.resources</code> defaults to a Guaranteed <code>100m</code> CPU and <code>256Mi</code>
+memory, with the same <code>requests</code> and <code>limits</code>. The memory of the
+controller grows with the number of distinct flows and the number of
+proposals in the cluster. Watch the controller pod after the install, and
+raise both values when the pod gets close to its limit. Keep <code>requests</code>
+equal to <code>limits</code>, so that the pod keeps the Guaranteed class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_keep_the_status_sync_interval"><a class="anchor" href="#_keep_the_status_sync_interval"></a>Keep the status sync interval</h3>
+<div class="paragraph">
+<p><code>controller.wnpStatusUpdateInterval</code> defaults to <code>30s</code>. The quick start
+lowers it to make the demo responsive. A shorter interval writes the
+policy status more often and adds load on the API server. In production,
+keep the default. See
+<a href="troubleshooting.html#_wnpstatusupdateinterval-latency" class="xref page"><code>wnpStatusUpdateInterval</code>
+latency</a> for what the interval changes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_add_a_poddisruptionbudget_for_the_controller"><a class="anchor" href="#_add_a_poddisruptionbudget_for_the_controller"></a>Add a PodDisruptionBudget for the controller</h3>
+<div class="paragraph">
+<p>A PodDisruptionBudget (PDB) limits how many pods a voluntary disruption can
+remove at the same time, for example a node drain or a cluster upgrade. The
+chart ships a PDB template for the controller, off by default.</p>
+</div>
+<div class="paragraph">
+<p>Set <code>controller.pdb.enabled</code> to <code>true</code>. Set <code>minAvailable</code> or
+<code>maxUnavailable</code> under <code>controller.pdb</code>, in the same way as a PDB <code>spec</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  pdb:
+    enabled: true
+    minAvailable: 1</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If <code>controller.replicas</code> is <code>1</code> and <code>controller.pdb.minAvailable</code> is <code>1</code>,
+the PodDisruptionBudget blocks every voluntary disruption of the controller
+pod, including <code>kubectl drain</code>. Before you turn on the PodDisruptionBudget,
+set <code>controller.replicas</code> to <code>2</code> or more. With the Istio provider, where
+the controller must stay at one replica, leave the PodDisruptionBudget off.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fluent_bit_daemonset_istio_provider"><a class="anchor" href="#_fluent_bit_daemonset_istio_provider"></a>fluent-bit DaemonSet, Istio provider</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With <code>controller.provider.name: istio</code>, the chart deploys fluent-bit as a
+DaemonSet. One pod runs on each node. It reads the log files of
+<a href="../glossary.html#_ztunnel" class="xref page"><code>ztunnel</code></a> and sends the records to the controller. A node without a
+fluent-bit pod produces no proposals and no monitor-mode <a href="../glossary.html#_violation" class="xref page">violation</a>s
+for the pods on that node. Protect mode still blocks traffic there,
+because ztunnel enforces the policy on its own.</p>
+</div>
+<div class="sect2">
+<h3 id="_fluent_bit_scheduling"><a class="anchor" href="#_fluent_bit_scheduling"></a>fluent-bit scheduling</h3>
+<div class="paragraph">
+<p><code>controller.provider.istio.fluentBit</code> has its own <code>resources</code>,
+<code>tolerations</code>, <code>nodeSelector</code>, and <code>affinity</code> keys. The pod also gets the
+shared <a href="#_priorityclass">PriorityClass</a>.</p>
+</div>
+<div class="paragraph">
+<p>fluent-bit must run on every node where ztunnel runs. The chart sets a
+toleration that matches every taint by default, the same default that
+ztunnel itself uses. If you set
+<code>controller.provider.istio.fluentBit.tolerations</code> to <code>[]</code>, fluent-bit
+stops tolerating taints. The pod is then missing from each tainted node
+that still runs ztunnel. The chart loses the ztunnel logs from that node,
+together with the proposals and the monitor-mode violations of its
+workloads.</p>
+</div>
+<div class="paragraph">
+<p>If you restrict fluent-bit with <code>nodeSelector</code> or <code>affinity</code>, make sure
+that the selection still matches every node where ztunnel runs.</p>
+</div>
+<div class="paragraph">
+<p>In the default TLS mode <code>issuer</code>, each fluent-bit pod receives its
+certificate from the cert-manager CSI driver. Make sure that the CSI
+driver runs on every node. See
+<a href="../reference/compatibility.html#_provider-tls" class="xref page">Provider TLS</a> for the
+other modes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fluent_bit_security_context"><a class="anchor" href="#_fluent_bit_security_context"></a>fluent-bit security context</h3>
+<div class="paragraph">
+<p>fluent-bit runs as root (<code>runAsUser: 0</code>) and mounts two read-only
+<code>hostPath</code> volumes, <code>/var/log</code> and <code>/var/lib/docker/containers</code>, to read
+the container logs of the node. It is not privileged, it does not allow
+privilege escalation, and it drops all capabilities.</p>
+</div>
+<div class="paragraph">
+<p>These two requirements come from the job, not from a gap in the chart.
+Every log shipper that tails node log files needs the same two
+requirements.</p>
+</div>
+<div class="paragraph">
+<p>The container runtime writes the log files under <code>/var/log/pods</code> with
+mode <code>0640</code> and owner <code>root:root</code>. A pod&#8217;s <code>fsGroup</code> does not change the
+ownership of a <code>hostPath</code> volume, so it cannot open the files to a
+non-root user. The capability <code>CAP_DAC_READ_SEARCH</code> is not an option
+either. The <code>baseline</code> and the <code>restricted</code> Pod Security Admission
+levels both forbid it. The kernel also does not activate it for a
+non-root process. Reading the files needs UID <code>0</code>.</p>
+</div>
+<div class="paragraph">
+<p>The DaemonSet mounts <code>/var/log</code> and <code>/var/lib/docker/containers</code> to reach
+those files from the host. No Pod Security Admission level below
+<code>privileged</code> admits a <code>hostPath</code> volume. So the fluent-bit pod needs the
+<code>privileged</code> level, and the two
+<a href="#_admission_policies_and_pod_security_admission">recommended
+policies</a> that this page excludes next.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_priorityclass"><a class="anchor" href="#_priorityclass"></a>PriorityClass</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The chart creates a PriorityClass named <code>network-enforcer-priorityclass</code>,
+with value <code>1000000</code>, and applies it to the controller, the fluent-bit,
+and the collector pods. This makes the Kubernetes scheduler prefer these
+pods over most application pods, and keeps the kubelet from evicting them
+first under node pressure.</p>
+</div>
+<div class="paragraph">
+<p>To reuse an existing PriorityClass, for example <code>system-cluster-critical</code>,
+turn off the chart-managed one and point <code>priorityClass.name</code> at the
+existing class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">priorityClass:
+  enabled: false
+  name: system-cluster-critical</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you delete a PriorityClass, running pods that use it keep running. New
+pods that name the deleted class do not start.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_admission_policies_and_pod_security_admission"><a class="anchor" href="#_admission_policies_and_pod_security_admission"></a>Admission policies and Pod Security Admission</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>What an admission policy accepts depends on the provider.</p>
+</div>
+<div class="paragraph">
+<p>With the Calico or the Cilium provider, the chart deploys the controller
+and the collector only. Both pods run as non-root, drop all capabilities,
+and use no host namespace and no <code>hostPath</code> volume. They meet the
+<code>restricted</code> Pod Security Admission level, and none of the SUSE Security Admission Controller
+recommended policies rejects them. The Network Enforcer namespace can
+carry <code>pod-security.kubernetes.io/enforce: restricted</code>.</p>
+</div>
+<div class="paragraph">
+<p>With the Istio provider, the fluent-bit pod fails both the <code>baseline</code> and
+the <code>restricted</code> level. In <code>protect</code> mode, two of the Admission Controller
+recommended policies reject it:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Policy</th>
+<th class="tableblock halign-left valign-top">Rejects fluent-bit because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>do-not-share-host-paths</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/var/log</code> and <code>/var/lib/docker/containers</code> are not under <code>/tmp</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>do-not-run-as-root</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>runAsUser</code> is <code>0</code> and <code>runAsNonRoot</code> is <code>false</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Exclude the Network Enforcer namespace from these policies, with the
+<code>recommendedPolicies.skipAdditionalNamespaces</code> value of the
+Admission Controller Helm chart. The default exclusion list of that chart
+does not include a Network Enforcer namespace, so add yours in every case:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">recommendedPolicies:
+  skipAdditionalNamespaces:
+    - network-enforcer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Keep the namespace at the <code>privileged</code> Pod Security Admission level, or
+use <code>audit</code> or <code>warn</code> mode only.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="../../../../admission-controller/1.38/en/howtos/security-hardening/security-hardening.html" class="xref page">Security
+hardening</a> for the full list of recommended policies, and
+<a href="../../../../admission-controller/1.38/en/howtos/pod-security-admission-with-kubewarden.html" class="xref page">Pod
+Security Admission</a> for the three levels.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_telemetry"><a class="anchor" href="#_telemetry"></a>Telemetry</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By default, the chart deploys its own <a href="../glossary.html#_opentelemetry-collector" class="xref page">OpenTelemetry collector</a>, as
+a single Deployment replica. <code>telemetry.defaultCollector</code> has
+<code>tolerations</code>, <code>nodeSelector</code>, and <code>affinity</code> values, but the replica
+count stays fixed at one. The collector keeps its counters in memory, so
+a restart resets them. This default is enough for a basic setup, but it
+is a single point of failure for the violation metrics.</p>
+</div>
+<div class="paragraph">
+<p>For production, point Network Enforcer at an OpenTelemetry collector that
+your own platform operates and schedules for high availability:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">telemetry:
+  collectorStrategy: external
+  externalCollector:
+    protocol: grpc
+    endpoint: otel-collector.observability.svc.cluster.local:4317
+    otelCollectorCertificateSecret: otel-collector-ca</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Secret in <code>otelCollectorCertificateSecret</code> holds the CA certificate
+of your collector in the key <code>ca.crt</code>. Without it, the controller sends
+the events without TLS verification. The Secret must be in the
+Network Enforcer namespace.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This collector receives the violation events. It is not the OTLP endpoint
+that receives the ztunnel logs on the Istio provider. The two hops use
+different ports and different certificates. See
+<a href="../explanations/architecture.html#_opentelemetry-collector" class="xref page">OpenTelemetry
+collector</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_learning_scope"><a class="anchor" href="#_learning_scope"></a>Learning scope</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The chart has no value that limits the learning scope. Learning is
+cluster-wide and starts when the controller starts. The provider decides
+which flows the controller sees:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>With the Istio provider, only the namespaces that carry the label
+<code>istio.io/dataplane-mode=ambient</code> send traffic through ztunnel. That
+label is the learning scope.</p>
+</li>
+<li>
+<p>With the Calico or the Cilium provider, every flow that the data plane
+reports is learned, in every namespace.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Learning stops for a workload and direction when a
+<a href="../glossary.html#_workloadnetworkpolicy" class="xref page"><code>WorkloadNetworkPolicy</code></a> with the same name exists. You can learn the
+policies in another cluster, for example staging, promote them there, and
+apply the resulting policies to production as code. The controller then
+writes a <a href="../glossary.html#_workloadnetworkpolicyproposal" class="xref page"><code>WorkloadNetworkPolicyProposal</code></a> only for the workloads that
+have no policy yet.</p>
+</div>
+<div class="paragraph">
+<p>See
+<a href="../reference/known_limitations.html#_learning-starts-when-the-controller-starts" class="xref page">Learning
+starts when the controller starts</a> for what learning does not record.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_keep_the_flow_dumper_off"><a class="anchor" href="#_keep_the_flow_dumper_off"></a>Keep the flow dumper off</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>controller.flowDumper.enabled</code> defaults to <code>false</code>. Keep it off in
+production. When it is on, the chart creates a <code>NodePort</code> Service on port
+<code>30080</code> that exposes the raw flow records on every node. Turning it on or
+off also changes the controller arguments, so the controller restarts.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="troubleshooting.html#_flow-dumper" class="xref page">Flow dumper</a> for what
+it shows and how to read it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_production_configuration"><a class="anchor" href="#_example_production_configuration"></a>Example production configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example combines the configuration from this page into one Helm
+values file, for the Istio provider:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  provider:
+    name: istio
+  replicas: 1
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+  wnpStatusUpdateInterval: 30s
+  flowDumper:
+    enabled: false
+
+telemetry:
+  collectorStrategy: external
+  externalCollector:
+    protocol: grpc
+    endpoint: otel-collector.observability.svc.cluster.local:4317
+    otelCollectorCertificateSecret: otel-collector-ca</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the Calico or the Cilium provider, set <code>controller.provider.name</code> to
+<code>calico</code> or <code>cilium</code>. You can then raise <code>controller.replicas</code> to <code>2</code> and
+turn on the PodDisruptionBudget:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">controller:
+  provider:
+    name: calico
+  replicas: 2
+  pdb:
+    enabled: true
+    minAvailable: 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apply the file at install or upgrade time:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm upgrade --install network-enforcer kubewarden/network-enforcer \
+  --namespace network-enforcer \
+  --create-namespace \
+  -f production-values.yaml \
+  --wait</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="uninstall.html">Uninstall</a></span>
+  <span class="next"><a href="emergency-disable.html">Emergency disable</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<script src="../../../../_/js/site.js"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+<script src="../../../../_/js/vendor/lunr.js"></script>
+<script src="../../../../_/js/vendor/lunr-languages.js"></script>
+<script src="../../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../../.." data-snippet-length="100" data-stylesheet="../../../../_/css/search.css"></script>
+<script async src="../../../../search-index.js"></script>
+<script src="../../../../_/js/vendor/langSelection.js"></script>
+<script async src="../../../../_/js/vendor/tabs.js"></script>
+
+
+<script src="../../../../_/js/CNLanguageSwitcher.js"></script>
+  </body>
+</html>
