@@ -3,58 +3,42 @@
 Planned work for the product build. Open questions and known issues are in
 [follow-ups.md](follow-ups.md). Remove an item when it is done.
 
-## How releases work
-
-SUSE Security releases pin one version of each component.
-[`suse-security-release-config.yml`](../shared/modules/en/partials/product-specific/suse-security-release-config.yml)
-lists them. Two tools read it:
-
-- The `productreleases` helper in `dsc-style-bundle`: the "Component /
-  version" selector shows the SUSE Security releases and a dropdown with the
-  components of the current release. The page version menu shows the
-  releases.
-- The `release-url-layout` extension in `product-docs-common`: it publishes
-  each release at `/suse-security/<release>/<lang>/`, for example
-  `/suse-security/6.0.0/en/admission-controller/introduction.html`. It builds
-  only the component versions that a release pins, and one landing page for
-  each release. Its
-  [README](https://github.com/rancher/product-docs-common/blob/main/extensions/release-url-layout/README.md)
-  describes the configuration and the rules.
-
-The landing page sets `release-version` and `release-<component>-version`.
-The product partials `landing-components.adoc`, `landing-nav.adoc`, and
-`landing-release-refs.adoc` in `docs/kw/version-1.0/modules/en/partials/product-specific/`
-use them to link to the component versions of the release.
+For how the SUSE Security releases and the release config work, see
+[How SUSE Security releases work](PRODUCT-consideration.md#how-suse-security-releases-work).
 
 ## Installation
 
-None of this goes into the community docs. Use the product facilities:
-product-only pages and nav entries in `product-specific/` directories,
-`{build-type}-specific` partials with an include point upstream when a shared
-page must differ, and the release config.
+Keep all installation content out of the community docs. Use these product
+facilities:
 
-1. **SUSE Security production installation.** A page that installs SUSE
-   Security with the umbrella Helm chart that is being developed.
+- product-only pages and nav entries in `product-specific/` directories
+- `{build-type}-specific` partials, with an include point upstream, when a
+  shared page must be different in the product build
+- the release config
+
+1. **Install SUSE Security for production.** Write a page that installs
+   SUSE Security with the umbrella Helm chart. The chart is in development.
    - Put it in the landing component, under
      `docs/kw/version-1.0/modules/en/pages/product-specific/`, and link it
      from the product `landing-nav.adoc`, which this repository owns.
-   - If the chart version differs for each release, add it to the release
-     config. The extension and the helper check the config strictly, so the
-     new key needs a change in both. The extension can then set it as a
-     `release-*` attribute on the landing page of each release.
-2. **Remove the per-component installation instructions.** The umbrella
-   installation replaces them in the product build. The pages come from
-   upstream, and the community build still needs them.
+   - If the chart version is different for each release, add it to the
+     release config. The extension and the helper check the config strictly,
+     so a new key needs a change in both. The extension can then set the
+     chart version as a `release-*` attribute on the landing page of each
+     release.
+2. **Remove the installation instructions of each component.** In the
+   product build, the umbrella installation replaces them. The pages come
+   from upstream, and the community build still needs them.
    - Add `{build-type}-specific` include points upstream where the install
      steps are, so that the community partial keeps the steps and the product
      partial points to the umbrella installation. The nav entries need the
      same treatment.
    - Decide whether the product build keeps short pages that point to the
      umbrella installation, or leaves the pages out.
-3. **Admission Controller only, Rancher Prime.** A product-only installation
-   of Admission Controller on its own, for Rancher Prime. A page in
-   Admission Controller's `product-specific/` pages and a product nav entry.
-   If it replaces install steps on a shared page, use the include points from
+3. **Install Admission Controller on its own for Rancher Prime.** Write a
+   product-only page for this installation. Put it in the `product-specific/`
+   pages of Admission Controller, and add a product nav entry. If the page
+   replaces install steps on a shared page, use the include points from
    item 2.
 
 ## Publishing
@@ -63,14 +47,14 @@ page must differ, and the release config.
    builds the published site. When this repository goes live:
    1. Remove the demo release 5.9.9 from the release config.
    2. In `product-docs-playbook-remote.yml` and `product-docs-playbook-local.yml`:
-      - Replace the `kubewarden-product-docs`, `sbomscanner-product-docs`,
+      - Replace the `kubewarden-product-docs`, `sbomscanner-product-docs`
         and `runtime-enforcer-product-docs` sources with one source for this
         repository, with the start paths of `remote-product-playbook.yml`.
       - Register `./product-docs-common/extensions/release-url-layout/release-url-layout.js`
         before `vlp.js`, as in `remote-product-playbook.yml`.
    3. Bump the `dsc-style-bundle` and `product-docs-common` submodules of
       `product-docs-playbook` to versions with the release support:
-      dsc-style-bundle #90, #91, and #92, and product-docs-common #104.
+      dsc-style-bundle #90, #91 and #92, and product-docs-common #104.
    4. Build the site with and without the change, and compare. On
       2026-10-28 a build with this repository in place of the old sources was
       clean: no new warnings, and no broken relative links in the SUSE
@@ -87,6 +71,6 @@ page must differ, and the release config.
    stop working when the published site switches. The decision for now is no
    redirects: SUSE Security is a new product. The extension could add them
    later without a change to the release config.
-6. **The old product repositories.** Archive `kubewarden-product-docs`,
-   `sbomscanner-product-docs`, and `runtime-enforcer-product-docs` after the
-   published site switches?
+6. **Archive the old product repositories?** Decide whether to archive
+   `kubewarden-product-docs`, `sbomscanner-product-docs` and
+   `runtime-enforcer-product-docs` after the published site switches.
