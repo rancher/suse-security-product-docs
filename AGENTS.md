@@ -6,10 +6,11 @@ This repository is a copy of the upstream community repository,
 [kubewarden/docs](https://github.com/kubewarden/docs), plus a small product
 layer. Make all content and structure changes in `kubewarden/docs`. Read the
 `AGENTS.md` of that repository for the conventions. A script and a GitHub
-Action copy the upstream changes to this repository and overwrite local edits
-to the copied files.
+Action copy the upstream changes to this repository. Do not edit a copied
+file here. At the next sync, the local edit can stay in place without a
+warning, or it can cause a merge conflict.
 
-Do not change files here unless they are in the list below.
+Change only the files in the list below.
 
 For why this repository exists and the design choices behind it, see
 [process-docs/PRODUCT-consideration.md](process-docs/PRODUCT-consideration.md).
@@ -17,11 +18,15 @@ For why this repository exists and the design choices behind it, see
 ## What belongs here
 
 - Files in `product-specific/` directories, under `shared/` and under each
-  component version. These hold the product values and text that the shared
-  pages include with `{build-type}-specific/`:
-  - `variables.adoc`, `globals.adoc`, and the component wrappers
-    `<key>-variables.adoc`: product names, registries, Helm charts,
-    namespaces, release tags.
+  component version. These files hold the product values and text. The
+  shared pages include files from `{build-type}-specific/` directories. The
+  product build sets `build-type: product`, so it uses the files in
+  `product-specific/`. These files are:
+  - `variables.adoc` in each component version, and `globals.adoc` and
+    `<key>-variables.adoc` in `shared/`: product names, registries, Helm
+    charts, namespaces and release tags. A `<key>-variables.adoc` file holds
+    the values that are the same in all versions of one component. The keys
+    are `admc`, `kw`, `ne`, `rte` and `sboms`.
   - Partials for passages that differ in the product build.
   - Pages, nav fragments, and images that exist only in the product build.
   - `shared/modules/en/partials/product-specific/suse-security-release-config.yml`:
@@ -43,25 +48,26 @@ For why this repository exists and the design choices behind it, see
 - `.upstream-ref`: the upstream commit of the last sync. A sync commit
   updates it. `scripts/sync.py` syncs from it.
 - `process-docs/`: notes about this repository and its processes:
-  - `PRODUCT-consideration.md`: why this repository exists, and the design
-    of the sync.
+  - `PRODUCT-consideration.md`: why this repository exists, how the SUSE
+    Security releases work, and the design of the sync.
   - `follow-ups.md`: open questions and known issues.
   - `next-steps.md`: planned work, for example the installation pages and
     the switch of the published site to this repository.
   - `what-can-go-wrong.md`: how the sync can fail, and how it is reported.
 
-The automated translation process writes the localized content, the language
-modules other than `en`. Do not edit the translations. Until a page is
-translated, its language module holds a copy of the English page as a
-placeholder, and the language `nav.adoc` lists it in the English position. A
-language module holds no page that the English module does not have.
+An automated translation process writes the translations. The translations
+are in the language modules, all modules other than `en`. Do not edit the
+translations. Until a page is translated, its language module holds a copy
+of the English page as a placeholder. The language `nav.adoc` lists the copy
+in the same position as the English `nav.adoc`. Each page in a language
+module also exists in the English module.
 
 If a change could go upstream, make it upstream.
 
 ## Writing style
 
-Write the product text in this repository, the pages and partials in
-`product-specific/` directories, to these standards:
+Write the product text to these standards. The product text is the pages
+and partials in the `product-specific/` directories.
 
 - The SUSE Style Guide. The AI prompts for it are in
   `product-docs-common/ai-prompts/suse-style-guide/`, a submodule of
@@ -72,7 +78,7 @@ Write the product text in this repository, the pages and partials in
 - ASD-STE100 Simplified Technical English (STE): one idea for each sentence,
   short sentences, active voice, simple words, and no phrasal verbs.
 
-The most frequent points:
+The most important rules:
 
 - Use no serial comma: "learn, monitor and protect".
 - Write H2 and H3 headings as natural-language questions where they fit, in
@@ -109,7 +115,7 @@ make preview
 make dev
 ```
 
-Build output lands in `build/site/`. Logs are written to `tmp/build.log`.
+The build writes the site to `build/site/` and the log to `tmp/build.log`.
 The playbooks set `build-type: product` and `attribute-missing: warn`. A
 reference to an undefined attribute causes a `WARN (asciidoctor): skipping
 reference to missing attribute` line in `tmp/build.log`.

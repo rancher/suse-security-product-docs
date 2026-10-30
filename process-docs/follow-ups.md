@@ -6,14 +6,15 @@ the upstream community repository. Remove an item when it is done.
 ## Values to confirm
 
 - **Admission controller image tags.** In `admission-controller/version-1.39`,
-  `{release-tag}` (`v1.38.2`) is the upstream tag. The product file assumes the
-  product image tags are the same. `{default-policy-server-image-tag}` uses it
-  to build the `dp.apps.rancher.io` image reference. If the product image tags
+  `{release-tag}` (`v1.38.2`) is the upstream tag. The product file assumes
+  that the product image tags are the same.
+  `{default-policy-server-image-tag}` uses `{release-tag}` to make the
+  `dp.apps.rancher.io` image reference. If the product image tags
   have no leading `v`, add a separate image tag attribute.
 - **Release tags and chart versions.** The product `variables.adoc` of every
   component dev version copies `{release-tag}` and `{chart-version}` from
-  upstream. Confirm that the product versions are the same. The updatecli job
-  that bumps them upstream writes only to `community-specific/variables.adoc`.
+  upstream. Confirm that the product versions are the same. Upstream, the
+  updatecli job bumps them only in `community-specific/variables.adoc`.
   `scripts/sync.py` copies the new values to the product files.
 - **Network Enforcer chart.** `{network-enforcer-helm-chart}` is a guess,
   `oci://dp.apps.rancher.io/charts/suse-security-network-enforcer`. No page
@@ -25,15 +26,19 @@ the upstream community repository. Remove an item when it is done.
   contributors to the upstream project. Review the wording and the rest of the
   contribution guide pages for the product build. The `{docs-repo-*}`
   attributes point to the upstream `kubewarden/docs` repository and team.
-  Before PR 960, the product build pointed to
+  Before [kubewarden/docs#960](https://github.com/kubewarden/docs/pull/960),
+  the product build pointed to
   `rancher/kubewarden-product-docs` and the `rancher/teams/docs` team.
 - **Verifying images.** `admission-controller` `tutorials/verifying-kubewarden.adoc`
   hard codes the `ghcr.io/kubewarden` images and chart. In the product build it
   verifies the community artifacts.
-- **Parameterization passes.** The shared pages still hard code community
-  values that the product build needs to differ: registries, Helm charts and
-  `helm repo add` commands, namespaces, URLs, and names. Approximate counts in
-  the English pages of the latest and dev versions:
+- **Replace hard-coded community values.** The shared pages still hard code
+  community values that must be different in the product build: registries,
+  Helm charts and `helm repo add` commands, namespaces, URLs and names. The
+  table gives approximate counts in the English pages of the latest and dev
+  versions. AC is Admission Controller, VS is Vulnerability Scanner, RTE is
+  Runtime Enforcer, NE is Network Enforcer and KW is the SUSE Security
+  landing component, `kw`.
 
   | Pattern | AC 1.38 | AC 1.39 | VS 0.13 | VS 0.14 | RTE 0.10 | RTE 0.11 | NE 0.3 | NE 0.4 | KW 1.0 |
   |---|---|---|---|---|---|---|---|---|---|
@@ -45,15 +50,15 @@ the upstream community repository. Remove an item when it is done.
   | `Kubewarden` as a name | 27 | 27 | 1 | 1 | 0 | 1 | 1 | 1 | 0 |
 
   Many hits are correct community references, for example source code links
-  and policy images. Approach:
+  and policy images. Do the work in these steps:
 
   1. Do one component at a time, in the dev version, starting with
      `admission-controller` 1.39. The promotion carries the changes to later
      versions. Do not change older versions.
   2. For each pass, list every hit and sort it: parameterize, keep as
-     community, or decide. Review the "decide" group.
+     community, or decide later. Review the "decide later" group.
   3. Make the changes upstream in `kubewarden/docs`. Use the attributes that
-     exist, for example `{admc-namespace}`, `{default-oci-registry}`, and
+     exist, for example `{admc-namespace}`, `{default-oci-registry}` and
      `{admc-chart-location}`. Add new attributes only when necessary, with a
      community and a product value.
   4. Build both sites and compare.
@@ -83,8 +88,8 @@ the upstream community repository. Remove an item when it is done.
   `scripts/sync.py` on demand and opens a sync pull request. Add a
   `schedule:` trigger when the on-demand runs work well.
 - **Sync: hardening.** [what-can-go-wrong.md](what-can-go-wrong.md) lists
-  how the sync can fail or give a wrong result, and the changes that make it
-  safer.
+  how the sync can fail or give a wrong result. It also lists the changes
+  that make the sync safer.
 - **Mermaid diagrams in the publishing playbook.**
   `@sntke/antora-mermaid-extension` applies `subs` to the wrong value, so
   diagrams with `[mermaid,subs="attributes"]` render as the word "attributes".
@@ -96,7 +101,9 @@ the upstream community repository. Remove an item when it is done.
   `asciidoc.extensions`, and remove the package.
 - **Publishing playbook.** `product-docs-playbook` builds the published site.
   The switch to this repository is a planned step in
-  [next-steps.md](next-steps.md). Also check:
-  - It sets `build-type: product@` and the old `kw-build-type`. Check that no
-    page overrides `build-type`.
-  - It indexes with `index_latest_only: true`. This repository uses `false`.
+  [next-steps.md](next-steps.md). Before the switch, check these points:
+  - The playbook sets `build-type: product@` and the old `kw-build-type`.
+    The trailing `@` lets a page override the value. Check that no page
+    overrides `build-type`.
+  - The playbook indexes with `index_latest_only: true`. This repository uses
+    `false`. Decide which value the published site needs.
